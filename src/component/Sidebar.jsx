@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaLaptopHouse, FaUserCircle } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { GiNotebook } from "react-icons/gi";
@@ -6,8 +7,8 @@ import { DiCodepen } from "react-icons/di";
 import { IoExitSharp } from "react-icons/io5";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { GoDotFill } from "react-icons/go";
-
-export default function Sidebar({ children }) {
+import { FaRegUserCircle } from "react-icons/fa";
+export default function Sidebar({ children ,page}) {
     const [sideButton, setSideButton] = React.useState(true);
     const [expandUserManagement, setExpandUserManagement] = React.useState(false);
 
@@ -31,11 +32,11 @@ export default function Sidebar({ children }) {
                     </div>
                     <div className=' h-150'>
                         <ul className='align flex flex-col space-y-4 '>
-                            <li className="flex items-center space-x-2 cursor-pointer text-white hover:text-black">
+                           <Link to='/'> <li className="flex items-center space-x-2 cursor-pointer text-white hover:text-black">
                                 <FaLaptopHouse className=" text-4xl  " />
                                 {/* <FontAwesomeIcon icon={faLaptop} /> */}
                                 <span className="  text-2xl">Dash Board</span>
-                            </li>
+                            </li></Link>
                             <li className=" flexspace-x-2 cursor-pointer flex-col" >
                                 <div className='flex text-white hover:text-black' onClick={toggleUserManagement}>
                                     <FaUserCircle className=" text-4xl " />
@@ -43,7 +44,8 @@ export default function Sidebar({ children }) {
                                 </div>
 
                                 <ul className={expandUserManagement == true ? `text-white flex flex-col justify-center ms-10 text-xl` : 'hidden'} >
-                                    <li className='hover:text-black'>&#x2022;Vendors</li>
+                                    <Link to='/vendors'>
+                                    <li className='hover:text-black'>&#x2022;Vendors</li></Link>
                                     <li className='hover:text-black'>&#x2022;Buyers</li>
                                     <li className='hover:text-black'>&#x2022;Delivery Agent</li>
                                 </ul>
@@ -76,6 +78,7 @@ export default function Sidebar({ children }) {
                         {sideButton == true ? <BsChevronCompactRight /> : <BsChevronCompactLeft />}
                     </button>
                 </div>
+                
                 <div className='w-full'>
                     <div className='flex '>
 
@@ -111,6 +114,10 @@ export default function Sidebar({ children }) {
                             <FaUserCircle className='text-4xl ' />
                         </div>
                     </div>
+                    <div className='flex items-center text-4xl font-bold mt-10 ms-5'>
+                    <FaRegUserCircle style={{ color: 'green' }} className='text-4xl items-center mt-1 ' />
+                    <h1 style={{ color: 'green' }}>{page}</h1>
+                </div>
                     {children}
                 </div>
             </div>

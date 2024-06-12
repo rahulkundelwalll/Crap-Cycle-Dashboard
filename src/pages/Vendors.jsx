@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from './../component/Sidebar';
-import { FaUserCircle, FaRegUserCircle } from "react-icons/fa";
+
 
 const data = [
     { id: 1, contactPerson: 'John Doe', vendorId: 'V001', phone: '123-456-7890', companyName: 'ABC Inc.', email: 'john.doe@example.com', address: '123 Main St', profile: 'Link to profile 1' },
@@ -10,12 +10,9 @@ const data = [
 export default function Vendor() {
     return (
         <>
-            <Sidebar>
+            <Sidebar page={'Vendor'}>
                 
-                <div className='flex items-center text-4xl font-bold mt-10 ms-5'>
-                    <FaRegUserCircle style={{ color: 'green' }} className='text-4xl items-center mt-1 ' />
-                    <h1 style={{ color: 'green' }}>{"Vendor "}</h1>
-                </div>
+                
                 <div className='flex justify-end text-xl font-bold mt-5 '>
                     <button class=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                         + Add Vendor
