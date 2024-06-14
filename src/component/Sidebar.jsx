@@ -9,7 +9,7 @@ import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { GoDotFill } from "react-icons/go";
 import { FaRegUserCircle } from "react-icons/fa";
 export default function Sidebar({ children ,page}) {
-    const [sideButton, setSideButton] = React.useState(true);
+    const [sideButton, setSideButton] = React.useState();
     const [expandUserManagement, setExpandUserManagement] = React.useState(false);
 
 
@@ -21,6 +21,12 @@ export default function Sidebar({ children ,page}) {
             return !prev;
         })
     }
+
+
+    React.useEffect(()=>{
+        setSideButton(prev=>prev)
+    },[sideButton])
+
     return (
         <>
             <div className='flex'>

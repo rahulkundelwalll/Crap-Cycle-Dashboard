@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './../component/Sidebar';
-
+import { Link } from 'react-router-dom';
+import {useNavigate} from "react-router-dom";
 
 const data = [
     { id: 1, contactPerson: 'John Doe', vendorId: 'V001', phone: '123-456-7890', companyName: 'ABC Inc.', email: 'john.doe@example.com', address: '123 Main St', profile: 'Link to profile 1' },
@@ -8,13 +9,14 @@ const data = [
     // Add more rows as needed
 ];
 export default function Vendor() {
+    const navigate = useNavigate();
     return (
         <>
             <Sidebar page={'Vendor'}>
-                
-                
+
+
                 <div className='flex justify-end text-xl font-bold mt-5 '>
-                    <button class=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                    <button class=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event)=>navigate('/addvendor')}>
                         + Add Vendor
                     </button>
                 </div>
@@ -43,9 +45,10 @@ export default function Vendor() {
                                     <td className="py-2 px-4">{row.email}</td>
                                     <td className="py-2 px-4">{row.address}</td>
                                     <td className="py-2 px-4">
-                                        <button className="text-blue-500 hover:underline" onClick={() => window.open(row.profile, '_blank')}>
+
+                                        <Link to='/vendorprofile' className="text-blue-500 hover:underline" >
                                             View
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
