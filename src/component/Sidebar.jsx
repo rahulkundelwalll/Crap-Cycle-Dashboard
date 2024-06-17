@@ -53,7 +53,8 @@ export default function Sidebar({ children ,page}) {
                                     <Link to='/vendors'>
                                     <li className='hover:text-black'>&#x2022;Vendors</li></Link>
                                     <Link to='/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
-                                    <li className='hover:text-black'>&#x2022;Delivery Agent</li>
+                                    <Link to='/deliveryagent'>
+                                    <li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
                             </li>
                             <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">

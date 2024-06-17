@@ -8,6 +8,10 @@ import AddVendor from './pages/AddVendor';
 import VendorProfile from './pages/VendorProfile';
 import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
+import DeliveryAgent from './pages/DeliveryAgent'
+import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
+import AddDeliveryAgent from './pages/AddDeliveryAgent'
+
 function App() {
  
 
@@ -21,6 +25,10 @@ function App() {
       <Route path='/vendorprofile' element={<VendorProfile/>} />
       <Route path='/buyers' element={<Buyers/>} />
       <Route path='/addbuyer' element={<AddBuyer/>} />
+      <Route path='/deliveryagent' element={<DeliveryAgent/>} />
+      <Route path='/Agentprofile' element={<DeliveryAgentProfile/>} />
+      <Route path='/addAgent' element={<AddDeliveryAgent/>} />
+      
     </Routes>
       {/* <Sidebar/> */}
       
