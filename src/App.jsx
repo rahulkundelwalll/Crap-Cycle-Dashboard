@@ -11,6 +11,14 @@ import AddBuyer from './pages/AddBuyer';
 import DeliveryAgent from './pages/DeliveryAgent'
 import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
 import AddDeliveryAgent from './pages/AddDeliveryAgent'
+import CategoryManagement from './pages/Categories/CategoryManagement'
+import AddCategory from './pages/Categories/AddCategory'
+import CategoryDetail from './pages/Categories/CategoryDetail'
+import AddSubCat from './pages/subcategories/AddSubCat'
+import SubCategory from './pages/subcategories/SubCategory'
+
+
+
 
 function App() {
  
@@ -28,6 +36,13 @@ function App() {
       <Route path='/deliveryagent' element={<DeliveryAgent/>} />
       <Route path='/Agentprofile' element={<DeliveryAgentProfile/>} />
       <Route path='/addAgent' element={<AddDeliveryAgent/>} />
+      <Route path='/category' element={<CategoryManagement/>} />
+      <Route path='/addcategory' element={<AddCategory/>} />
+      <Route path='/CategoryDetail' element={<CategoryDetail/>} />
+      <Route path='/addsubcat' element={<AddSubCat/>} />
+      <Route path='/subcat' element={<SubCategory/>} />
+
+      
       
     </Routes>
       {/* <Sidebar/> */}
