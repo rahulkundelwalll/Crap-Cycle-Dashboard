@@ -67,10 +67,12 @@ export default function Sidebar({ children ,page}) {
                                 <DiCodepen className=" text-4xl" />
                                 <span className=" text-2xl">Order Management</span>
                             </li>
+                            <Link to='/requirementstatus'>
                             <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
                                 <GiNotebook className="text-4xl " />
                                 <span className="  text-2xl">Add Requirement</span>
                             </li>
+                            </Link>
                         </ul>
                     </div>
                     <div className=" pb-10">

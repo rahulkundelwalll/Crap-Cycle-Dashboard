@@ -16,6 +16,7 @@ import AddCategory from './pages/Categories/AddCategory'
 import CategoryDetail from './pages/Categories/CategoryDetail'
 import AddSubCat from './pages/subcategories/AddSubCat'
 import SubCategory from './pages/subcategories/SubCategory'
+import RequiremenStatus from './pages/requirements/RequiremenStatus'
 
 
 
@@ -41,6 +42,7 @@ function App() {
       <Route path='/CategoryDetail' element={<CategoryDetail/>} />
       <Route path='/addsubcat' element={<AddSubCat/>} />
       <Route path='/subcat' element={<SubCategory/>} />
+      <Route path='/requirementstatus' element = {<RequiremenStatus/>}/>
 
       
       
