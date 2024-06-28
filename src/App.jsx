@@ -17,7 +17,9 @@ import CategoryDetail from './pages/Categories/CategoryDetail'
 import AddSubCat from './pages/subcategories/AddSubCat'
 import SubCategory from './pages/subcategories/SubCategory'
 import RequiremenStatus from './pages/requirements/RequiremenStatus'
-
+import AddRequirement from './pages/requirements/AddRequirement'
+import LoginPage from './pages/login/LoginPage'
+import EditRequirement from './pages/requirements/EditRequirement'
 
 
 
@@ -43,7 +45,9 @@ function App() {
       <Route path='/addsubcat' element={<AddSubCat/>} />
       <Route path='/subcat' element={<SubCategory/>} />
       <Route path='/requirementstatus' element = {<RequiremenStatus/>}/>
-
+      <Route path='/addrequrement' element = {<AddRequirement/>}/>
+      <Route path='/login' element={<LoginPage/>}></Route>
+      <Route path='/editRequirement' element={<EditRequirement/>}></Route>
       
       
     </Routes>
