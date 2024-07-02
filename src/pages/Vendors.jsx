@@ -2,13 +2,25 @@ import React from 'react';
 import Sidebar from './../component/Sidebar';
 import { Link } from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
 
-const data = [
-    { id: 1, contactPerson: 'John Doe', vendorId: 'V001', phone: '123-456-7890', companyName: 'ABC Inc.', email: 'john.doe@example.com', address: '123 Main St', profile: 'Link to profile 1' },
-    { id: 2, contactPerson: 'Jane Smith', vendorId: 'V002', phone: '987-654-3210', companyName: 'XYZ Corp.', email: 'jane.smith@example.com', address: '456 Oak Ave', profile: 'Link to profile 2' },
-    // Add more rows as needed
-];
+
 export default function Vendor() {
+    const [data, setData] = React.useState([]); // State to hold fetched data
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/vendor/get-vendors');
+                setData(res.data.data); // Set fetched data to state
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, []);
+
+    
     const navigate = useNavigate();
     return (
         <>
@@ -16,7 +28,7 @@ export default function Vendor() {
 
 
                 <div className='flex justify-end text-xl font-bold mt-5 '>
-                    <button class=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event)=>navigate('/addvendor')}>
+                    <button className=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event)=>navigate('/addvendor')}>
                         + Add Vendor
                     </button>
                 </div>
@@ -38,15 +50,15 @@ export default function Vendor() {
                             {data.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
-                                    <td className="py-2 px-4">{row.contactPerson}</td>
-                                    <td className="py-2 px-4">{row.vendorId}</td>
-                                    <td className="py-2 px-4">{row.phone}</td>
-                                    <td className="py-2 px-4">{row.companyName}</td>
-                                    <td className="py-2 px-4">{row.email}</td>
-                                    <td className="py-2 px-4">{row.address}</td>
+                                    <td className="py-2 px-4">{row.v_name}</td>
+                                    <td className="py-2 px-4">{row.v_id}</td>
+                                    <td className="py-2 px-4">{row.v_mobile}</td>
+                                    <td className="py-2 px-4">{row.v_companyname}</td>
+                                    <td className="py-2 px-4">{row.v_email}</td>
+                                    <td className="py-2 px-4">{row.v_address}</td>
                                     <td className="py-2 px-4">
 
-                                        <Link to='/vendorprofile' className="text-blue-500 hover:underline" >
+                                        <Link to={`/vendorprofile/${row.v_id}`} className="text-blue-500 hover:underline" >
                                             View
                                         </Link>
                                     </td>

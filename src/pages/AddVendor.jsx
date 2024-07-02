@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 export default function AddVendor() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         personName: "",
+        password: "ddf",
         phoneNumber: "",
         email: "",
         companyName: "",
@@ -16,9 +19,8 @@ export default function AddVendor() {
         pdfFileName: "",
         pdfFileUrl: ""
     });
-    console.log(formData.pdfFile)
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const categories = ["steel", "plastic"]; // Dummy data
 
     const handleChange = (event) => {
@@ -43,9 +45,36 @@ export default function AddVendor() {
         }
     };
 
-    const handleClick = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(formData);
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('personName', formData.personName);
+        formDataToSend.append('password', formData.password);
+        formDataToSend.append('phoneNumber', formData.phoneNumber);
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('category', JSON.stringify([1]));
+        formDataToSend.append('companyName', formData.companyName);
+        formDataToSend.append('address', formData.address);
+        
+        if (formData.imageFile) {
+            formDataToSend.append('imageFile', formData.imageFile);
+        }
+        if (formData.pdfFile) {
+            formDataToSend.append('pdfFile', formData.pdfFile);
+        }
+
+        try {
+            const res = await axios.post('/api/vendor/save-vendor', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(res);
+            navigate('/vendors');
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const toggleModal = () => {
@@ -63,7 +92,7 @@ export default function AddVendor() {
                     <input type="file" id="imageFile" name="imageFile" accept="image/*" onChange={handleFileChange} className='hidden' />
                 </div>
 
-                <form className='flex flex-col items-center w-full'>
+                <form className='flex flex-col items-center w-full' onSubmit={handleSubmit}>
                     <input
                         type="text"
                         name='personName'
@@ -122,7 +151,7 @@ export default function AddVendor() {
                     {formData.pdfFileName && <p className='mb-4 cursor-pointer text-blue-500' onClick={toggleModal}>Uploaded PDF: {formData.pdfFileName}</p>}
                     <div className='flex items-center'>
                         <button
-                            onClick={handleClick}
+                            type="submit"
                             className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'
                         >
                             Submit

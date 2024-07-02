@@ -31,9 +31,9 @@ function App() {
     <Routes>
       <Route path='/vendors' element={<Vendor/>} />
       <Route path='/' element={<DashBoard/>} />
-      <Route path='/buyerprofile' element={<BuyerProfile/>} />
+      <Route path='/buyerprofile/:id' element={<BuyerProfile/>} />
       <Route path='/addvendor' element={<AddVendor/>} />
-      <Route path='/vendorprofile' element={<VendorProfile/>} />
+      <Route path='/vendorprofile/:id' element={<VendorProfile/>} />
       <Route path='/buyers' element={<Buyers/>} />
       <Route path='/addbuyer' element={<AddBuyer/>} />
       <Route path='/deliveryagent' element={<DeliveryAgent/>} />
