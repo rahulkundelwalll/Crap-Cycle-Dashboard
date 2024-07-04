@@ -1,74 +1,131 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../.././assets/user.webp';
-import {useNavigate} from "react-router-dom";
-
-
-export default function VendorProfile() {
+import { useNavigate, useParams } from "react-router-dom";
+import axios from 'axios';
+import AddCategory from './AddCategory';
+export default function CategoryDetail(props) {
     const navigate = useNavigate();
-    // Example data
-    const category = 'Aluminium';
-    const  categoryId= '123-456-7890';
-    const subcategory = 'B001';
-    const discription = " i am category"
-    // Example addresses
+    const { id } = useParams();
+    const [data, setData] = useState({
+        category: "",
+        categoryId: "",
+        subcategory: "",
+        discription: "",
+        imagePreview: ""
+    });
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/category/category/${id}`);
+                console.log(res.data.data[0]);
+                setData({
+                    category: res.data.data[0].cat_name,
+                    discription: res.data.data[0].cat_description,
+                    categoryId: res.data.data[0].cat_id,
+                    imagePreview: `../../../upload/${res.data.data[0].cat_image}`
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, [id]);
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`/api/category/delete-cat/${id}`);
+            // alert("Category deleted successfully!");
+            navigate('/category');
+        } catch (err) {
+            console.log(err);
+            alert("Failed to delete category.");
+        }
+    };
 
     return (
         <Sidebar page={'Category'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <button onClick={(event)=>navigate('/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" >
+                <button onClick={(event) => navigate('/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Category
                 </button>
             </div>
+            <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
+                <span className="text-green-400">{props.cat}</span>
+                </div>
             <div className='flex justify-center text-3xl font-bold mt-5 ms-10'>
                 <span className="text-gray-400">Category Detail</span>
             </div>
             <div className='flex flex-col items-center h-4/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl '>
-                <img src={userImage} className='h-24  bg-cover mt-10 rounded-full' alt="User" />
+                <img src={userImage} className='h-24 bg-cover mt-10 rounded-full' alt="User" />
                 <div className='mt-10 w-full '>
                     <table className="table-auto border-collapse border border-white-400 w-full">
                         <tbody>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Category:</td>
-                                <td className="border px-4 py-2">{category}</td>
+                                <td className="border px-4 py-2">{data.category}</td>
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Category Id:</td>
-                                <td className="border px-4 py-2">{categoryId}</td>
+                                <td className="border px-4 py-2">{data.categoryId}</td>
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Sub Category:</td>
-                                <td className="border px-4 py-2">{subcategory}</td>
+                                <td className="border px-4 py-2">{data.subcategory}</td>
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Discription:</td>
-                                <td className="border px-4 py-2">{discription}</td>
+                                <td className="border px-4 py-2">{data.discription}</td>
                             </tr>
-                            
                         </tbody>
                     </table>
                 </div>
                 <div className='my-auto '>
                     <button
-                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        onClick={()=>{}}
                     >
-                        Delet
+                        ADD subcategory
                     </button>
                     <button
-                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        onClick={() => setIsDeleteConfirmOpen(true)}
+                    >
+                        Delete
+                    </button>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        onClick={() => { navigate(`/editcategory/${id}`) }}
                     >
                         Edit
                     </button>
-                    <button
-                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                    >
-                        Save
-                    </button>
-                    
                 </div>
             </div>
 
-            
+            {isDeleteConfirmOpen && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
+                        <p className="mb-4">Are you sure you want to delete this category?</p>
+                        <div className="flex justify-end">
+                            <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </button>
+                            <button
+                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                                onClick={() => setIsDeleteConfirmOpen(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </Sidebar>
     );
 }

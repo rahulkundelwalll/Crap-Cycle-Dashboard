@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-export default function AddCategory() {
+import { useNavigate,useParams } from 'react-router-dom';
+
+export default function Editcategory() {
 
     const navigate = useNavigate();
-
+    const {id} = useParams();
     const [formData, setFormData] = useState({
         categoryName: "",
         categoryDescription: "",
@@ -36,15 +37,33 @@ export default function AddCategory() {
             }));
         }
     };
+    React.useEffect(()=>{
+        try{
+            const fetchData= async () =>{
+                const res = await axios.get(`/api/category/category/${id}`);
+                console.log(res.data.data[0]);
+                setFormData({
+                    categoryName:res.data.data[0].cat_name,
+                    categoryDescription:res.data.data[0].cat_description,
+                    imagePreview: `../../../upload/${res.data.data[0].cat_image}`
 
-    const handleClick = (event) => {
+                })
+                console.log(formData)
+            } 
+            fetchData();
+        }catch(err)
+        {
+            console.log(err);
+        }
+    },[])
+    const handleClick = async (event) => {
         event.preventDefault();
         const formDataToSend = new FormData();
         formDataToSend.append('categoryName',formData.categoryName)
         formDataToSend.append('categoryDescription',formData.categoryDescription)
         formDataToSend.append('imageFile',formData.imageFile)
         try{
-            const res = axios.post('/api/category/add',formDataToSend,{
+            const res = await axios.post('/api/category/add',formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }

@@ -8,11 +8,13 @@ import AddVendor from './pages/AddVendor';
 import VendorProfile from './pages/VendorProfile';
 import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
+import EditBuyer from './pages/EditBuyer';
 import DeliveryAgent from './pages/DeliveryAgent'
 import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
 import AddDeliveryAgent from './pages/AddDeliveryAgent'
 import CategoryManagement from './pages/Categories/CategoryManagement'
 import AddCategory from './pages/Categories/AddCategory'
+import Editcategory from './pages/Categories/Editcategory'
 import CategoryDetail from './pages/Categories/CategoryDetail'
 import AddSubCat from './pages/subcategories/AddSubCat'
 import SubCategory from './pages/subcategories/SubCategory'
@@ -33,6 +35,7 @@ function App() {
       <Route path='/' element={<DashBoard/>} />
       <Route path='/buyerprofile/:id' element={<BuyerProfile/>} />
       <Route path='/addvendor' element={<AddVendor/>} />
+      <Route path='/editbuyer/:id' element={<EditBuyer/>} />
       <Route path='/vendorprofile/:id' element={<VendorProfile/>} />
       <Route path='/buyers' element={<Buyers/>} />
       <Route path='/addbuyer' element={<AddBuyer/>} />
@@ -41,7 +44,8 @@ function App() {
       <Route path='/addAgent' element={<AddDeliveryAgent/>} />
       <Route path='/category' element={<CategoryManagement/>} />
       <Route path='/addcategory' element={<AddCategory/>} />
-      <Route path='/CategoryDetail' element={<CategoryDetail/>} />
+      <Route path='/editcategory/:id' element={<Editcategory/>} />
+      <Route path='/CategoryDetail/:id'  element={<CategoryDetail cat=''/>} />
       <Route path='/addsubcat' element={<AddSubCat/>} />
       <Route path='/subcat' element={<SubCategory/>} />
       <Route path='/requirementstatus' element = {<RequiremenStatus/>}/>
