@@ -26,7 +26,6 @@ export default function AddRequirement() {
     const buyers = {
         "Buyer 1": "alwar",
         "Buyer 2": "dehli",
-        "Buyer 2": "dfftgt"
     };
 
     useEffect(() => {
