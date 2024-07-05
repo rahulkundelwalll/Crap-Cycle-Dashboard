@@ -22,7 +22,7 @@ import RequiremenStatus from './pages/requirements/RequiremenStatus'
 import AddRequirement from './pages/requirements/AddRequirement'
 import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
-
+import OrderManagement from './pages/OrderMangement';
 
 
 function App() {
@@ -52,6 +52,7 @@ function App() {
       <Route path='/addrequrement' element = {<AddRequirement/>}/>
       <Route path='/login' element={<LoginPage/>}></Route>
       <Route path='/editRequirement' element={<EditRequirement/>}></Route>
+      <Route path='/ordermanagement' element={<OrderManagement/>}></Route>
       
       
     </Routes>

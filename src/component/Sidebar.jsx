@@ -63,10 +63,12 @@ export default function Sidebar({ children ,page}) {
                                 <span className="   text-2xl">Category Management</span>
                             </li>
                             </Link>
+                            <Link to='/ordermanagement'>
                             <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
                                 <DiCodepen className=" text-4xl" />
                                 <span className=" text-2xl">Order Management</span>
                             </li>
+                            </Link>
                             <Link to='/requirementstatus'>
                             <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
                                 <GiNotebook className="text-4xl " />
