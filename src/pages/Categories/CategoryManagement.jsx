@@ -178,7 +178,7 @@ export default function CategoryManagement() {
                                     <td className="py-2 px-4">{row.no_of_listing}</td>
                                     <td className="py-2 px-4">{row.no_of_bidding}</td>
                                     <td className="py-2 px-4">
-                                        <Link to='/CategoryDetail' className="text-blue-500 hover:underline">
+                                        <Link to='/CategoryDetail/3' className="text-blue-500 hover:underline">
                                             View
                                         </Link>
                                     </td>

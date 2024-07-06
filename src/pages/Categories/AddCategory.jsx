@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 export default function AddCategory() {
-
+    const [hierarchical, setHierarchical] = React.useState([]);
+    const location =useLocation();
+    const { cat,cat_id } = location.state || {};
+    console.log(cat_id)
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -15,7 +18,18 @@ export default function AddCategory() {
         imagePreview: userImage
     });
 
-    const subcategories = ["steel", "plastic"]; // Dummy data
+   React.useEffect(() => {
+        const fetchHierarchicalData = async () => {
+            try {
+                const res = await axios.get(`/api/category/hierarchical-cat/${cat_id}`);
+                setHierarchical(res.data.data || []); // Ensure hierarchical is set to an array
+                
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchHierarchicalData();
+    }, [cat_id]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -43,6 +57,7 @@ export default function AddCategory() {
         formDataToSend.append('categoryName',formData.categoryName)
         formDataToSend.append('categoryDescription',formData.categoryDescription)
         formDataToSend.append('imageFile',formData.imageFile)
+        formDataToSend.append('parent',cat_id?cat_id:-1)
         try{
             const res = axios.post('/api/category/add',formDataToSend,{
                 headers:{
@@ -61,6 +76,15 @@ export default function AddCategory() {
 
     return (
         <Sidebar page={"Category"}>
+            <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
+                <span className="text-green-400">{hierarchical?.map((item, index) => (
+                    <React.Fragment key={item.cat_id}>
+                        /
+                        {item.cat_name}
+                        
+                    </React.Fragment>
+                ))}</span>
+            </div>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
                     <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="Category" />

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-import userImage from '../.././assets/user.webp';
-import { useNavigate, useParams } from "react-router-dom";
+
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from 'axios';
-import AddCategory from './AddCategory';
+
+
 export default function CategoryDetail(props) {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [hierarchical, setHierarchical] = React.useState([]);
+    const { cat } = location.state || {};
     const { id } = useParams();
     const [data, setData] = useState({
         category: "",
         categoryId: "",
-        subcategory: "",
+        subcategory: [],
         discription: "",
-        imagePreview: ""
+        imagePreview: "../.././assets/user.webp"
     });
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
@@ -20,13 +24,14 @@ export default function CategoryDetail(props) {
         const fetchData = async () => {
             try {
                 const res = await axios.get(`/api/category/category/${id}`);
-                console.log(res.data.data[0]);
                 setData({
                     category: res.data.data[0].cat_name,
                     discription: res.data.data[0].cat_description,
                     categoryId: res.data.data[0].cat_id,
-                    imagePreview: `../../../upload/${res.data.data[0].cat_image}`
+                    imagePreview: res.data.data[0].cat_image ? `../../../upload/${res.data.data[0].cat_image}` : "../.././assets/user.webp",
+                    subcategory: data.subcategory // Keep the existing subcategory array
                 });
+
             } catch (err) {
                 console.log(err);
             }
@@ -34,10 +39,37 @@ export default function CategoryDetail(props) {
         fetchData();
     }, [id]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/category/get-subcat/${id}`);
+                setData((prev) => ({
+                    ...prev,
+                    subcategory: res.data.data || [] // Provide a default value of an empty array
+                }));
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, [id]);
+    useEffect(() => {
+        const fetchHierarchicalData = async () => {
+            try {
+                const res = await axios.get(`/api/category/hierarchical-cat/${id}`);
+                setHierarchical(res.data.data || []); // Ensure hierarchical is set to an array
+                
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchHierarchicalData();
+    }, [id]);
+    
+
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/category/delete-cat/${id}`);
-            // alert("Category deleted successfully!");
             navigate('/category');
         } catch (err) {
             console.log(err);
@@ -48,18 +80,25 @@ export default function CategoryDetail(props) {
     return (
         <Sidebar page={'Category'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <button onClick={(event) => navigate('/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                <button onClick={() => navigate('/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Category
+
                 </button>
             </div>
             <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
-                <span className="text-green-400">{props.cat}</span>
-                </div>
+                <span className="text-green-400">{hierarchical?.map((item, index) => (
+                    <React.Fragment key={item.cat_id}>
+                        /
+                        {item.cat_name}
+                        
+                    </React.Fragment>
+                ))}</span>
+            </div>
             <div className='flex justify-center text-3xl font-bold mt-5 ms-10'>
                 <span className="text-gray-400">Category Detail</span>
             </div>
             <div className='flex flex-col items-center h-4/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl '>
-                <img src={userImage} className='h-24 bg-cover mt-10 rounded-full' alt="User" />
+                <img src={data.imagePreview} className='h-24 bg-cover mt-10 rounded-full' alt="User" />
                 <div className='mt-10 w-full '>
                     <table className="table-auto border-collapse border border-white-400 w-full">
                         <tbody>
@@ -73,10 +112,24 @@ export default function CategoryDetail(props) {
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Sub Category:</td>
-                                <td className="border px-4 py-2">{data.subcategory}</td>
+                                <td className="border px-4 py-2 text-blue-500">
+                                    {data.subcategory?.map((item, index) => (
+                                        <React.Fragment key={item.cat_id}>
+                                            <Link
+                                                to={{
+                                                    pathname: `/CategoryDetail/${item.cat_id}`,
+                                                    state: { cat: cat ? cat : '' + data.category + '/', cat_id: data.categoryId }
+                                                }}
+                                            >
+                                                {item.cat_name}
+                                            </Link>
+                                            {index !== data.subcategory.length - 1 && ','}
+                                        </React.Fragment>
+                                    ))}
+                                </td>
                             </tr>
                             <tr>
-                                <td className="border px-4 py-2 font-bold">Discription:</td>
+                                <td className="border px-4 py-2 font-bold">Description:</td>
                                 <td className="border px-4 py-2">{data.discription}</td>
                             </tr>
                         </tbody>
@@ -84,11 +137,12 @@ export default function CategoryDetail(props) {
                 </div>
                 <div className='my-auto '>
                     <button
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
-                        onClick={()=>{}}
+                        onClick={() => navigate('/addcategory', { state: { cat: cat ? cat : '' + data.category + '/', cat_id: data.categoryId } })}
+                        className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3"
                     >
-                        ADD subcategory
+                        + Add Category
                     </button>
+
                     <button
                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
                         onClick={() => setIsDeleteConfirmOpen(true)}

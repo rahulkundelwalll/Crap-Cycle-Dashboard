@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
+import { useLocation } from 'react-router-dom';
 
 export default function AddSubCat() {
+    const location =useLocation();
+    const { cat,cat_id } = location.state || {};
     const [formData, setFormData] = useState({
         categoryName: "",
         categoryDescription: "",
@@ -43,6 +46,9 @@ export default function AddSubCat() {
             <div className='flex justify-center text-3xl font-bold mt-5 ms-10'>
                 <span className="text-gray-400">Add SubCategory</span>
             </div>
+            <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
+                <span className="text-green-400">{cat}/</span>
+            </div>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
                     <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="Category" />
@@ -69,17 +75,7 @@ export default function AddSubCat() {
                         placeholder='Category Description'
                         className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <select
-                        name='subcategory'
-                        value={formData.subcategory}
-                        onChange={handleChange}
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    >
-                        <option value="" disabled>Select Subcategory</option>
-                        {subcategories.map((subcategory, index) => (
-                            <option key={index} value={subcategory}>{subcategory}</option>
-                        ))}
-                    </select>
+                   
                     <div className='flex items-center'>
                         <button
                             onClick={handleClick}

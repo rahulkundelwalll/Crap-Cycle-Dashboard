@@ -12,6 +12,7 @@ export default function Editcategory() {
         categoryName: "",
         categoryDescription: "",
         subcategory: "",
+        parent:'',
         imageFile: null,
         imagePreview: userImage
     });
@@ -45,7 +46,8 @@ export default function Editcategory() {
                 setFormData({
                     categoryName:res.data.data[0].cat_name,
                     categoryDescription:res.data.data[0].cat_description,
-                    imagePreview: `../../../upload/${res.data.data[0].cat_image}`
+                    imagePreview: `../../../upload/${res.data.data[0].cat_image}`,
+                    parent:res.data.data[0].parent
 
                 })
                 console.log(formData)
@@ -62,8 +64,9 @@ export default function Editcategory() {
         formDataToSend.append('categoryName',formData.categoryName)
         formDataToSend.append('categoryDescription',formData.categoryDescription)
         formDataToSend.append('imageFile',formData.imageFile)
+        formDataToSend.append('parent',formData.parent)
         try{
-            const res = await axios.post('/api/category/add',formDataToSend,{
+            const res = await axios.put(`/api/category/edit/${id}`,formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }
