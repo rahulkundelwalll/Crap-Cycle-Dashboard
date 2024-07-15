@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios'; 
+import { useNavigation,useParams } from 'react-router-dom';// Import axios for making HTTP requests
 
 export default function AddVendor() {
+    const {id} = useParams();
+    const [data,setData] = React.useState({});
     const [formData, setFormData] = useState({
         personName: "",
         phoneNumber: "",
@@ -18,7 +21,7 @@ export default function AddVendor() {
         pdfFileUrl: ""
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
@@ -40,6 +43,38 @@ export default function AddVendor() {
             }));
         }
     };
+    console.log(data)
+    React.useEffect(()=>{
+        const fetchData = async ()=>{
+            try{
+                const res = await axios.get(`/api/delivery/agent-detail/${id}`)
+                setData(res.data.data[0])
+                setFormData((prev)=>{
+                    return {
+                        ...prev,
+                        personName: data.d_name,
+                        phoneNumber: data.d_mobile,
+                        email: data.d_email,
+                        companyName: data.d_company_name,
+                        address: data.d_addres,                        
+                        location:data.d_location,                        
+                        pdfFile: null,
+                        imageFile: null,
+                        imagePreview: userImage,
+                        pdfFileName: "",
+                        pdfFileUrl: ""
+                    }
+                    
+                })
+                
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchData();
+    },[])
+
+
 
     const handleClick = async (event) => {
         event.preventDefault();
@@ -55,16 +90,18 @@ export default function AddVendor() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.post('http://localhost:3000/api/delivery/add-agent', data, {
+            const response = await axios.put(`/api/delivery/edit/${id}`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
             console.log(response.data);
+            
             // Handle successful response
         } catch (error) {
             console.error('Error adding delivery agent:', error);
             // Handle error response
+            
         }
     };
 

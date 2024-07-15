@@ -49,7 +49,7 @@ export default function BuyerProfile() {
         }
         fetchData()
     }, [id]);
-
+    
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/buyer/deletbuyer/${id}`);
@@ -58,7 +58,7 @@ export default function BuyerProfile() {
             console.log(error);
         }
     };
-
+    
     return (
         <Sidebar page={'Buyers'}>
             <div className='flex justify-end text-xl font-bold mt-5'>

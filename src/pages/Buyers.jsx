@@ -16,7 +16,7 @@ export default function Buyer() {
             try {
                 const res = await axios.get('/api/buyer/allbuyer');
                 setData(res.data.data);
-                console.log(typeof res.data.data);
+                
             } catch (err) {
                 console.log(err);
             }

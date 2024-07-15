@@ -2,14 +2,29 @@ import React from 'react';
 import Sidebar from './../component/Sidebar';
 import { Link } from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
 
-const data = [
-    { id: 1, contactPerson: 'John Doe', AgentId: 'V001', phone: '123-456-7890', companyName: 'ABC Inc.', email: 'john.doe@example.com', address: '123 Main St', profile: 'Link to profile 1' },
-    { id: 2, contactPerson: 'Jane Smith', AgentId: 'V002', phone: '987-654-3210', companyName: 'XYZ Corp.', email: 'jane.smith@example.com', address: '456 Oak Ave', profile: 'Link to profile 2' },
-    // Add more rows as needed
-];
+
+
 export default function DeliveryAgent() {
+    const [data,setData] = React.useState([]);
     const navigate = useNavigate();
+    React.useEffect(()=>{
+        const fetchData = async ()=>{
+            try{
+                const res = await axios.get('/api/delivery/get-all-agent');
+                setData(res.data.data);
+                // console.log(res.data.data)
+            }catch(err){
+                console.log(err);
+            }
+            
+
+        }
+        fetchData();
+    },[])
+
+
     return (
         <>
             <Sidebar page={'Delivery Agent'}>
@@ -38,15 +53,15 @@ export default function DeliveryAgent() {
                             {data.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
-                                    <td className="py-2 px-4">{row.contactPerson}</td>
-                                    <td className="py-2 px-4">{row.AgentId}</td>
-                                    <td className="py-2 px-4">{row.phone}</td>
-                                    <td className="py-2 px-4">{row.companyName}</td>
-                                    <td className="py-2 px-4">{row.email}</td>
-                                    <td className="py-2 px-4">{row.address}</td>
+                                    <td className="py-2 px-4">{row.d_name}</td>
+                                    <td className="py-2 px-4">{row.d_id}</td>
+                                    <td className="py-2 px-4">{row.d_mobile}</td>
+                                    <td className="py-2 px-4">{row.d_company_name}</td>
+                                    <td className="py-2 px-4">{row.d_email}</td>
+                                    <td className="py-2 px-4">{row.d_address}</td>
                                     <td className="py-2 px-4">
 
-                                        <Link to='/Agentprofile' className="text-blue-500 hover:underline" >
+                                        <Link to={`/Agentprofile/${row.d_id}`} className="text-blue-500 hover:underline" >
                                             View
                                         </Link>
                                     </td>

@@ -12,6 +12,7 @@ import EditBuyer from './pages/EditBuyer';
 import DeliveryAgent from './pages/DeliveryAgent'
 import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
 import AddDeliveryAgent from './pages/AddDeliveryAgent'
+import EditDeliveryAgent from './pages/EditDeliveryAgent';
 import CategoryManagement from './pages/Categories/CategoryManagement'
 import AddCategory from './pages/Categories/AddCategory'
 import Editcategory from './pages/Categories/Editcategory'
@@ -19,7 +20,8 @@ import CategoryDetail from './pages/Categories/CategoryDetail'
 import AddSubCat from './pages/subcategories/AddSubCat'
 import SubCategory from './pages/subcategories/SubCategory'
 import RequiremenStatus from './pages/requirements/RequiremenStatus'
-import AddRequirement from './pages/requirements/AddRequirement'
+import AddRequirement from './pages/requirements/AddRequirement';
+import RequirementDetail from './pages/requirements/RequirementDetail'
 import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
 import OrderManagement from './pages/OrderMangement';
@@ -40,8 +42,9 @@ function App() {
       <Route path='/buyers' element={<Buyers/>} />
       <Route path='/addbuyer' element={<AddBuyer/>} />
       <Route path='/deliveryagent' element={<DeliveryAgent/>} />
-      <Route path='/Agentprofile' element={<DeliveryAgentProfile/>} />
+      <Route path='/Agentprofile/:id' element={<DeliveryAgentProfile/>} />
       <Route path='/addAgent' element={<AddDeliveryAgent/>} />
+      <Route path='/editagent/:id' element={<EditDeliveryAgent/>} />
       <Route path='/category' element={<CategoryManagement/>} />
       <Route path='/addcategory' element={<AddCategory/>} />
       <Route path='/editcategory/:id' element={<Editcategory/>} />
@@ -50,6 +53,7 @@ function App() {
       <Route path='/subcat' element={<SubCategory/>} />
       <Route path='/requirementstatus' element = {<RequiremenStatus/>}/>
       <Route path='/addrequrement' element = {<AddRequirement/>}/>
+      <Route path='/requirement-detail/:id' element = {<RequirementDetail/>}/>
       <Route path='/login' element={<LoginPage/>}></Route>
       <Route path='/editRequirement' element={<EditRequirement/>}></Route>
       <Route path='/ordermanagement' element={<OrderManagement/>}></Route>

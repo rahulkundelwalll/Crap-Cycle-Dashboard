@@ -1,37 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
+import axios from 'axios';
 
 export default function AddRequirement() {
     const [formData, setFormData] = useState({
-        categoryName: "",
-        categoryID: "12345", // Dummy category ID
+        category: {},
         quantity: "",
         requirementId: "",
         price: "",
         amount: "",
-        date: new Date().toLocaleDateString(),
         note: "",
-        buyerName: "",
+        buyer: {},
         address: "",
         imageFile: null,
-        imagePreview: userImage,
-        pdfFileName: "",
-        pdfFileUrl: ""
+        imagePreview: userImage
     });
-
+    const [categories, setCategories] = useState([]);
+    const [buyers, setBuyers] = useState([]);
+    const [dropingAdd,setDropingAdd]= useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const categories = ["steel", "plastic"]; // Dummy data
-    const buyers = {
-        "Buyer 1": "alwar",
-        "Buyer 2": "dehli",
-    };
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get('/api/category/categories');
+                setCategories(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
-        const newRequirementId = `REQ${Date.now()}`; // Generate a new requirement ID
-        setFormData(prev => ({ ...prev, requirementId: newRequirementId }));
+        const fetchBuyers = async () => {
+            try {
+                const res = await axios.get('/api/buyer/allbuyer');
+                setBuyers(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchBuyers();
     }, []);
+
+    useEffect(() => {
+        if(formData.buyer.b_id)
+        {
+            const deliveryAdd = async()=>{
+                try{
+                    const res = await axios.get(`/api/buyer/getbuyer/${formData.buyer.b_id}`);
+                    setDropingAdd(res.data.dropingaddress)
+                }catch(err)
+                {
+                    console.log(err);
+                }
+            }
+            deliveryAdd()
+        }
+    }, [formData.buyer]);
 
     useEffect(() => {
         if (formData.quantity && formData.price) {
@@ -42,11 +70,24 @@ export default function AddRequirement() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-            address: name === 'buyerName' ? buyers[value] : prev.address
-        }));
+        if (name === 'buyer') {
+            const buyer = JSON.parse(value);
+            setFormData((prev) => ({
+                ...prev,
+                buyer: buyer,
+                address: buyer.b_address
+            }));
+        } else if (name === 'category') {
+            setFormData((prev) => ({
+                ...prev,
+                category: JSON.parse(value)
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
     const handleFileChange = (event) => {
@@ -56,9 +97,7 @@ export default function AddRequirement() {
             setFormData((prev) => ({
                 ...prev,
                 [name]: file,
-                imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview,
-                pdfFileName: name === 'pdfFile' ? file.name : prev.pdfFileName,
-                pdfFileUrl: name === 'pdfFile' ? URL.createObjectURL(file) : prev.pdfFileUrl
+                imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview
             }));
         }
     };
@@ -85,21 +124,21 @@ export default function AddRequirement() {
 
                 <form className='flex flex-col items-center w-full'>
                     <select
-                        name='categoryName'
-                        value={formData.categoryName}
+                        name='category'
+                        value={JSON.stringify(formData.category)}
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
                         <option value="" disabled>Select Category</option>
                         {categories.map((category, index) => (
-                            <option key={index} value={category}>{category}</option>
+                            <option key={index} value={JSON.stringify(category)}>{category.cat_name}</option>
                         ))}
                     </select>
                     <input
                         type="text"
-                        name='categoryID'
-                        value={formData.categoryID}
-                        placeholder='Category ID'
+                        name='categoryName'
+                        value={formData.category.cat_name || ''}
+                        placeholder='Category Name'
                         readOnly
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
@@ -129,22 +168,6 @@ export default function AddRequirement() {
                     />
                     <input
                         type="text"
-                        name='requirementId'
-                        value={formData.requirementId}
-                        placeholder='Requirement ID'
-                        readOnly
-                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='date'
-                        value={formData.date}
-                        placeholder='Date'
-                        readOnly
-                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
                         name='note'
                         value={formData.note}
                         onChange={handleChange}
@@ -152,14 +175,14 @@ export default function AddRequirement() {
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-red-500'
                     />
                     <select
-                        name='buyerName'
-                        value={formData.buyerName}
+                        name='buyer'
+                        value={JSON.stringify(formData.buyer)}
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
                         <option value="" disabled>Select Buyer</option>
-                        {Object.keys(buyers).map((buyer, index) => (
-                            <option key={index} value={buyer}>{buyer}</option>
+                        {buyers.map((buyer, index) => (
+                            <option key={index} value={JSON.stringify(buyer)}>{buyer.b_name}</option>
                         ))}
                     </select>
                     <select
@@ -168,11 +191,12 @@ export default function AddRequirement() {
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        <option value="" disabled>Select Delivery Address</option>
-                        {Object.entries(buyers).map(([buyer, address], index) => (
-                            formData.buyerName === buyer ? <option key={index} value={address}>{address}</option> : null
+                        <option value="" disabled>Select Buyer</option>
+                        {dropingAdd.map((add, index) => (
+                            <option key={index} value={add.dropingAddress}>{add.dropingAddress}</option>
                         ))}
                     </select>
+                    
                     <div className='flex items-center'>
                         <button
                             onClick={handleClick}

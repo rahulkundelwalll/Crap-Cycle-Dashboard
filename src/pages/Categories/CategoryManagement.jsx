@@ -3,7 +3,7 @@ import Sidebar from '../../component/Sidebar';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-
+import axios from 'axios';
 
 
 
@@ -107,6 +107,18 @@ export default function CategoryManagement() {
         }
     };
 
+    React.useEffect(()=>{
+        const fetchData = async ()=>{
+            try{
+                const res = await axios.get('/api/category/category-bidden');
+                setData(res.data.data)
+            }catch(err){
+                console.log(err)
+            }
+        };
+        fetchData();
+    },[])
+
     return (
         <>
             <Sidebar page={'Category Management'}>
@@ -164,21 +176,24 @@ export default function CategoryManagement() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bidden Requirement</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. of Listing</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. of Bidding</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">parent</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Details</th>
+                                
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {data.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
-                                    <td className="py-2 px-4">{row.category_name}</td>
-                                    <td className="py-2 px-4">{row.category_id}</td>
-                                    <td className="py-2 px-4">{row.current_requirement}</td>
+                                    <td className="py-2 px-4">{row.cat_name}</td>
+                                    <td className="py-2 px-4">{row.cat_id}</td>
+                                    <td className="py-2 px-4">{row.curr_requirement}</td>
                                     <td className="py-2 px-4">{row.bidden_requirement}</td>
-                                    <td className="py-2 px-4">{row.no_of_listing}</td>
-                                    <td className="py-2 px-4">{row.no_of_bidding}</td>
+                                    <td className="py-2 px-4">{row.No_listing}</td>
+                                    <td className="py-2 px-4">{row.no_bidding}</td>
+                                    <td className="py-2 px-4">{row.parent}</td>
                                     <td className="py-2 px-4">
-                                        <Link to='/CategoryDetail/3' className="text-blue-500 hover:underline">
+                                        <Link to={`/CategoryDetail/${row.cat_id}`} className="text-blue-500 hover:underline">
                                             View
                                         </Link>
                                     </td>
