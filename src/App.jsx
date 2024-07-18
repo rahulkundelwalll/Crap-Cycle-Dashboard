@@ -25,7 +25,7 @@ import RequirementDetail from './pages/requirements/RequirementDetail'
 import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
 import OrderManagement from './pages/OrderMangement';
-
+import SupplyTable from './pages/Supplytable';
 
 function App() {
  
@@ -57,6 +57,7 @@ function App() {
       <Route path='/login' element={<LoginPage/>}></Route>
       <Route path='/editRequirement' element={<EditRequirement/>}></Route>
       <Route path='/ordermanagement' element={<OrderManagement/>}></Route>
+      <Route path='/supplytable' element={<SupplyTable/>}></Route>
       
       
     </Routes>

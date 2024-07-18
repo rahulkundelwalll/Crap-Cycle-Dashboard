@@ -132,7 +132,7 @@ export default function OrderManagement() {
                                     <td className="py-2 px-4">{row.no_of_bids}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate('/OrderDetail')}>
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate('/supplytable')}>
                                             View
                                         </button>
                                     </td>
