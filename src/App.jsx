@@ -55,7 +55,7 @@ function App() {
       <Route path='/addrequrement' element = {<AddRequirement/>}/>
       <Route path='/requirement-detail/:id' element = {<RequirementDetail/>}/>
       <Route path='/login' element={<LoginPage/>}></Route>
-      <Route path='/editRequirement' element={<EditRequirement/>}></Route>
+      <Route path='/editRequirement/:id' element={<EditRequirement/>}></Route>
       <Route path='/ordermanagement' element={<OrderManagement/>}></Route>
       <Route path='/supplytable' element={<SupplyTable/>}></Route>
       

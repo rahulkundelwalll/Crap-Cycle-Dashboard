@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddRequirement() {
     const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function AddRequirement() {
     const [buyers, setBuyers] = useState([]);
     const [dropingAdd,setDropingAdd]= useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -102,15 +103,45 @@ export default function AddRequirement() {
         }
     };
 
-    const handleClick = (event) => {
+    const handleClick = async (event) => {
         event.preventDefault();
-        console.log(formData);
+        
+        const data = {
+            req_quantity: formData.quantity,
+            req_price: formData.price,
+            req_status: "pending",
+            req_note: formData.note,
+            b_id: formData.buyer.b_id,
+            b_name: formData.buyer.b_id,
+            b_add: formData.buyer.b_address,
+            b_drop_add: formData.address,
+            b_mobile: formData.buyer.b_mobile,  // Corrected typo
+            list_cat_id: formData.category.cat_id,
+            cat_name: formData.category.cat_name,
+            cat_image: formData.category.cat_image
+        };
+    
+        // Debug: Check the contents of the data object
+        console.log(data);
+    
+        try {
+            const response = await axios.post('/api/requirement/add-requirement', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            // console.log(response.data);
+            navigate('/requirementstatus')
+        } catch (error) {
+            console.error('Error adding requirement:', error);
+        }
     };
-
+    
+    
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
-
+    
     return (
         <Sidebar page={"Requirement Adding"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
@@ -137,7 +168,7 @@ export default function AddRequirement() {
                     <input
                         type="text"
                         name='categoryName'
-                        value={formData.category.cat_name || ''}
+                        value={formData.category.cat_id || ''}
                         placeholder='Category Name'
                         readOnly
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'

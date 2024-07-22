@@ -1,114 +1,288 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-import userImage from '../.././assets/user.webp';
-import { useNavigate } from "react-router-dom";
+import userImage from '../../assets/user.webp';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function VendorProfile() {
+export default function AddRequirement() {
+    const Id = useParams().id;
+    const [formData, setFormData] = useState({
+        category: {},
+        quantity: "",
+        requirementId: "",
+        price: "",
+        amount: "",
+        note: "",
+        buyer: {},
+        address: ""
+    });
+    const [categories, setCategories] = useState([]);
+    const [buyers, setBuyers] = useState([]);
+    const [dropingAdd, setDropingAdd] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
-    // Example data
-    const categoryName = 'Aluminium Sheets';
-    const categoryId = 'AL59934';
-    const quantity = '200 kg';
-    const requirementId = 'jfjrfir';
-    const price = '6';
-    const amount = ''; // You can update this with the actual amount
-    const date = '12-12-2024';
-    const note = 'Sorted and thin sheets of aluminium are accepted';
-    const buyerName = 'BGI India Pvt. Ltd.';
-    const buyerPhoneNo = '+91-7942498211';
-    const buyerAddress = 'B-984, Okhala Phase 2, N.D-110023';
-    const orderDropLocation = 'B-984, Okhala Phase 2, N.D-110023';
+
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/requirement/requirement-detail/${Id}`);
+                setFormData({
+                    category: {
+                        cat_id: res.data.results[0].list_cat_id,
+                        cat_image: res.data.results[0].cat_image,
+                        cat_name: res.data.results[0].cat_name,
+
+                    },
+                    buyer:{
+                        b_id: res.data.results[0].b_id,
+                        b_moile: res.data.results[0].b_moile,
+                        b_drop_add: res.data.results[0].b_drop_add,
+                        b_name: res.data.results[0].b_name,
+                        b_add: res.data.results[0].b_add,
+                    },
+                    quantity:res.data.results[0].req_quantity,
+                    price:res.data.results[0].req_price,
+                    address:res.data.results[0].b_drop_add,
+                    note:res.data.results[0].req_note,
+                });
+                console.log(res.data.results[0])
+            } catch (err) {
+                console.log(err);
+            }
+
+        }
+        fetchData();
+    }, [])
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get('/api/category/categories');
+                setCategories(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const fetchBuyers = async () => {
+            try {
+                const res = await axios.get('/api/buyer/allbuyer');
+                setBuyers(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchBuyers();
+    }, []);
+
+    useEffect(() => {
+        if (formData.buyer.b_id) {
+            const deliveryAdd = async () => {
+                try {
+                    const res = await axios.get(`/api/buyer/getbuyer/${formData.buyer.b_id}`);
+                    setDropingAdd(res.data.dropingaddress)
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+            deliveryAdd()
+        }
+    }, [formData.buyer]);
+
+    useEffect(() => {
+        if (formData.quantity && formData.price) {
+            const amount = parseFloat(formData.quantity) * parseFloat(formData.price);
+            setFormData(prev => ({ ...prev, amount: amount.toFixed(2) }));
+        }
+    }, [formData.quantity, formData.price]);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        if (name === 'buyer') {
+            const buyer = JSON.parse(value);
+            setFormData((prev) => ({
+                ...prev,
+                buyer: buyer,
+                address: buyer.b_address
+            }));
+        } else if (name === 'category') {
+            setFormData((prev) => ({
+                ...prev,
+                category: JSON.parse(value)
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value
+            }));
+        }
+    };
+
+    const handleFileChange = (event) => {
+        const { name, files } = event.target;
+        if (files.length > 0) {
+            const file = files[0];
+            setFormData((prev) => ({
+                ...prev,
+                [name]: file,
+                imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview
+            }));
+        }
+    };
+
+    const handleClick = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            req_quantity: formData.quantity,
+            req_price: formData.price,
+            req_status: "pending",
+            req_note: formData.note,
+            b_id: formData.buyer.b_id,
+            b_name: formData.buyer.b_id,
+            b_add: formData.buyer.b_address,
+            b_drop_add: formData.address,
+            b_mobile: formData.buyer.b_mobile,  // Corrected typo
+            list_cat_id: formData.category.cat_id,
+            cat_name: formData.category.cat_name,
+            cat_image: formData.category.cat_image
+        };
+
+        // Debug: Check the contents of the data object
+        console.log(data);
+
+        try {
+            const response = await axios.put(`/api/requirement/edit/${Id}`, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            // console.log(response.data);
+            navigate('/requirementstatus')
+        } catch (error) {
+            console.error('Error adding requirement:', error);
+        }
+    };
+
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
 
     return (
-        <Sidebar page={'Requirement'}>
-            <div className='flex justify-end text-xl font-bold mt-5'>
-                <button onClick={(event) => navigate('/addvendor')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
-                    + Add Requirement
-                </button>
-            </div>
-            <div className='flex justify-center text-3xl font-bold mt-5 ms-10'>
-                <span className="text-gray-400">Edit Page</span>
-            </div>
-            <div className='flex flex-col items-center h-5/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl'>
-                <img src={userImage} className='h-24  bg-cover mt-10 rounded-full' alt="User" />
-                <div className='mt-10 w-full'>
-                    <table className="table-auto border-collapse border border-white-400 w-full">
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Category Name:</td>
-                                <td className="border px-4 py-2">{categoryName}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Category ID:</td>
-                                <td className="border px-4 py-2">{categoryId}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Quantity:</td>
-                                <td className="border px-4 py-2">{quantity}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Requirement ID:</td>
-                                <td className="border px-4 py-2">{requirementId}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Price:</td>
-                                <td className="border px-4 py-2">{price}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Amount:</td>
-                                <td className="border px-4 py-2">{amount}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Date:</td>
-                                <td className="border px-4 py-2">{date}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Note:</td>
-                                <td className="border px-4 py-2">{note}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Buyer’s Name:</td>
-                                <td className="border px-4 py-2">{buyerName}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Buyer’s Phone No.:</td>
-                                <td className="border px-4 py-2">{buyerPhoneNo}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Buyer’s Address:</td>
-                                <td className="border px-4 py-2">{buyerAddress}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Order Drop Location:</td>
-                                <td className="border px-4 py-2">{orderDropLocation}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <Sidebar page={"Requirement Adding"}>
+            <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
+                <div className='flex flex-col items-center mb-10'>
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="User" />
+                    <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
+                        Upload Image
+                    </label>
+                    <input type="file" id="imageFile" name="imageFile" accept="image/*" onChange={handleFileChange} className='hidden' />
                 </div>
-                <div className='my-auto '>
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+
+                <form className='flex flex-col items-center w-full'>
+                    <select
+                        name='category'
+                        value={JSON.stringify(formData.category)}
+                        onChange={handleChange}
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        Edit
-                    </button>
-                    <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        <option value="" disabled>Select Category</option>
+                        {categories.map((category, index) => (
+                            <option key={index} value={JSON.stringify(category)}>{category.cat_name}</option>
+                        ))}
+                    </select>
+                    <input
+                        type="text"
+                        name='categoryName'
+                        value={formData.category.cat_id || ''}
+                        placeholder='Category Name'
+                        readOnly
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    />
+                    <input
+                        type="text"
+                        name='quantity'
+                        value={formData.quantity}
+                        onChange={handleChange}
+                        placeholder='Quantity'
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    />
+                    <input
+                        type="text"
+                        name='price'
+                        value={formData.price}
+                        onChange={handleChange}
+                        placeholder='Price'
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    />
+                    <input
+                        type="text"
+                        name='amount'
+                        value={formData.amount}
+                        placeholder='Amount'
+                        readOnly
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    />
+                    <input
+                        type="text"
+                        name='note'
+                        value={formData.note}
+                        onChange={handleChange}
+                        placeholder='Note'
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-red-500'
+                    />
+                    <select
+                        name='buyer'
+                        value={JSON.stringify(formData.buyer)}
+                        onChange={handleChange}
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        Cancel
-                    </button>
-                    <button
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        <option value="" disabled>Select Buyer</option>
+                        {buyers.map((buyer, index) => (
+                            <option key={index} value={JSON.stringify(buyer)}>{buyer.b_name}</option>
+                        ))}
+                    </select>
+                    <select
+                        name='address'
+                        value={formData.address}
+                        onChange={handleChange}
+                        className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        Order Complete
-                    </button>
-                    <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
-                    >
-                        Order Cancelled
-                    </button>
-                </div>
+                        <option value="" disabled>Select Buyer</option>
+                        {dropingAdd.map((add, index) => (
+                            <option key={index} value={add.dropingAddress}>{add.dropingAddress}</option>
+                        ))}
+                    </select>
+
+                    <div className='flex items-center'>
+                        <button
+                            onClick={handleClick}
+                            className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'
+                        >
+                            Save
+                        </button>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
+            {isModalOpen && (
+                <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
+                    <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5'>
+                        <div className='flex justify-between items-center mb-4'>
+                            <h2 className='text-xl font-bold'>Uploaded Document</h2>
+                            <button onClick={toggleModal} className='text-red-500 text-xl'>&times;</button>
+                        </div>
+                        <iframe src={formData.pdfFileUrl} className='w-full h-full border'></iframe>
+                    </div>
+                </div>
+            )}
         </Sidebar>
     );
 }
