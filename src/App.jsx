@@ -38,7 +38,7 @@ function App() {
       <Routes>
         {/* dashboard */}
         <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
-        <Route path='/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
+        <Route path='/dashboard/vendor/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
         <Route path='/buyerprofile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
         <Route path='/addvendor' element={<ProtectedRoute><AddVendor /></ProtectedRoute>} />
         <Route path='/editbuyer/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />

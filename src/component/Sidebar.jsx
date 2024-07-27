@@ -63,7 +63,7 @@ export default function Sidebar({ children, page }) {
                                     <span className="text-2xl">User Management</span>
                                 </div>
                                 <ul className={expandUserManagement ? 'text-white flex flex-col justify-center ms-10 text-xl' : 'hidden'}>
-                                    <Link to='/vendors'><li className='hover:text-black'>&#x2022;Vendors</li></Link>
+                                    <Link to='/dashboard/vendor/vendors'><li className='hover:text-black'>&#x2022;Vendors</li></Link>
                                     <Link to='/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
                                     <Link to='/deliveryagent'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
