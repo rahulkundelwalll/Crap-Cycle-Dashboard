@@ -15,7 +15,7 @@ export default function VendorProfile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/vendor/vender-detail/${id}`);
+                const res = await axios.get(`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
                 setCategories(res.data.category);
             } catch (err) {
@@ -29,7 +29,7 @@ export default function VendorProfile() {
         try {
             // Perform deletion logic here (e.g., call API to delete vendor)
             // Assuming successful deletion, navigate to '/vendors'
-            const res = await axios.delete(`http://localhost:3000/api/vendor/delete-vendor/${id}`)
+            const res = await axios.delete(`/api/vendor/delete-vendor/${id}`)
 
             navigate('/vendors'); // Navigate to vendors list after deletion
         } catch (err) {

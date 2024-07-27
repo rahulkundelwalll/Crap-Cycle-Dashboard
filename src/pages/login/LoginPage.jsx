@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
 
 export default function LoginPage() {
     const [credentials, setCredentials] = useState({
-        username: "",
+        email: "",
         password: ""
     });
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useContext(AuthContext);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -17,12 +20,15 @@ export default function LoginPage() {
         }));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Handle login logic here, e.g., authenticate with backend
-        console.log(credentials);
-        // On successful login, redirect to the homepage or dashboard
-        navigate('/'); // Change this path to the desired destination after login
+        const response = await login(credentials.email, credentials.password);
+        if (response.status === 200) {
+            const redirectTo = location.state?.from || '/';
+            navigate(redirectTo);
+        } else {
+            alert(response.data.message);
+        }
     };
 
     return (
@@ -32,10 +38,10 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit} className='flex flex-col items-center w-full'>
                     <input
                         type="text"
-                        name='username'
-                        value={credentials.username}
+                        name='email'
+                        value={credentials.email}
                         onChange={handleChange}
-                        placeholder='Username'
+                        placeholder='email'
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input

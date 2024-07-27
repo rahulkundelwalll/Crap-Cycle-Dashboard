@@ -1,13 +1,16 @@
 import React from 'react'
-import Sidebar from './component/Sidebar'
-import Vendor from './pages/Vendors';
-import { Route,Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+
+// Dashboard
 import DashBoard from './pages/DashBoard';
-import BuyerProfile from './pages/BuyerProfile';
+
+// Vendor 
+import Vendor from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
 import VendorProfile from './pages/VendorProfile';
 import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
+import BuyerProfile from './pages/BuyerProfile';
 import EditBuyer from './pages/EditBuyer';
 import DeliveryAgent from './pages/DeliveryAgent'
 import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
@@ -26,43 +29,44 @@ import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
 import OrderManagement from './pages/OrderMangement';
 import SupplyTable from './pages/Supplytable';
-
+import ProtectedRoute from './protected/ProtectedRoute';
 function App() {
- 
+
 
   return (
     <>
-    <Routes>
-      <Route path='/vendors' element={<Vendor/>} />
-      <Route path='/' element={<DashBoard/>} />
-      <Route path='/buyerprofile/:id' element={<BuyerProfile/>} />
-      <Route path='/addvendor' element={<AddVendor/>} />
-      <Route path='/editbuyer/:id' element={<EditBuyer/>} />
-      <Route path='/vendorprofile/:id' element={<VendorProfile/>} />
-      <Route path='/buyers' element={<Buyers/>} />
-      <Route path='/addbuyer' element={<AddBuyer/>} />
-      <Route path='/deliveryagent' element={<DeliveryAgent/>} />
-      <Route path='/Agentprofile/:id' element={<DeliveryAgentProfile/>} />
-      <Route path='/addAgent' element={<AddDeliveryAgent/>} />
-      <Route path='/editagent/:id' element={<EditDeliveryAgent/>} />
-      <Route path='/category' element={<CategoryManagement/>} />
-      <Route path='/addcategory' element={<AddCategory/>} />
-      <Route path='/editcategory/:id' element={<Editcategory/>} />
-      <Route path='/CategoryDetail/:id'  element={<CategoryDetail cat=''/>} />
-      <Route path='/addsubcat' element={<AddSubCat/>} />
-      <Route path='/subcat' element={<SubCategory/>} />
-      <Route path='/requirementstatus' element = {<RequiremenStatus/>}/>
-      <Route path='/addrequrement' element = {<AddRequirement/>}/>
-      <Route path='/requirement-detail/:id' element = {<RequirementDetail/>}/>
-      <Route path='/login' element={<LoginPage/>}></Route>
-      <Route path='/editRequirement/:id' element={<EditRequirement/>}></Route>
-      <Route path='/ordermanagement' element={<OrderManagement/>}></Route>
-      <Route path='/supplytable' element={<SupplyTable/>}></Route>
-      
-      
-    </Routes>
+      <Routes>
+        {/* dashboard */}
+        <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
+        <Route path='/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
+        <Route path='/buyerprofile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
+        <Route path='/addvendor' element={<ProtectedRoute><AddVendor /></ProtectedRoute>} />
+        <Route path='/editbuyer/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
+        <Route path='/vendorprofile/:id' element={<ProtectedRoute><VendorProfile /></ProtectedRoute>} />
+        <Route path='/buyers' element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
+        <Route path='/addbuyer' element={<ProtectedRoute><AddBuyer /></ProtectedRoute>} />
+        <Route path='/deliveryagent' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
+        <Route path='/Agentprofile/:id' element={<ProtectedRoute><DeliveryAgentProfile /></ProtectedRoute>} />
+        <Route path='/addAgent' element={<ProtectedRoute><AddDeliveryAgent /></ProtectedRoute>} />
+        <Route path='/editagent/:id' element={<ProtectedRoute><EditDeliveryAgent /></ProtectedRoute>} />
+        <Route path='/category' element={<ProtectedRoute><CategoryManagement /></ProtectedRoute>} />
+        <Route path='/addcategory' element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
+        <Route path='/editcategory/:id' element={<ProtectedRoute><Editcategory /></ProtectedRoute>} />
+        <Route path='/CategoryDetail/:id' element={<ProtectedRoute><CategoryDetail cat='' /></ProtectedRoute>} />
+        <Route path='/addsubcat' element={<ProtectedRoute><AddSubCat /></ProtectedRoute>} />
+        <Route path='/subcat' element={<ProtectedRoute><SubCategory /></ProtectedRoute>} />
+        <Route path='/requirementstatus' element={<ProtectedRoute><RequiremenStatus /></ProtectedRoute>} />
+        <Route path='/addrequrement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />
+        <Route path='/requirement-detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
+        <Route path='/login' element={<ProtectedRoute><LoginPage /></ProtectedRoute>}></Route>
+        <Route path='/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
+        <Route path='/ordermanagement' element={<ProtectedRoute><OrderManagement /></ProtectedRoute>}></Route>
+        <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
+
+
+      </Routes>
       {/* <Sidebar/> */}
-      
+
     </>
   )
 }
