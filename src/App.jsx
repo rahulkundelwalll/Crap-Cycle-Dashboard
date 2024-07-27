@@ -58,7 +58,7 @@ function App() {
         <Route path='/requirementstatus' element={<ProtectedRoute><RequiremenStatus /></ProtectedRoute>} />
         <Route path='/addrequrement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />
         <Route path='/requirement-detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
-        <Route path='/login' element={<ProtectedRoute><LoginPage /></ProtectedRoute>}></Route>
+        <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
         <Route path='/ordermanagement' element={<ProtectedRoute><OrderManagement /></ProtectedRoute>}></Route>
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
