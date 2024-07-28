@@ -11,6 +11,7 @@ import AddVendor from './pages/AddVendor';
 import VendorProfile from './pages/VendorProfile';
 import EditVendor from './pages/EditVendor';
 
+// Buyer
 import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
 import BuyerProfile from './pages/BuyerProfile';
@@ -50,12 +51,14 @@ function App() {
         <Route path='/dashboard/vendor/edit/:id' element={<ProtectedRoute><EditVendor /></ProtectedRoute>} />
 
 
-
-        <Route path='/buyerprofile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
-        <Route path='/editbuyer/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
+        {/* Buyer */}
+        <Route path='/dashboard/buyer/add' element={<ProtectedRoute><AddBuyer /></ProtectedRoute>} />
+        <Route path='/dashboard/buyer/buyers' element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
+        <Route path='/dashboard/buyer/profile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
+        <Route path='/dashboard/buyer/edit/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
         
-        <Route path='/buyers' element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
-        <Route path='/addbuyer' element={<ProtectedRoute><AddBuyer /></ProtectedRoute>} />
+        
+        
         <Route path='/deliveryagent' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
         <Route path='/Agentprofile/:id' element={<ProtectedRoute><DeliveryAgentProfile /></ProtectedRoute>} />
         <Route path='/addAgent' element={<ProtectedRoute><AddDeliveryAgent /></ProtectedRoute>} />

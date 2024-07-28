@@ -30,7 +30,7 @@ export default function VendorProfile() {
             }
         };
         fetchData();
-    }, [id]); // Added id to dependency array to fetch data when id changes
+    }, [id]); // Added id to dependency array to fetch data when id change
 
     const confirmDelete = async () => {
         try {
@@ -39,7 +39,7 @@ export default function VendorProfile() {
             toast.warn("Vender deleted !");
         } catch (err) {
             console.error('Error deleting vendor:', err);
-            toast.error("Error in Deleting vendor !"); 
+            toast.error("Error in Deleting vendor !");
         }
     };
 
@@ -129,7 +129,7 @@ export default function VendorProfile() {
                     >
                         Back
                     </button>
-                    {data.v_document &&<button
+                    {data.v_document && <button
                         onClick={togglePdfModal}
                         className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32' // Set the same width
                     >

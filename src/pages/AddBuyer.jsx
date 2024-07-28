@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 export default function AddBuyer() {
     const [formData, setFormData] = useState({
         personName: "",
@@ -21,12 +26,10 @@ export default function AddBuyer() {
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [categoryOptions,setCategoryOptions] = useState([])
     const navigate = useNavigate();
 
-    const categoryOptions = [
-        { cat_id: 1, name: "steel" },
-        { cat_id: 2, name: "plastic" }
-    ];
+    
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -73,26 +76,25 @@ export default function AddBuyer() {
         formDataToSend.append('address', formData.address);
         formDataToSend.append('category', JSON.stringify(formData.categories.map(cat => cat.cat_id)));
         formDataToSend.append('dropingaddress', JSON.stringify(formData.dropingLocations));
-        formDataToSend.append('imageFile', formData.imageFile);
-        formDataToSend.append('pdfFile', formData.pdfFile);
+        if (formData.imageFile) {
+            formDataToSend.append('imageFile', formData.imageFile);
+        }
+        if (formData.pdfFile) {
+            formDataToSend.append('pdfFile', formData.pdfFile);
+        }
 
         try {
-            const response = await fetch('http://localhost:3000/api/buyer/addbuyer', {
-                method: 'POST',
-                body: formDataToSend
+            const response = await axios.post('/api/buyer/addbuyer', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
-            if (!response.ok) {
-                throw new Error('Error adding buyer');
-            }
-
-            const data = await response.json();
-            console.log('Response:', data);
-            navigate('/buyers')
-            // Optionally, you can handle success and redirect or show a success message
+            navigate('/dashboard/buyer/buyers');
+            toast.success('Buyer added!')
         } catch (error) {
-            console.error('Error:', error.message);
-            // Handle error state, show error message, etc.
+            toast.error(error.response.data.message)
+            console.error('Error:', error);
         }
     };
 
@@ -114,12 +116,24 @@ export default function AddBuyer() {
         }
     };
 
-    const removeDroppingLocation = (index) => {
+    const removeDroppingLocation = (event, index) => {
+        event.preventDefault();
         setFormData((prev) => ({
             ...prev,
             dropingLocations: prev.dropingLocations.filter((_, i) => i !== index)
         }));
     };
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/category/categories');
+                setCategoryOptions(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, []);
     return (
         <Sidebar page={"Buyers"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
@@ -146,7 +160,7 @@ export default function AddBuyer() {
                         value={formData.phoneNumber}
                         onChange={handleChange}
                         placeholder='Phone Number'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="email"
@@ -154,23 +168,16 @@ export default function AddBuyer() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder='Email Id'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <input
-                        type="text"
-                        name='password'
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder='password'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
+        
                     <input
                         type="text"
                         name='companyName'
                         value={formData.companyName}
                         onChange={handleChange}
                         placeholder='Company Name'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="text"
@@ -178,7 +185,7 @@ export default function AddBuyer() {
                         value={formData.address}
                         onChange={handleChange}
                         placeholder='Address'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <div className='flex w-3/4 mb-2'>
                         <input
@@ -197,9 +204,9 @@ export default function AddBuyer() {
                         {formData.dropingLocations.map((location, index) => (
                             <div key={index} className='flex justify-between items-center p-2 mb-2 border border-gray-300 rounded-3xl'>
                                 <span>{location}</span>
-                                <button onClick={() => removeDroppingLocation(index)} className='text-red-500'>
-                                    &times;
-                                </button>
+                                    <span type="button" onClick={(event) => removeDroppingLocation(event, index)} className='text-red-500  cursor-pointer'>
+                                        &times;
+                                    </span>
                             </div>
                         ))}
                     </div>
@@ -209,7 +216,7 @@ export default function AddBuyer() {
                         </button>
                         <div className='mt-2'>
                             {formData.categories.map((category) => (
-                                <span key={category.cat_id} className='inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2'>{category.name}</span>
+                                <span key={category.cat_id} className='inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2'>{category.cat_name}</span>
                             ))}
                         </div>
                     </div>
@@ -225,7 +232,8 @@ export default function AddBuyer() {
                         >
                             Submit
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate('/dashboard/buyer/buyers')}}>
                             Cancel
                         </button>
                     </div>
@@ -249,7 +257,7 @@ export default function AddBuyer() {
                     <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5 overflow-y-auto'>
                         <div className='flex justify-between items-center mb-4'>
                             <h2 className='text-xl font-bold'>Select Categories</h2>
-                            <button onClick={toggleCategoryModal} className='text-red-500 text-xl'>&times;</button>
+                            
                         </div>
                         {categoryOptions.map((category) => (
                             <div key={category.cat_id} className='flex items-center mb-2'>
@@ -262,9 +270,10 @@ export default function AddBuyer() {
                                     onChange={handleCategoryChange}
                                     className='mr-2'
                                 />
-                                <label htmlFor={`category-${category.cat_id}`}>{category.name}</label>
+                                <label htmlFor={`category-${category.cat_id}`}>{category.cat_name}</label>
                             </div>
                         ))}
+                        <button onClick={toggleCategoryModal} className='px-6 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition duration-300'>done</button>
                     </div>
                 </div>
             )}
