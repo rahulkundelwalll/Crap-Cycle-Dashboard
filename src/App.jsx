@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 
 // Dashboard
 import DashBoard from './pages/DashBoard';
-
+import Profile from './component/Profile';
 // Vendor 
 import Vendor from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
@@ -38,7 +38,7 @@ function App() {
       <Routes>
         {/* dashboard */}
         <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
-
+        <Route path='/dashboard/Profile' element={<div className="bg-gray-100 min-h-screen flex items-center justify-center"><ProtectedRoute ><Profile /></ProtectedRoute></div>}/>
 
         {/* Vendor */}
         <Route path='/dashboard/vendor/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />

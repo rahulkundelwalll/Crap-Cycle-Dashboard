@@ -3,6 +3,9 @@ import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function VendorProfile() {
     const { id } = useParams();
@@ -33,8 +36,10 @@ export default function VendorProfile() {
         try {
             const res = await axios.delete(`/api/vendor/delete-vendor/${id}`);
             navigate('/dashboard/vendor/vendors'); // Navigate to vendors list after deletion
+            toast.warn("Vender deleted !");
         } catch (err) {
             console.error('Error deleting vendor:', err);
+            toast.error("Error in Deleting vendor !"); 
         }
     };
 
@@ -119,17 +124,17 @@ export default function VendorProfile() {
                         Delete
                     </button>
                     <button
-                        onClick={() => { navigate('/dashboard/vendor/vendors') }}
+                        onClick={() => { navigate('/dashboard/vendor/vendors'); }}
                         className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`} // Set the same width
                     >
                         Back
                     </button>
-                    <button
+                    {data.v_document &&<button
                         onClick={togglePdfModal}
                         className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32' // Set the same width
                     >
                         View PDF
-                    </button>
+                    </button>}
 
                 </div>
             </div>

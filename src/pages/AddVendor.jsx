@@ -4,6 +4,10 @@ import userImage from '../assets/user.webp';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 export default function AddVendor() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -96,8 +100,10 @@ export default function AddVendor() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            toast.success("New Vendor added ! ")
             navigate('/dashboard/vendor/vendors');
         } catch (err) {
+            toast.error(err.response.data.message)
             console.error(err);
         }
     };

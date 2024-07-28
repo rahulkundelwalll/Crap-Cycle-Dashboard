@@ -1,6 +1,7 @@
 // src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 axios.defaults.withCredentials = true;
 const AuthContext = createContext();
@@ -8,9 +9,9 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is authenticated on initial load
     const checkAuth = async () => {
       try {
         const response = await axios.get('/api/Autharization/checkAuth');
@@ -23,6 +24,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
+
+    const interval = setInterval(checkAuth, 180000); // Check every minute
+    return () => clearInterval(interval);
   }, []);
 
   const login = async (email, password) => {
@@ -38,10 +42,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    
     try {
       await axios.post('/api/Autharization/logout');
       setAuth(null);
+      navigate('/login');
     } catch (error) {
       console.error('Logout failed', error);
     }

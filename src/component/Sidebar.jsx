@@ -125,7 +125,8 @@ export default function Sidebar({ children, page }) {
                             </button>
                         </div>
                         <div className='w-100 pt-2 ms-2 me-3 '>
-                            <FaUserCircle className='text-4xl ' />
+                            <Link to='/dashboard/Profile'>
+                            <FaUserCircle className='text-4xl ' /></Link>
                         </div>
                     </div>
                     <div className='flex items-center text-4xl font-bold mt-10 ms-5'>
