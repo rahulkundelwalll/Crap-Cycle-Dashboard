@@ -4,10 +4,13 @@ import { Route, Routes } from 'react-router-dom';
 // Dashboard
 import DashBoard from './pages/DashBoard';
 import Profile from './component/Profile';
+
 // Vendor 
 import Vendor from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
 import VendorProfile from './pages/VendorProfile';
+import EditVendor from './pages/EditVendor';
+
 import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
 import BuyerProfile from './pages/BuyerProfile';
@@ -44,6 +47,7 @@ function App() {
         <Route path='/dashboard/vendor/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
         <Route path='/dashboard/vendor/profile/:id' element={<ProtectedRoute><VendorProfile /></ProtectedRoute>} />
         <Route path='/dashboard/vendor/add' element={<ProtectedRoute><AddVendor /></ProtectedRoute>} />
+        <Route path='/dashboard/vendor/edit/:id' element={<ProtectedRoute><EditVendor /></ProtectedRoute>} />
 
 
 
