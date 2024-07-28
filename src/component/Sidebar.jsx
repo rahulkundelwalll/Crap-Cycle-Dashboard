@@ -8,6 +8,9 @@ import { IoExitSharp } from "react-icons/io5";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import AuthContext from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);

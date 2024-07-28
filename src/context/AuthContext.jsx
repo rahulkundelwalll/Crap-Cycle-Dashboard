@@ -2,6 +2,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 axios.defaults.withCredentials = true;
 const AuthContext = createContext();
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post('/api/Autharization/login', { email, password });
       if (response.status === 200) {
         setAuth(response.data);
+        toast("Welcome Pawan!")
       }
       return response;
     } catch (error) {
@@ -45,7 +48,9 @@ export const AuthProvider = ({ children }) => {
     try {
       await axios.post('/api/Autharization/logout');
       setAuth(null);
+      toast.success("Logout")
       navigate('/login');
+      
     } catch (error) {
       console.error('Logout failed', error);
     }

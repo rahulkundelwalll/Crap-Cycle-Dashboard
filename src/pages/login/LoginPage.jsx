@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
     const [credentials, setCredentials] = useState({
@@ -27,7 +29,7 @@ export default function LoginPage() {
             const redirectTo = location.state?.from || '/';
             navigate(redirectTo);
         } else {
-            alert(response.data.message);
+            toast.error(response.data.message);
         }
     };
 
