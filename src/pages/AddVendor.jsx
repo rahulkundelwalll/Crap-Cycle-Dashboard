@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
 export default function AddVendor() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         personName: "",
-        password: "ddf",
+        password: "",
         phoneNumber: "",
         email: "",
         companyName: "",
         address: "",
-        category: "",
+        category: [],
         pdfFile: null,
         imageFile: null,
         imagePreview: userImage,
@@ -20,8 +21,9 @@ export default function AddVendor() {
         pdfFileUrl: ""
     });
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const categories = ["steel", "plastic"]; // Dummy data
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -30,6 +32,18 @@ export default function AddVendor() {
             [name]: value
         }));
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/category/categories');
+                setCategories(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleFileChange = (event) => {
         const { name, files } = event.target;
@@ -45,6 +59,18 @@ export default function AddVendor() {
         }
     };
 
+    const handleCategoryChange = (categoryId) => {
+        setFormData((prev) => {
+            const updatedCategories = prev.category.includes(categoryId)
+                ? prev.category.filter((id) => id !== categoryId)
+                : [...prev.category, categoryId];
+            return {
+                ...prev,
+                category: updatedCategories
+            };
+        });
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -53,10 +79,10 @@ export default function AddVendor() {
         formDataToSend.append('password', formData.password);
         formDataToSend.append('phoneNumber', formData.phoneNumber);
         formDataToSend.append('email', formData.email);
-        formDataToSend.append('category', JSON.stringify([1]));
+        formDataToSend.append('category', JSON.stringify(formData.category));
         formDataToSend.append('companyName', formData.companyName);
         formDataToSend.append('address', formData.address);
-        
+
         if (formData.imageFile) {
             formDataToSend.append('imageFile', formData.imageFile);
         }
@@ -70,15 +96,18 @@ export default function AddVendor() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(res);
-            navigate('/vendors');
+            navigate('/dashboard/vendor/vendors');
         } catch (err) {
             console.error(err);
         }
     };
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
+    const toggleCategoryModal = () => {
+        setIsCategoryModalOpen(!isCategoryModalOpen);
+    };
+
+    const togglePdfModal = () => {
+        setIsPdfModalOpen(!isPdfModalOpen);
     };
 
     return (
@@ -99,7 +128,7 @@ export default function AddVendor() {
                         value={formData.personName}
                         onChange={handleChange}
                         placeholder='Person Name'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="tel"
@@ -107,7 +136,7 @@ export default function AddVendor() {
                         value={formData.phoneNumber}
                         onChange={handleChange}
                         placeholder='Phone Number'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="email"
@@ -115,7 +144,15 @@ export default function AddVendor() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder='Email Id'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    />
+                    <input
+                        type="text"
+                        name='password'
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder='password'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="text"
@@ -123,7 +160,7 @@ export default function AddVendor() {
                         value={formData.companyName}
                         onChange={handleChange}
                         placeholder='Company Name'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="text"
@@ -131,24 +168,29 @@ export default function AddVendor() {
                         value={formData.address}
                         onChange={handleChange}
                         placeholder='Address'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <select
-                        name='category'
-                        value={formData.category}
-                        onChange={handleChange}
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    >
-                        <option value="" disabled>Select Category</option>
-                        {categories.map((category, index) => (
-                            <option key={index} value={category}>{category}</option>
+                    <div className='mb-4 w-3/4 flex justify-between items-center'>
+                        <button
+                            type="button"
+                            onClick={toggleCategoryModal}
+                            className='px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'
+                        >
+                            Select Categories
+                        </button>
+                        <label htmlFor="pdfFile" className='px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
+                            Upload Document
+                        </label>
+                        <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" onChange={handleFileChange} className='hidden' />
+                    </div>
+                    <div className='mb-4 w-3/4 flex flex-wrap'>
+                        {formData.category.map((catId, index) => (
+                            <span key={index} className='mr-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full'>
+                                {categories.find(cat => cat.cat_id === catId)?.cat_name}
+                            </span>
                         ))}
-                    </select>
-                    <label htmlFor="pdfFile" className='mb-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
-                        Upload Document
-                    </label>
-                    <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" onChange={handleFileChange} className='hidden' />
-                    {formData.pdfFileName && <p className='mb-4 cursor-pointer text-blue-500' onClick={toggleModal}>Uploaded PDF: {formData.pdfFileName}</p>}
+                    </div>
+                    {formData.pdfFileName && <p className='mb-4 cursor-pointer text-blue-500' onClick={togglePdfModal}>Uploaded PDF: {formData.pdfFileName}</p>}
                     <div className='flex items-center'>
                         <button
                             type="submit"
@@ -156,18 +198,51 @@ export default function AddVendor() {
                         >
                             Submit
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate('/dashboard/vendor/vendors')}}>
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-            {isModalOpen && (
+            
+            {isCategoryModalOpen && (
+                <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
+                    <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5 overflow-auto'>
+                        <div className='flex justify-between items-center mb-4'>
+                            <h2 className='text-xl font-bold'>Select Categories</h2>
+                            <button onClick={toggleCategoryModal} className='text-red-500 text-xl'>&times;</button>
+                        </div>
+                        <div className='grid grid-cols-2 gap-4'>
+                            {categories.map((category) => (
+                                <div key={category.cat_id} className='flex items-center'>
+                                    <input
+                                        type="checkbox"
+                                        id={`category-${category.cat_id}`}
+                                        checked={formData.category.includes(category.cat_id)}
+                                        onChange={() => handleCategoryChange(category.cat_id)}
+                                    />
+                                    <label htmlFor={`category-${category.cat_id}`} className='ml-2'>{category.cat_name}</label>
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={toggleCategoryModal}
+                            className='mt-4 px-4 py-2 bg-blue-500 text-white rounded-3xl hover:bg-blue-700 transition duration-300'
+                        >
+                            Done
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {isPdfModalOpen && (
                 <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
                     <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5'>
                         <div className='flex justify-between items-center mb-4'>
                             <h2 className='text-xl font-bold'>Uploaded Document</h2>
-                            <button onClick={toggleModal} className='text-red-500 text-xl'>&times;</button>
+                            <button onClick={togglePdfModal} className='text-red-500 text-xl'>&times;</button>
                         </div>
                         <iframe src={formData.pdfFileUrl} className='w-full h-full border'></iframe>
                     </div>

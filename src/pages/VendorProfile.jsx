@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../component/Sidebar';
-
+import userImage from '../assets/user.webp';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,6 +11,9 @@ export default function VendorProfile() {
     const [data, setData] = useState({});
     const [categories, setCategories] = useState([]);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [vendroImage, setVendroImage] = useState('');
+    const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+    const [pdfUrl, setPdfUrl] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,6 +21,7 @@ export default function VendorProfile() {
                 const res = await axios.get(`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
                 setCategories(res.data.category);
+                setVendroImage(`/upload/${res.data.data.v_image}`)
             } catch (err) {
                 console.log(err);
             }
@@ -27,14 +31,10 @@ export default function VendorProfile() {
 
     const confirmDelete = async () => {
         try {
-            // Perform deletion logic here (e.g., call API to delete vendor)
-            // Assuming successful deletion, navigate to '/vendors'
-            const res = await axios.delete(`/api/vendor/delete-vendor/${id}`)
-
-            navigate('/vendors'); // Navigate to vendors list after deletion
+            const res = await axios.delete(`/api/vendor/delete-vendor/${id}`);
+            navigate('/dashboard/vendor/vendors'); // Navigate to vendors list after deletion
         } catch (err) {
             console.error('Error deleting vendor:', err);
-            // Handle error if deletion fails
         }
     };
 
@@ -42,10 +42,15 @@ export default function VendorProfile() {
         setShowConfirmDialog(false); // Close delete confirmation dialog
     };
 
+    const togglePdfModal = () => {
+        setPdfUrl(`/upload/${data.v_document}`); // Set the URL of the PDF to be displayed
+        setIsPdfModalOpen(!isPdfModalOpen); // Toggle the PDF modal
+    };
+
     return (
         <Sidebar page={'Vendors'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <button onClick={() => navigate('/addvendor')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                <button onClick={() => navigate('/dashboard/vendor/add')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Vendor
                 </button>
             </div>
@@ -53,7 +58,8 @@ export default function VendorProfile() {
                 <span className="text-gray-400">Profile</span>
             </div>
             <div className='flex flex-col items-center h-4/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl'>
-                <img src={`../../upload/${data.v_image}`} className='h-24 bg-cover mt-10 rounded-full' alt="User" />
+                <img src={data.v_image ? vendroImage : userImage} className='h-24 bg-cover mt-10 rounded-full' alt="User" />
+
                 <div className='mt-10 w-full'>
                     <table className="table-auto border-collapse border border-white-400 w-full">
                         <tbody>
@@ -78,6 +84,10 @@ export default function VendorProfile() {
                                 <td className="border px-4 py-2">{data.v_email}</td>
                             </tr>
                             <tr>
+                                <td className="border px-4 py-2 font-bold">Password:</td>
+                                <td className="border px-4 py-2">{data.v_password}</td>
+                            </tr>
+                            <tr>
                                 <td className="border px-4 py-2 font-bold">Company Name:</td>
                                 <td className="border px-4 py-2">{data.v_companyname}</td>
                             </tr>
@@ -97,24 +107,33 @@ export default function VendorProfile() {
                 </div>
                 <div className='my-auto '>
                     <button
-                        onClick={() => setShowConfirmDialog(true)}
-                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                    >
-                        Delete
-                    </button>
-                    <button
-                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        onClick={() => setIsEditing(true)}
+                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`} // Set a common width (e.g., w-32)
                     >
                         Edit
                     </button>
                     <button
-                        onClick={() => { navigate('/vendors') }}
-                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        onClick={() => setShowConfirmDialog(true)}
+                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`} // Set the same width
                     >
-                        Save
+                        Delete
                     </button>
+                    <button
+                        onClick={() => { navigate('/dashboard/vendor/vendors') }}
+                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`} // Set the same width
+                    >
+                        Back
+                    </button>
+                    <button
+                        onClick={togglePdfModal}
+                        className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32' // Set the same width
+                    >
+                        View PDF
+                    </button>
+
                 </div>
             </div>
+
             {/* Delete Confirmation Dialog */}
             {showConfirmDialog && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
@@ -157,6 +176,19 @@ export default function VendorProfile() {
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* PDF Modal */}
+            {isPdfModalOpen && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold">Uploaded Document</h2>
+                            <button onClick={togglePdfModal} className="text-red-500 text-xl">&times;</button>
+                        </div>
+                        <iframe src={pdfUrl} className='w-full h-full border'></iframe>
                     </div>
                 </div>
             )}

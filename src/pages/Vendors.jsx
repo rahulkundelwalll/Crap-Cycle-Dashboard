@@ -28,7 +28,7 @@ export default function Vendor() {
 
 
                 <div className='flex justify-end text-xl font-bold mt-5 '>
-                    <button className=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event)=>navigate('/addvendor')}>
+                    <button className=" bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event)=>navigate('/dashboard/vendor/add')}>
                         + Add Vendor
                     </button>
                 </div>
@@ -58,7 +58,7 @@ export default function Vendor() {
                                     <td className="py-2 px-4">{row.v_address}</td>
                                     <td className="py-2 px-4">
 
-                                        <Link to={`/vendorprofile/${row.v_id}`} className="text-blue-500 hover:underline" >
+                                        <Link to={`/dashboard/vendor/profile/${row.v_id}`} className="text-blue-500 hover:underline" >
                                             View
                                         </Link>
                                     </td>

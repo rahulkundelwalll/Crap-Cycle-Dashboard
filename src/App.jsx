@@ -38,11 +38,18 @@ function App() {
       <Routes>
         {/* dashboard */}
         <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
+
+
+        {/* Vendor */}
         <Route path='/dashboard/vendor/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
+        <Route path='/dashboard/vendor/profile/:id' element={<ProtectedRoute><VendorProfile /></ProtectedRoute>} />
+        <Route path='/dashboard/vendor/add' element={<ProtectedRoute><AddVendor /></ProtectedRoute>} />
+
+
+
         <Route path='/buyerprofile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
-        <Route path='/addvendor' element={<ProtectedRoute><AddVendor /></ProtectedRoute>} />
         <Route path='/editbuyer/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
-        <Route path='/vendorprofile/:id' element={<ProtectedRoute><VendorProfile /></ProtectedRoute>} />
+        
         <Route path='/buyers' element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
         <Route path='/addbuyer' element={<ProtectedRoute><AddBuyer /></ProtectedRoute>} />
         <Route path='/deliveryagent' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
