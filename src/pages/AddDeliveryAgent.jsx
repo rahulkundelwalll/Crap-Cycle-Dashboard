@@ -55,7 +55,7 @@ export default function AddVendor() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.post('http://localhost:3000/api/delivery/add-agent', data, {
+            const response = await axios.post('/api/delivery/add-agent', data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
