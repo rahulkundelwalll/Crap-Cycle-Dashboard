@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useParams} from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddVendor() {
     const navigate = useNavigate();
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         personName: "",
         password: "",
@@ -22,9 +23,10 @@ export default function AddVendor() {
         imageFile: null,
         imagePreview: userImage,
         pdfFileName: "",
+        imageName:"",
         pdfFileUrl: ""
     });
-
+    const [data, setData] = useState({});
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -36,7 +38,40 @@ export default function AddVendor() {
             [name]: value
         }));
     };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/vendor/vender-detail/${id}`);
+                setData(res.data.data);
+                // console.log(res.data.data)
+                // setCategories(res.data.category);
+                setFormData((prev)=>{
+                    return {
+                        ...prev,
+                        imagePreview:`/upload/${res.data.data.v_image}`,
+                        pdfFileUrl:`/upload/${res.data.data.v_document}`,
+                        pdfFileName:res.data.data.v_document,
+                        imageName:res.data.data.v_image,
+                        personName:res.data.data.v_name,
+                        phoneNumber:res.data.data.v_mobile,
+                        email:res.data.data.v_email,
+                        password:res.data.data.v_password,
+                        companyName:res.data.data.v_companyname,
+                        address:res.data.data.v_address,
+                        category:res.data.category.map(item => item.cat_id)
+    
 
+                        
+                    }
+                })
+
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, [id]);
+    // console.log(formData.category)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -58,6 +93,7 @@ export default function AddVendor() {
                 [name]: file,
                 imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview,
                 pdfFileName: name === 'pdfFile' ? file.name : prev.pdfFileName,
+                imageName:name === 'imageFile' ? file.name : prev.imageName,
                 pdfFileUrl: name === 'pdfFile' ? URL.createObjectURL(file) : prev.pdfFileUrl
             }));
         }
@@ -86,6 +122,8 @@ export default function AddVendor() {
         formDataToSend.append('category', JSON.stringify(formData.category));
         formDataToSend.append('companyName', formData.companyName);
         formDataToSend.append('address', formData.address);
+        formDataToSend.append('imageName', formData.imageName);
+        formDataToSend.append('pdfFileName', formData.pdfFileName);
 
         if (formData.imageFile) {
             formDataToSend.append('imageFile', formData.imageFile);
@@ -95,12 +133,12 @@ export default function AddVendor() {
         }
 
         try {
-            const res = await axios.post('/api/vendor/save-vendor', formDataToSend, {
+            const res = await axios.put(`/api/vendor/edit/${id}`, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            toast.success("New Vendor added ! ")
+            toast.success("Vendor detail updated! ")
             navigate('/dashboard/vendor/vendors');
         } catch (err) {
             toast.error(err.response.data.message)
@@ -120,7 +158,7 @@ export default function AddVendor() {
         <Sidebar page={"Vendor"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="User" />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imageName?formData.imagePreview:userImage} alt="User" />
                     <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Image
                     </label>
@@ -196,7 +234,7 @@ export default function AddVendor() {
                             </span>
                         ))}
                     </div>
-                    {formData.pdfFileName && <p className='mb-4 cursor-pointer text-blue-500' onClick={togglePdfModal}>Uploaded PDF: {formData.pdfFileName}</p>}
+                    {(data.v_document ||formData.pdfFileName )&&<p className='mb-4 cursor-pointer text-blue-500' onClick={togglePdfModal}>Uploaded PDF: {formData.pdfFileName}</p>}
                     <div className='flex items-center'>
                         <button
                             type="submit"

@@ -6,55 +6,69 @@ import { GiNotebook } from "react-icons/gi";
 import { DiCodepen } from "react-icons/di";
 import { IoExitSharp } from "react-icons/io5";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
-import { GoDotFill } from "react-icons/go";
 import { FaRegUserCircle } from "react-icons/fa";
-export default function Sidebar({ children ,page}) {
-    const [sideButton, setSideButton] = React.useState();
-    const [expandUserManagement, setExpandUserManagement] = React.useState(false);
+import AuthContext from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+
+export default function Sidebar({ children, page }) {
+    const [sideButton, setSideButton] = React.useState(false);
+    const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
+        const savedState = localStorage.getItem('expandUserManagement');
+        return savedState === 'true';
+    });
+    const { logout } = React.useContext(AuthContext);
 
     const toggleUserManagement = () => {
-        setExpandUserManagement(!expandUserManagement);
+        setExpandUserManagement(prev => {
+            const newState = !prev;
+            localStorage.setItem('expandUserManagement', newState);
+            return newState;
+        });
     }
+
     const sideButtonFunction = () => {
-        setSideButton((prev) => {
-            return !prev;
-        })
+        setSideButton(prev => !prev);
     }
 
+    React.useEffect(() => {
+        setSideButton(prev => prev);
+    }, [sideButton]);
 
-    React.useEffect(()=>{
-        setSideButton(prev=>prev)
-    },[sideButton])
+    const handleLogout = async () => {
+        const res = await logout();
+        if (res.status === 200) {
+            alert("logout successful");
+            navigate('/login');
+        } else {
+            alert(res.data.message);
+        }
+    }
 
     return (
         <>
             <div className='flex'>
-
-                <div className={` ps-10 bg-gradient-to-r from-customTeal  to-green-500 md:w-3/5 h-screen w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl  shadow-2xl ${sideButton == true ? 'hidden' : ""}`}>
+                <div className={`ps-10 bg-gradient-to-r from-customTeal to-green-500 md:w-3/5 h-screen w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl shadow-2xl ${sideButton ? 'hidden' : ""}`}>
                     <div className='box-border text-center '>
-                        <h2 className='box-border  font-bold text-start text-white text-3xl '>Welcome Back,</h2>
-                        <h1 className=' text-4xl font-bold text-start text-white'>Pawan Mishra!</h1>
+                        <h2 className='box-border font-bold text-start text-white text-3xl'>Welcome Back,</h2>
+                        <h1 className='text-4xl font-bold text-start text-white'>Pawan Mishra!</h1>
                     </div>
-                    <div className=' h-150'>
+                    <div className='h-150'>
                         <ul className='align flex flex-col space-y-4 '>
-                           <Link to='/'> <li className="flex items-center space-x-2 cursor-pointer text-white hover:text-black">
-                                <FaLaptopHouse className=" text-4xl  " />
-                                {/* <FontAwesomeIcon icon={faLaptop} /> */}
-                                <span className="  text-2xl">Dash Board</span>
+                            <Link to='/'><li className="flex items-center space-x-2 cursor-pointer text-white hover:text-black">
+                                <FaLaptopHouse className="text-4xl" />
+                                <span className="text-2xl">Dashboard</span>
                             </li></Link>
-                            <li className=" flexspace-x-2 cursor-pointer flex-col" >
+                            <li className="flexspace-x-2 cursor-pointer flex-col">
                                 <div className='flex text-white hover:text-black' onClick={toggleUserManagement}>
-                                    <FaUserCircle className=" text-4xl " />
+                                    <FaUserCircle className="text-4xl" />
                                     <span className="text-2xl">User Management</span>
                                 </div>
-
-                                <ul className={expandUserManagement == true ? `text-white flex flex-col justify-center ms-10 text-xl` : 'hidden'} >
-                                    <Link to='/vendors'>
-                                    <li className='hover:text-black'>&#x2022;Vendors</li></Link>
-                                    <Link to='/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
-                                    <Link to='/deliveryagent'>
-                                    <li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
+                                <ul className={expandUserManagement ? 'text-white flex flex-col justify-center ms-10 text-xl' : 'hidden'}>
+                                    <Link to='/dashboard/vendor/vendors'><li className='hover:text-black'>&#x2022;Vendors</li></Link>
+                                    <Link to='/dashboard/buyer/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
+                                    <Link to='/dashboard/delivery_agent/allgents'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
                             </li>
                             <Link to='/category'>
@@ -75,27 +89,24 @@ export default function Sidebar({ children ,page}) {
                                 <span className="  text-2xl">Add Requirement</span>
                             </li>
                             </Link>
+
                         </ul>
                     </div>
-                    <div className=" pb-10">
-                        <div className="flex items-center text-white hover:text-black space-x-2 cursor-pointer">
-                            <IoExitSharp className=" text-4xl " />
-                            <span className=" text-2xl  ">logout</span>
+                    <div className="pb-10">
+                        <div className="flex items-center text-white hover:text-black space-x-2 cursor-pointer" onClick={handleLogout}>
+                            <IoExitSharp className="text-4xl" />
+                            <span className="text-2xl">logout</span>
                         </div>
-
                     </div>
                 </div>
-                <div className={sideButton == true ? "flex justify-start items-center h-screen" : `self-center flex justify-center`}>
-
-                    <button className='text-4xl rounded-e-3xl h-40 bg-gradient-to-r from-customTeal to-green-500 shadow-left hover:text-white ' onClick={sideButtonFunction}>
-                        {sideButton == true ? <BsChevronCompactRight /> : <BsChevronCompactLeft />}
+                <div className={sideButton ? "flex justify-start items-center h-screen" : 'self-center flex justify-center'}>
+                    <button className='text-4xl rounded-e-3xl h-40 bg-gradient-to-r from-customTeal to-green-500 shadow-left hover:text-white' onClick={sideButtonFunction}>
+                        {sideButton ? <BsChevronCompactRight /> : <BsChevronCompactLeft />}
                     </button>
                 </div>
-                
                 <div className='w-full'>
-                    <div className='flex '>
-
-                        <div className="item pt-2 mr-0 relative mx-auto text-gray-600 ">
+                    <div className='flex'>
+                        <div className="item pt-2 mr-0 relative mx-auto text-gray-600">
                             <input
                                 className="border-2 border-black bg-white h-10 px-5 pr-16 rounded-3xl text-sm focus:outline-none"
                                 type="search"
@@ -124,13 +135,14 @@ export default function Sidebar({ children ,page}) {
                             </button>
                         </div>
                         <div className='w-100 pt-2 ms-2 me-3 '>
-                            <FaUserCircle className='text-4xl ' />
+                            <Link to='/dashboard/Profile'>
+                            <FaUserCircle className='text-4xl ' /></Link>
                         </div>
                     </div>
                     <div className='flex items-center text-4xl font-bold mt-10 ms-5'>
-                    <FaRegUserCircle style={{ color: 'green' }} className='text-4xl items-center mt-1 ' />
-                    <h1 style={{ color: 'green' }}>{page}</h1>
-                </div>
+                        <FaRegUserCircle style={{ color: 'green' }} className='text-4xl items-center mt-1 ' />
+                        <h1 style={{ color: 'green' }}>{page}</h1>
+                    </div>
                     {children}
                 </div>
             </div>

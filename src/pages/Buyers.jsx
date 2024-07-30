@@ -36,8 +36,8 @@ export default function Buyer() {
         <>
             <Sidebar page={'Buyers'}>
                 <div className='flex justify-end text-xl font-bold mt-5 '>
-                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/addBuyer')}>
-                        + Add Buyers
+                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/dashboard/buyer/add')}>
+                        + Add Buyer
                     </button>
                 </div>
                 <div className="mx-auto pt-10 container w-sreen ">
@@ -65,7 +65,7 @@ export default function Buyer() {
                                     <td className="py-2 px-4">{row.b_email}</td>
                                     <td className="py-2 px-4">{row.b_address}</td>
                                     <td className="py-2 px-4">
-                                        <Link to={`/Buyerprofile/${row.b_id}`} className="text-blue-500 hover:underline">
+                                        <Link to={`/dashboard/buyer/profile/${row.b_id}`} className="text-blue-500 hover:underline">
                                             View
                                         </Link>
                                     </td>

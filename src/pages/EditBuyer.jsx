@@ -3,7 +3,11 @@ import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
-export default function EditBuyer() {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+export default function AddBuyer() {
     const [formData, setFormData] = useState({
         personName: "",
         phoneNumber: "",
@@ -11,40 +15,66 @@ export default function EditBuyer() {
         password: "",
         companyName: "",
         address: "",
-        dropinglocation:"",
+        dropinglocation: "",
         dropingLocations: [],
         categories: [],
         pdfFile: null,
         imageFile: null,
-        
         imagePreview: userImage,
         pdfFileName: "",
+        imageName:"",
         pdfFileUrl: ""
     });
-    const [imageName,setImageName] = React.useState("1719566651772IMG_6161.jpg")
-    const [docName,setdocName] = React.useState("")
+    const { id } = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [categoryOptions,setCategoryOptions] = useState([])
     const navigate = useNavigate();
-    const {id} = useParams();
-    console.log(imageName)
 
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/buyer/getbuyer/${id}`);
+                // setData(res.data.data)
+                const fetchData = res.data.data;
+                // console.log(res.data);
+                setFormData((prev)=>{
+                    return {
+                        ...prev,
+                        personName: fetchData.b_name,
+                        phoneNumber: fetchData.b_mobile,
+                        email: fetchData.b_email,
+                        companyName: fetchData.b_company_name,
+                        address: fetchData.b_address,
+                        dropinglocation: "",
+                        dropingLocations: res.data.dropingaddress.map((item)=>item.dropingAddress),
+                        categories: res.data.category,
+                        pdfFile: null,
+                        imageFile: null,
+                        imagePreview: `/upload/${fetchData.b_image}`,
+                        imageName:fetchData.b_image,
+                        pdfFileName: fetchData.b_document,
+                        pdfFileUrl: `/upload/${fetchData.b_document}`
+                    }
+                })
 
-    
-
-    const categoryOptions = [
-        { cat_id: 1, name: "steel" },
-        { cat_id: 2, name: "plastic" }
-    ];
+                
+                
+                // console.log(buyerImage);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchData()
+    }, [id]);
 
     const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-        ...prev,
-        [name]: value
-    }));
-};
-
+        const { name, value } = event.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const handleFileChange = (event) => {
         const { name, files } = event.target;
@@ -55,6 +85,7 @@ export default function EditBuyer() {
                 [name]: file,
                 imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview,
                 pdfFileName: name === 'pdfFile' ? file.name : prev.pdfFileName,
+                imageName:name === 'imageFile' ? file.name : prev.imageName,
                 pdfFileUrl: name === 'pdfFile' ? URL.createObjectURL(file) : prev.pdfFileUrl
             }));
         }
@@ -71,32 +102,6 @@ export default function EditBuyer() {
         });
     };
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(`/api/buyer/getbuyer/${id}`);
-                const {b_password, b_name, b_mobile, b_email, b_company_name, b_address, b_image, b_document } = res.data.data;
-                const categories = res.data.category.map(cat => ({ cat_id: cat.cat_id, name: cat.name }));
-                const dropingAddresses = res.data.dropingaddress.map(addr => addr.dropingAddress);
-                setImageName(b_image)
-                setdocName(b_document)
-                setFormData({
-                    personName: b_name,
-                    phoneNumber: b_mobile,
-                    password:b_password,
-                    email: b_email,
-                    companyName: b_company_name,
-                    address: b_address,
-                    categories: categories,
-                    dropingLocations: dropingAddresses
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
-    }, []);
-    
     const handleClick = async (event) => {
         event.preventDefault();
 
@@ -109,26 +114,27 @@ export default function EditBuyer() {
         formDataToSend.append('address', formData.address);
         formDataToSend.append('category', JSON.stringify(formData.categories.map(cat => cat.cat_id)));
         formDataToSend.append('dropingaddress', JSON.stringify(formData.dropingLocations));
-        formDataToSend.append('imageFile', formData.imageFile);
-        formDataToSend.append('pdfFile', formData.pdfFile);
+        formDataToSend.append('imageName', formData.imageName);
+        formDataToSend.append('pdfFileName', formData.pdfFileName);
+        if (formData.imageFile) {
+            formDataToSend.append('imageFile', formData.imageFile);
+        }
+        if (formData.pdfFile) {
+            formDataToSend.append('pdfFile', formData.pdfFile);
+        }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/buyer/edit/${id}`, {
-                method: 'PUT',
-                body: formDataToSend
+            const response = await axios.put(`/api/buyer/edit/${id}`, formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
-            if (!response.ok) {
-                throw new Error('Error adding buyer');
-            }
-
-            const data = await response.json();
-            console.log('Response:', data);
-            navigate('/buyers')
-            // Optionally, you can handle success and redirect or show a success message
+            navigate('/dashboard/buyer/buyers');
+            toast.success('Buyer deatail updated!')
         } catch (error) {
-            console.error('Error:', error.message);
-            // Handle error state, show error message, etc.
+            toast.error(error.response.data.message)
+            console.error('Error:', error);
         }
     };
 
@@ -141,27 +147,39 @@ export default function EditBuyer() {
     };
 
     const addDroppingLocation = () => {
-    const trimmedLocation = formData.dropinglocation.trim();
-    if (trimmedLocation) {
-        setFormData((prev) => ({
-            ...prev,
-            dropingLocations: [...prev.dropingLocations, trimmedLocation],
-            dropinglocation: "" // Clear the input field after adding
-        }));
-    }
-};
+        if (formData.dropinglocation.trim()) {
+            setFormData((prev) => ({
+                ...prev,
+                dropingLocations: [...prev.dropingLocations, prev.dropinglocation],
+                dropinglocation: ""
+            }));
+        }
+    };
 
-    const removeDroppingLocation = (index) => {
+    const removeDroppingLocation = (event, index) => {
+        event.preventDefault();
         setFormData((prev) => ({
             ...prev,
             dropingLocations: prev.dropingLocations.filter((_, i) => i !== index)
         }));
     };
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/category/categories');
+                setCategoryOptions(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, []);
+    // console.log(formData.dropingLocations)
     return (
         <Sidebar page={"Buyers"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview?formData.imagePreview:`../../upload/${imageName}`} alt="User" />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imageName?formData.imagePreview:userImage} alt="User" />
                     <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Image
                     </label>
@@ -183,7 +201,7 @@ export default function EditBuyer() {
                         value={formData.phoneNumber}
                         onChange={handleChange}
                         placeholder='Phone Number'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="email"
@@ -191,23 +209,16 @@ export default function EditBuyer() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder='Email Id'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <input
-                        type="text"
-                        name='password'
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder='password'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
+        
                     <input
                         type="text"
                         name='companyName'
                         value={formData.companyName}
                         onChange={handleChange}
                         placeholder='Company Name'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <input
                         type="text"
@@ -215,7 +226,7 @@ export default function EditBuyer() {
                         value={formData.address}
                         onChange={handleChange}
                         placeholder='Address'
-                        className='placeholder:text-center mb-2 p-1  w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
                     <div className='flex w-3/4 mb-2'>
                         <input
@@ -234,9 +245,9 @@ export default function EditBuyer() {
                         {formData.dropingLocations.map((location, index) => (
                             <div key={index} className='flex justify-between items-center p-2 mb-2 border border-gray-300 rounded-3xl'>
                                 <span>{location}</span>
-                                <button onClick={() => removeDroppingLocation(index)} className='text-red-500'>
-                                    &times;
-                                </button>
+                                    <span type="button" onClick={(event) => removeDroppingLocation(event, index)} className='text-red-500  cursor-pointer'>
+                                        &times;
+                                    </span>
                             </div>
                         ))}
                     </div>
@@ -246,7 +257,7 @@ export default function EditBuyer() {
                         </button>
                         <div className='mt-2'>
                             {formData.categories.map((category) => (
-                                <span key={category.cat_id} className='inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2'>{category.name}</span>
+                                <span key={category.cat_id} className='inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2'>{category.cat_name}</span>
                             ))}
                         </div>
                     </div>
@@ -254,7 +265,7 @@ export default function EditBuyer() {
                         Upload Document
                     </label>
                     <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" onChange={handleFileChange} className='hidden' />
-                    {(formData.pdfFileName || docName )&& <p onClick={toggleModal} className='mb-4 cursor-pointer text-blue-500' >Uploaded PDF: {formData.pdfFileName?formData.pdfFileName:'file'}</p>}
+                    {(formData.pdfFileName ) && <p className='mb-4 cursor-pointer text-blue-500' onClick={toggleModal}>Uploaded PDF: {formData.pdfFileName}</p>}
                     <div className='flex items-center'>
                         <button
                             onClick={handleClick}
@@ -262,7 +273,8 @@ export default function EditBuyer() {
                         >
                             Submit
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate('/dashboard/buyer/buyers')}}>
                             Cancel
                         </button>
                     </div>
@@ -276,7 +288,7 @@ export default function EditBuyer() {
                             <h2 className='text-xl font-bold'>Uploaded Document</h2>
                             <button onClick={toggleModal} className='text-red-500 text-xl'>&times;</button>
                         </div>
-                        <iframe src={formData.pdfFileUrl?formData.pdfFileUrl:`../../upload/${docName}`} className='w-full h-full border'></iframe>
+                        <iframe src={formData.pdfFileUrl} className='w-full h-full border'></iframe>
                     </div>
                 </div>
             )}
@@ -286,7 +298,7 @@ export default function EditBuyer() {
                     <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5 overflow-y-auto'>
                         <div className='flex justify-between items-center mb-4'>
                             <h2 className='text-xl font-bold'>Select Categories</h2>
-                            <button onClick={toggleCategoryModal} className='text-red-500 text-xl'>&times;</button>
+                            
                         </div>
                         {categoryOptions.map((category) => (
                             <div key={category.cat_id} className='flex items-center mb-2'>
@@ -299,9 +311,10 @@ export default function EditBuyer() {
                                     onChange={handleCategoryChange}
                                     className='mr-2'
                                 />
-                                <label htmlFor={`category-${category.cat_id}`}>{category.name}</label>
+                                <label htmlFor={`category-${category.cat_id}`}>{category.cat_name}</label>
                             </div>
                         ))}
+                        <button onClick={toggleCategoryModal} className='px-6 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition duration-300'>done</button>
                     </div>
                 </div>
             )}

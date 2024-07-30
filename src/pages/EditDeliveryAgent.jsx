@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-import axios from 'axios'; 
-import { useNavigation,useParams } from 'react-router-dom';// Import axios for making HTTP requests
+import axios from 'axios'; // Import axios for making HTTP requests
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function AddVendor() {
-    const {id} = useParams();
-    const [data,setData] = React.useState({});
+export default function EditAgent() {
     const [formData, setFormData] = useState({
         personName: "",
         phoneNumber: "",
         email: "",
         companyName: "",
         address: "",
-        location:"",
+        location: "",
         pdfFile: null,
         imageFile: null,
         imagePreview: userImage,
         pdfFileName: "",
+        imageName: "",
         pdfFileUrl: ""
     });
+
+    const { id } = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    const navigate = useNavigate();
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
@@ -29,6 +32,35 @@ export default function AddVendor() {
             [name]: value
         }));
     };
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/api/delivery/agent-detail/${id}`)
+                const fetchData = res.data.data[0];
+                // console.log(fetchData)
+                setFormData((prev) => {
+                    return {
+                        ...prev,
+                        personName: fetchData.d_name,
+                        phoneNumber: fetchData.d_mobile,
+                        email: fetchData.d_email,
+                        companyName: fetchData.d_company_name,
+                        address: fetchData.d_address,
+                        location: fetchData.d_location,
+                        imagePreview: `/upload/${fetchData.d_image}`,
+                        imageName: fetchData.d_image,
+                        pdfFileName: fetchData.d_document,
+                        pdfFileUrl: `/upload/${fetchData.d_document}`
+                    }
+                })
+                // setAgentImage(`/upload/${res.data.data[0].d_image}`)
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchData();
+    }, [id])
 
     const handleFileChange = (event) => {
         const { name, files } = event.target;
@@ -39,42 +71,11 @@ export default function AddVendor() {
                 [name]: file,
                 imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview,
                 pdfFileName: name === 'pdfFile' ? file.name : prev.pdfFileName,
+                imageName: name === 'imageFile' ? file.name : prev.imageName,
                 pdfFileUrl: name === 'pdfFile' ? URL.createObjectURL(file) : prev.pdfFileUrl
             }));
         }
     };
-    console.log(data)
-    React.useEffect(()=>{
-        const fetchData = async ()=>{
-            try{
-                const res = await axios.get(`/api/delivery/agent-detail/${id}`)
-                setData(res.data.data[0])
-                setFormData((prev)=>{
-                    return {
-                        ...prev,
-                        personName: data.d_name,
-                        phoneNumber: data.d_mobile,
-                        email: data.d_email,
-                        companyName: data.d_company_name,
-                        address: data.d_addres,                        
-                        location:data.d_location,                        
-                        pdfFile: null,
-                        imageFile: null,
-                        imagePreview: userImage,
-                        pdfFileName: "",
-                        pdfFileUrl: ""
-                    }
-                    
-                })
-                
-            }catch(err){
-                console.log(err)
-            }
-        }
-        fetchData();
-    },[])
-
-
 
     const handleClick = async (event) => {
         event.preventDefault();
@@ -85,8 +86,14 @@ export default function AddVendor() {
         data.append('companyName', formData.companyName);
         data.append('address', formData.address);
         data.append('location', formData.location);
-        data.append('pdfFile', formData.pdfFile);
-        data.append('imageFile', formData.imageFile);
+        data.append('imageName', formData.imageName);
+        data.append('pdfFileName', formData.pdfFileName);
+        if (formData.pdfFile) {
+            data.append('pdfFile', formData.pdfFile);
+        }
+        if (formData.imageFile) {
+            data.append('imageFile', formData.imageFile);
+        }
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
@@ -95,13 +102,14 @@ export default function AddVendor() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data);
-            
+            // console.log(response.data);
+            toast.success("Delvery Agent Detail Updated!");
+            navigate('/dashboard/delivery_agent/allgents')
             // Handle successful response
-        } catch (error) {
-            console.error('Error adding delivery agent:', error);
+        } catch (err) {
+            console.error('Error adding delivery agent:', err);
+            toast.error(err.response.data.message)
             // Handle error response
-            
         }
     };
 
@@ -113,7 +121,7 @@ export default function AddVendor() {
         <Sidebar page={"Delivery Agent"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="User" />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imageName ? formData.imagePreview : userImage} alt="User" />
                     <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Image
                     </label>
@@ -169,7 +177,7 @@ export default function AddVendor() {
                         placeholder='Location'
                         className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    
+
                     <label htmlFor="pdfFile" className='mb-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Document
                     </label>
@@ -182,7 +190,7 @@ export default function AddVendor() {
                         >
                             Submit
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button onClick={() => { navigate('/dashboard/delivery_agent/allgents') }} className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
                             Cancel
                         </button>
                     </div>

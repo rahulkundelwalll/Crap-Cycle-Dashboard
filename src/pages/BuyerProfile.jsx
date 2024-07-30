@@ -4,6 +4,10 @@ import userImage from '.././assets/user.webp';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 const Modal = ({ isOpen, onClose, addresses }) => {
     if (!isOpen) return null;
 
@@ -34,6 +38,9 @@ export default function BuyerProfile() {
     const [categories, setCategories] = useState([]);
     const [dropingAdd, setDropingAdds] = useState([]);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [buyerImage, setBuyerImage] = useState('');
+    const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+    const [pdfUrl, setPdfUrl] = useState('');
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +49,8 @@ export default function BuyerProfile() {
                 setData(res.data.data)
                 setCategories(res.data.category)
                 setDropingAdds(res.data.dropingaddress)
-                console.log(res.data.category);
+                setBuyerImage(`/upload/${res.data.data.b_image}`)
+                console.log(buyerImage);
             } catch (error) {
                 console.log(error)
             }
@@ -53,16 +61,21 @@ export default function BuyerProfile() {
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/buyer/deletbuyer/${id}`);
-            navigate('/buyers');
+            toast.warn("Buyer deleted!")
+            navigate('/dashboard/buyer/buyers');
         } catch (error) {
             console.log(error);
         }
+    };
+    const togglePdfModal = () => {
+        setPdfUrl(`/upload/${data.b_document}`); // Set the URL of the PDF to be displayed
+        setIsPdfModalOpen(!isPdfModalOpen); // Toggle the PDF modal
     };
     
     return (
         <Sidebar page={'Buyers'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <Link to='/addbuyer' className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                <Link to='/dashboard/buyer/add' className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Buyer
                 </Link>
             </div>
@@ -70,17 +83,13 @@ export default function BuyerProfile() {
                 <span className="text-gray-400">Profile</span>
             </div>
             <div className='flex flex-col items-center h-4/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl'>
-                <img src={userImage} className='h-24  bg-cover mt-10 rounded-full' alt="User" />
+                <img src={data.b_image?buyerImage:userImage} className='h-24  bg-cover mt-10 rounded-full' alt="User" />
                 <div className='mt-10 w-full'>
                     <table className="table-auto border-collapse border border-white-400 w-full">
                         <tbody>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Contact Person:</td>
                                 <td className="border px-4 py-2">{data.b_name}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 font-bold">Password :</td>
-                                <td className="border px-4 py-2">{data.b_password}</td>
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Phone No.:</td>
@@ -126,23 +135,33 @@ export default function BuyerProfile() {
                     </table>
                 </div>
                 <div className='my-auto '>
-                    <button
-                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                        onClick={() => setIsDeleteConfirmOpen(true)}
-                    >
-                        Delete
-                    </button>
-                    <button
-                    onClick={()=>{navigate(`/editbuyer/${id}`)}}
-                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                    >
-                        Save
-                    </button>
+                <button
+    className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
+    onClick={() => setIsDeleteConfirmOpen(true)}
+>
+    Delete
+</button>
+<button
+    onClick={() => { navigate(`/dashboard/buyer/edit/${id}`) }}
+    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
+>
+    Edit
+</button>
+<button
+    className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
+    onClick={() => { navigate('/dashboard/buyer/buyers') }}
+>
+    Back
+</button>
+{data.b_document && (
+    <button
+        onClick={togglePdfModal}
+        className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32'
+    >
+        View PDF
+    </button>
+)}
+
                 </div>
             </div>
 
@@ -171,6 +190,18 @@ export default function BuyerProfile() {
                                 Cancel
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {/* PDF Modal */}
+            {isPdfModalOpen && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold">Uploaded Document</h2>
+                            <button onClick={togglePdfModal} className="text-red-500 text-xl">&times;</button>
+                        </div>
+                        <iframe src={pdfUrl} className='w-full h-full border'></iframe>
                     </div>
                 </div>
             )}
