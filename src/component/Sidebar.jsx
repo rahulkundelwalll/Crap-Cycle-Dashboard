@@ -71,18 +71,25 @@ export default function Sidebar({ children, page }) {
                                     <Link to='/dashboard/delivery_agent/allgents'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
                             </li>
-                            <Link to='/category'><li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-                                <BiSolidCategory className="text-4xl" />
-                                <span className="text-2xl">Category Management</span>
-                            </li></Link>
-                            <Link to='/ordermanagement'><li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-                                <DiCodepen className="text-4xl" />
-                                <span className="text-2xl">Order Management</span>
-                            </li></Link>
-                            <Link to='/addrequrement'><li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-                                <GiNotebook className="text-4xl" />
-                                <span className="text-2xl">Add Requirement</span>
-                            </li></Link>
+                            <Link to='/category'>
+                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                                <BiSolidCategory className=" text-4xl " />
+                                <span className="   text-2xl">Category Management</span>
+                            </li>
+                            </Link>
+                            <Link to='/requirementtable'>
+                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                                <DiCodepen className=" text-4xl" />
+                                <span className=" text-2xl">Order Management</span>
+                            </li>
+                            </Link>
+                            <Link to='/addrequrement'>
+                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                                <GiNotebook className="text-4xl " />
+                                <span className="  text-2xl">Add Requirement</span>
+                            </li>
+                            </Link>
+
                         </ul>
                     </div>
                     <div className="pb-10">

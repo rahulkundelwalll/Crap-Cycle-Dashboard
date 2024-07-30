@@ -31,14 +31,16 @@ import AddRequirement from './pages/requirements/AddRequirement';
 import RequirementDetail from './pages/requirements/RequirementDetail'
 import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
-import OrderManagement from './pages/OrderMangement';
+import Requirement_Table from './pages/Requirement_Table';
 import SupplyTable from './pages/Supplytable';
+import MainTable from './pages/MainTable';
 import ProtectedRoute from './protected/ProtectedRoute';
 function App() {
 
 
   return (
     <>
+
       <Routes>
         {/* dashboard */}
         <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
@@ -77,11 +79,13 @@ function App() {
         <Route path='/requirement-detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
-        <Route path='/ordermanagement' element={<ProtectedRoute><OrderManagement /></ProtectedRoute>}></Route>
+        <Route path='/requirementtable' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
+         <Route path='/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
 
 
       </Routes>
+
       {/* <Sidebar/> */}
 
     </>
