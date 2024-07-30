@@ -24,9 +24,9 @@ import AddRequirement from './pages/requirements/AddRequirement';
 import RequirementDetail from './pages/requirements/RequirementDetail'
 import LoginPage from './pages/login/LoginPage'
 import EditRequirement from './pages/requirements/EditRequirement'
-import OrderManagement from './pages/OrderMangement';
+import Requirement_Table from './pages/Requirement_Table';
 import SupplyTable from './pages/Supplytable';
-
+import MainTable from './pages/MainTable';
 function App() {
  
 
@@ -56,8 +56,9 @@ function App() {
       <Route path='/requirement-detail/:id' element = {<RequirementDetail/>}/>
       <Route path='/login' element={<LoginPage/>}></Route>
       <Route path='/editRequirement/:id' element={<EditRequirement/>}></Route>
-      <Route path='/ordermanagement' element={<OrderManagement/>}></Route>
+      <Route path='/requirementtable' element={<Requirement_Table/>}></Route>
       <Route path='/supplytable' element={<SupplyTable/>}></Route>
+      <Route path='/maintable' element={<MainTable/>}></Route>
       
       
     </Routes>

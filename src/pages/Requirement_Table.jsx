@@ -3,32 +3,45 @@ import Sidebar from '../component/Sidebar';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-
-const initialData = [
-    {
-        "s_no": 1,
-        "requirement_id": "RQ59934",
-        "category_name": "Aluminium Sheets",
-        "category_id": "AL59934",
-        "quantity": "200 kg",
-        "date": "12-12-2024",
-        "bided_quantity": 4000,
-        "no_of_bids": 8,
-        "status": "Pending"
-    }
-];
+import axios from 'axios';
 
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
-export default function OrderManagement() {
-    const [data, setData] = React.useState(initialData);
+export default function Requirement_Table() {
+    const [data, setData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
     const navigate = useNavigate();
 
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/requirement/all-requirement');
+
+                const fetchedData = res.data.results.map(item => ({
+                    s_no: item.req_id,
+                    requirement_id: `RQ${item.req_id}`,
+                    category_name: item.cat_name,
+                    category_id: `CAT${item.list_cat_id}`,
+                    quantity: `${item.req_quantity} kg`,
+                    date: new Date(item.create_at).toLocaleDateString(),
+                    bided_quantity:item.req_price,
+                    buyerid:item.b_id,
+                    status: item.req_status
+                }));
+         
+                setData(fetchedData);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
     };
@@ -58,7 +71,7 @@ export default function OrderManagement() {
 
     const handleSearchClick = () => {
         if (searchColumn) {
-            const filteredData = initialData.filter(item => 
+            const filteredData = data.filter(item => 
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
@@ -67,7 +80,27 @@ export default function OrderManagement() {
 
     return (
         <>
-            <Sidebar page={'Order Management'}>
+            <Sidebar page={'Requirement Table'}>
+                <div className='flex justify-around items-center mt-5'>
+                <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/requirementtable')}
+                    >
+                        Requirement Table
+                    </button>
+                    <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/supplytable')}
+                    >
+                        Supply Table
+                    </button>
+                    <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/maintable')}
+                    >
+                        Main Table
+                        </button>
+                </div>
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
@@ -113,8 +146,8 @@ export default function OrderManagement() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bided Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. of Bids</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RQ Rate</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -129,7 +162,7 @@ export default function OrderManagement() {
                                     <td className="py-2 px-4">{row.quantity}</td>
                                     <td className="py-2 px-4">{row.date}</td>
                                     <td className="py-2 px-4">{row.bided_quantity}</td>
-                                    <td className="py-2 px-4">{row.no_of_bids}</td>
+                                    <td className="py-2 px-4">{row.buyerid}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
                                         <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate('/supplytable')}>

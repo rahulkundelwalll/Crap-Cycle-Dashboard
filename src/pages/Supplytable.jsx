@@ -1,39 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from '../component/Sidebar';
 import { CiSearch } from "react-icons/ci";
-
-const initialData = [
-    {
-        "s_no": 1,
-        "vendor_name": "Crapcycle",
-        "vendor_ratings": 4.1,
-        "supply_quantity": "1000 kg",
-        "approve_quantity": "",
-        "supply_rate": 27,
-        "price_range": "",
-        "status": "Pending"
-    }
-];
+import { useNavigate } from "react-router-dom";
+import { FaBell } from "react-icons/fa";
+import axios from 'axios';
 
 const sortByOptions = ['vendor_ratings', 'supply_quantity', 'supply_rate', 'price_range'];
 const searchOptions = ['vendor_name'];
 
-const requirementDetails = {
-    requirement_id: "DL59923",
-    category_name: "Aluminium",
-    category_id: "DL59984",
-    requirement: "2000 kg",
-    pending_requirement: "1000 kg",
-    number_of_vendors: 4,
-    buying_price: "50rs"
-};
-
 export default function SupplyTable() {
-    const [data, setData] = React.useState(initialData);
+    const [data, setData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
+    const [notification, setNotification] = React.useState('');
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/supply/all-supply');
+                console.log(res.data.results);
+                const fetchedData = res.data.results.map(item => ({
+                    id: item.id,  // Add ID for each item
+                    vendor_name: item.v_name,
+                    supply_quantity: item.s_qty,
+                    supply_rate: item.s_price,
+                    status: item.s_status,
+                    approve_quantity: '',
+                    price_range: '',
+                    asked_price: '',
+                    asked_quantity: ''
+                }));
+                setData(fetchedData);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
@@ -64,7 +71,7 @@ export default function SupplyTable() {
 
     const handleSearchClick = () => {
         if (searchColumn) {
-            const filteredData = initialData.filter(item => 
+            const filteredData = data.filter(item =>
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
@@ -83,9 +90,65 @@ export default function SupplyTable() {
         setData(updatedData);
     };
 
+    const handleAskedPriceChange = (index, value) => {
+        const updatedData = [...data];
+        updatedData[index].asked_price = value;
+        setData(updatedData);
+    };
+
+    const handleAskedQuantityChange = (index, value) => {
+        const updatedData = [...data];
+        updatedData[index].asked_quantity = value;
+        setData(updatedData);
+    };
+
+    const handleBellClick = async (item) => {
+        const notificationData = {
+            s_id: item.id,
+            v_id: item.vendor_id,  // Make sure to include vendor_id in your data
+            asked_price: item.asked_price,
+            asked_quantity: item.asked_quantity,
+            prev_price: item.supply_rate,
+            prev_quantity: item.supply_quantity,
+            cat_id: item.cat_id,  // Make sure to include cat_id in your data
+            cat_name: item.cat_name  // Make sure to include cat_name in your data
+        };
+
+        try {
+            const res = await axios.post('/api/notification/new-notification', notificationData);
+            setNotification('Notification sent successfully!');
+            setTimeout(() => setNotification(''), 3000);
+        } catch (err) {
+            console.log(err);
+            setNotification('Failed to send notification.');
+            setTimeout(() => setNotification(''), 3000);
+     
+        }
+    };
+
     return (
         <>
             <Sidebar page={'Supply Table'}>
+                <div className='flex justify-around items-center mt-5'>
+                    <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/requirementtable')}
+                    >
+                        Requirement Table
+                    </button>
+                    <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/supplytable')}
+                    >
+                        Supply Table
+                    </button>
+                    <button
+                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
+                        onClick={() => navigate('/maintable')}
+                    >
+                        Main Table
+                    </button>
+                </div>
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
@@ -121,35 +184,23 @@ export default function SupplyTable() {
                     />
                     <CiSearch className='cursor-pointer hover:scale-125 text-2xl ease-in duration-300' onClick={handleSearchClick} />
                 </div>
-                <div className="mt-5 p-5 bg-white rounded-lg shadow-md">
-                    <div className="flex justify-between items-center mb-4">
-                        <div>
-                            <p><strong>Requirement ID:</strong> {requirementDetails.requirement_id}</p>
-                            <p><strong>Category Name:</strong> {requirementDetails.category_name}</p>
-                            <p><strong>Category ID:</strong> {requirementDetails.category_id}</p>
-                        </div>
-                        <div>
-                            <p><strong>Requirement:</strong> {requirementDetails.requirement}</p>
-                            <p><strong>Pending Requirement:</strong> {requirementDetails.pending_requirement}</p>
-                            <p><strong>Number of Vendors:</strong> {requirementDetails.number_of_vendors}</p>
-                            <p><strong>Buying Price:</strong> {requirementDetails.buying_price}</p>
-                        </div>
+                {notification && (
+                    <div className="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded shadow-lg">
+                        {notification}
                     </div>
-                    <div className="flex justify-end">
-                        <button className="bg-green-500 text-white px-4 py-2 rounded">Completed</button>
-                    </div>
-                </div>
+                )}
                 <div className="mx-auto pt-10 container w-screen">
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Name</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Ratings</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approve Quantity</th>
+                               
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price Range</th>
+                               
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price </th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -159,41 +210,34 @@ export default function SupplyTable() {
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
                                     <td className="py-2 px-4">{row.vendor_name}</td>
-                                    <td className="py-2 px-4">
-                                        <div className="flex items-center">
-                                            <span className="text-yellow-500">
-                                                {Array.from({ length: 5 }, (_, i) => (
-                                                    <i key={i} className={`fas fa-star ${i < Math.floor(row.vendor_ratings) ? 'text-yellow-400' : 'text-gray-300'}`}></i>
-                                                ))}
-                                            </span>
-                                            <span className="ml-2">{row.vendor_ratings}</span>
-                                        </div>
-                                    </td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    <td className="py-2 px-4 text-center">
-                                        <input 
-                                            type="text" 
-                                            placeholder="Approve Quantity" 
-                                            value={row.approve_quantity} 
-                                            onChange={(e) => handleApproveQuantityChange(index, e.target.value)} 
-                                            className="text-center w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                        />
-                                    </td>
+                                    
                                     <td className="py-2 px-4">{row.supply_rate}</td>
+                                    
                                     <td className="py-2 px-4 text-center">
                                         <input 
                                             type="text" 
-                                            placeholder="Price Range" 
-                                            value={row.price_range} 
-                                            onChange={(e) => handlePriceRangeChange(index, e.target.value)} 
-                                            className="text-center w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                            placeholder="" 
+                                            value={row.asked_price} 
+                                            onChange={(e) => handleAskedPriceChange(index, e.target.value)} 
+                                            className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
-                                    <td className="py-2 px-4" style={{color: row.status === 'Pending' ? 'red' : 'black'}}>
-                                        {row.status}
+                                    <td className="py-2 px-4 text-center">
+                                        <input 
+                                            type="text" 
+                                            placeholder="" 
+                                            value={row.asked_quantity} 
+                                            onChange={(e) => handleAskedQuantityChange(index, e.target.value)} 
+                                            className="text-center w-full p-1 border border-gray-300 rounded"
+                                        />
                                     </td>
-                                    <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-4 py-2 rounded">View</button>
+                                    <td className="py-2 px-4">{row.status}</td>
+                                    <td className="py-2 px-4 text-center">
+                                        <FaBell 
+                                            className='cursor-pointer text-xl hover:text-blue-500' 
+                                            onClick={() => handleBellClick(row)} 
+                                        />
                                     </td>
                                 </tr>
                             ))}
