@@ -68,7 +68,7 @@ export default function Sidebar({ children, page }) {
                                 <ul className={expandUserManagement ? 'text-white flex flex-col justify-center ms-10 text-xl' : 'hidden'}>
                                     <Link to='/dashboard/vendor/vendors'><li className='hover:text-black'>&#x2022;Vendors</li></Link>
                                     <Link to='/dashboard/buyer/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
-                                    <Link to='/deliveryagent'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
+                                    <Link to='/dashboard/delivery_agent/allgents'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
                             </li>
                             <Link to='/category'><li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">

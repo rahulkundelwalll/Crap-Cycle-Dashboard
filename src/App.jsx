@@ -58,11 +58,14 @@ function App() {
         <Route path='/dashboard/buyer/edit/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
         
         
-        
-        <Route path='/deliveryagent' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
-        <Route path='/Agentprofile/:id' element={<ProtectedRoute><DeliveryAgentProfile /></ProtectedRoute>} />
-        <Route path='/addAgent' element={<ProtectedRoute><AddDeliveryAgent /></ProtectedRoute>} />
-        <Route path='/editagent/:id' element={<ProtectedRoute><EditDeliveryAgent /></ProtectedRoute>} />
+        {/* Delivery agent */}
+        <Route path='/dashboard/delivery_agent/allgents' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
+        <Route path='/dashboard/delivery_agent/profile/:id' element={<ProtectedRoute><DeliveryAgentProfile /></ProtectedRoute>} />
+        <Route path='/dashboard/delivery_agent/add' element={<ProtectedRoute><AddDeliveryAgent /></ProtectedRoute>} />
+        <Route path='/dashboard/delivery_agent/edit/:id' element={<ProtectedRoute><EditDeliveryAgent /></ProtectedRoute>} />
+
+
+
         <Route path='/category' element={<ProtectedRoute><CategoryManagement /></ProtectedRoute>} />
         <Route path='/addcategory' element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
         <Route path='/editcategory/:id' element={<ProtectedRoute><Editcategory /></ProtectedRoute>} />

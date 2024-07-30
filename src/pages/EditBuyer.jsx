@@ -114,6 +114,8 @@ export default function AddBuyer() {
         formDataToSend.append('address', formData.address);
         formDataToSend.append('category', JSON.stringify(formData.categories.map(cat => cat.cat_id)));
         formDataToSend.append('dropingaddress', JSON.stringify(formData.dropingLocations));
+        formDataToSend.append('imageName', formData.imageName);
+        formDataToSend.append('pdfFileName', formData.pdfFileName);
         if (formData.imageFile) {
             formDataToSend.append('imageFile', formData.imageFile);
         }
@@ -129,7 +131,7 @@ export default function AddBuyer() {
             });
 
             navigate('/dashboard/buyer/buyers');
-            toast.success('Buyer added!')
+            toast.success('Buyer deatail updated!')
         } catch (error) {
             toast.error(error.response.data.message)
             console.error('Error:', error);

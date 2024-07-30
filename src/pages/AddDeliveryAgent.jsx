@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import axios from 'axios'; // Import axios for making HTTP requests
+import { useNavigate } from 'react-router-dom';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddVendor() {
     const [formData, setFormData] = useState({
@@ -18,7 +21,7 @@ export default function AddVendor() {
         pdfFileUrl: ""
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const navigate = useNavigate();
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
@@ -60,10 +63,13 @@ export default function AddVendor() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data);
+            // console.log(response.data);
+            toast.success("Delvery Agent added!");
+            navigate('/dashboard/delivery_agent/allgents')
             // Handle successful response
-        } catch (error) {
-            console.error('Error adding delivery agent:', error);
+        } catch (err) {
+            console.error('Error adding delivery agent:', err);
+            toast.error(err.response.data.message)
             // Handle error response
         }
     };
@@ -145,7 +151,7 @@ export default function AddVendor() {
                         >
                             Submit
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button onClick={()=>{navigate('/dashboard/delivery_agent/allgents')}} className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
                             Cancel
                         </button>
                     </div>

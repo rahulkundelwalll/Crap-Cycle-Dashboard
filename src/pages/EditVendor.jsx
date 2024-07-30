@@ -122,6 +122,8 @@ export default function AddVendor() {
         formDataToSend.append('category', JSON.stringify(formData.category));
         formDataToSend.append('companyName', formData.companyName);
         formDataToSend.append('address', formData.address);
+        formDataToSend.append('imageName', formData.imageName);
+        formDataToSend.append('pdfFileName', formData.pdfFileName);
 
         if (formData.imageFile) {
             formDataToSend.append('imageFile', formData.imageFile);
