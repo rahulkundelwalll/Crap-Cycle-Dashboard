@@ -8,7 +8,7 @@ import axios from 'axios';
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
-export default function Requirement_Table() {
+export default function Order_History() {
     const [data, setData] = React.useState([]);
     const [initialData, setInitialData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
@@ -17,31 +17,31 @@ export default function Requirement_Table() {
     const [searchColumn, setSearchColumn] = React.useState('');
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get('/api/requirement/all-requirement');
+    // React.useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const res = await axios.get('/api/requirement/all-requirement');
 
-                const fetchedData = res.data.results.map(item => ({
-                    s_no: item.req_id,
-                    requirement_id: item.req_id,
-                    category_name: item.cat_name,
-                    category_id: item.list_cat_id,
-                    quantity: `${item.req_quantity} kg`,
-                    date: new Date(item.create_at).toLocaleDateString(),
-                    bided_quantity:item.req_price,
-                    buyerid:item.b_id,
-                    status: item.req_status
-                }));
+    //             const fetchedData = res.data.results.map(item => ({
+    //                 s_no: item.req_id,
+    //                 requirement_id: item.req_id,
+    //                 category_name: item.cat_name,
+    //                 category_id: item.list_cat_id,
+    //                 quantity: `${item.req_quantity} kg`,
+    //                 date: new Date(item.create_at).toLocaleDateString(),
+    //                 bided_quantity:item.req_price,
+    //                 buyerid:item.b_id,
+    //                 status: item.req_status
+    //             }));
          
-                setData(fetchedData);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+    //             setData(fetchedData);
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     };
     
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
     
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
@@ -81,27 +81,9 @@ export default function Requirement_Table() {
 
     return (
         <>
-            <Sidebar page={'Order Management'}>
-                <div className='flex justify-around items-center mt-5'>
-                <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/dashboard/requirement/allrequirement')}
-                    >
-                        Requirement Table
-                    </button>
-                    <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/supplytable')}
-                    >
-                        Supply Table
-                    </button>
-                    <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/maintable')}
-                    >
-                        Main Table
-                        </button>
-                </div>
+            <Sidebar page={'Order History'}>
+                
+              
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
@@ -143,15 +125,14 @@ export default function Requirement_Table() {
                             <tr>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement ID</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RQ Rate</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pick Up Date</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Value</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Vendor</th>
+                               
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -159,12 +140,13 @@ export default function Requirement_Table() {
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
                                     <td className="py-2 px-4">{row.requirement_id}</td>
+                                    <td className="py-2 px-4">{row.order_id}</td>
                                     <td className="py-2 px-4">{row.category_name}</td>
                                     <td className="py-2 px-4">{row.category_id}</td>
                                     <td className="py-2 px-4">{row.quantity}</td>
                                     <td className="py-2 px-4">{row.date}</td>
-                                    <td className="py-2 px-4">{row.bided_quantity}</td>
-                                    <td className="py-2 px-4">{row.buyerid}</td>
+                                    <td className="py-2 px-4">{row.value}</td>
+    
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
                                     <td className="py-2 px-4">

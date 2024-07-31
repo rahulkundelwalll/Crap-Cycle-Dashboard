@@ -35,13 +35,19 @@ import AddRequirement from './pages/requirements/AddRequirement';
 import RequirementDetail from './pages/requirements/RequirementDetail';
 import EditRequirement from './pages/requirements/EditRequirement';
 import Requirement_Table from './pages/Requirement_Table';
+import CompletedRequirements from './pages/Completed_Requirement';
 
 
 import LoginPage from './pages/login/LoginPage'
 
 import SupplyTable from './pages/Supplytable';
 import MainTable from './pages/MainTable';
+import SpecificMainTable from './pages/SpecifyMainTable';
 import ProtectedRoute from './protected/ProtectedRoute';
+
+//Order
+import Order_History from './pages/OrderHistory';
+import OrderMangement from './pages/Order_Management';
 function App() {
 
 
@@ -87,11 +93,16 @@ function App() {
         <Route path='/dashboard/requirement/detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
         <Route path='/dashboard/requirement/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
         <Route path='/dashboard/requirement/allrequirement' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
-
+        <Route path='/complete-requirement' element={<ProtectedRoute><CompletedRequirements /></ProtectedRoute>}></Route>
+        
+       {/* Order */}
+       <Route path='/order-history' element={<ProtectedRoute><Order_History /></ProtectedRoute>}></Route>
+       <Route path='/order-mangagement' element={<ProtectedRoute><OrderMangement /></ProtectedRoute>}></Route>
 
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
          <Route path='/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
+         <Route path='/table/:req_id' element={<ProtectedRoute><SpecificMainTable /></ProtectedRoute>}></Route>
 
 
       </Routes>
