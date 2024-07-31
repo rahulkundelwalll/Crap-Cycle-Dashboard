@@ -16,6 +16,8 @@ import Buyers from './pages/Buyers'
 import AddBuyer from './pages/AddBuyer';
 import BuyerProfile from './pages/BuyerProfile';
 import EditBuyer from './pages/EditBuyer';
+
+// Delivery
 import DeliveryAgent from './pages/DeliveryAgent'
 import DeliveryAgentProfile from './pages/DeliveryAgentProfile'
 import AddDeliveryAgent from './pages/AddDeliveryAgent'
@@ -26,12 +28,17 @@ import Editcategory from './pages/Categories/Editcategory'
 import CategoryDetail from './pages/Categories/CategoryDetail'
 import AddSubCat from './pages/subcategories/AddSubCat'
 import SubCategory from './pages/subcategories/SubCategory'
-import RequiremenStatus from './pages/requirements/RequiremenStatus'
+
+// Requirement
+import RequiremenStatus from './pages/requirements/RequiremenStatus';
 import AddRequirement from './pages/requirements/AddRequirement';
-import RequirementDetail from './pages/requirements/RequirementDetail'
-import LoginPage from './pages/login/LoginPage'
-import EditRequirement from './pages/requirements/EditRequirement'
+import RequirementDetail from './pages/requirements/RequirementDetail';
+import EditRequirement from './pages/requirements/EditRequirement';
 import Requirement_Table from './pages/Requirement_Table';
+
+
+import LoginPage from './pages/login/LoginPage'
+
 import SupplyTable from './pages/Supplytable';
 import MainTable from './pages/MainTable';
 import ProtectedRoute from './protected/ProtectedRoute';
@@ -74,12 +81,15 @@ function App() {
         <Route path='/CategoryDetail/:id' element={<ProtectedRoute><CategoryDetail cat='' /></ProtectedRoute>} />
         <Route path='/addsubcat' element={<ProtectedRoute><AddSubCat /></ProtectedRoute>} />
         <Route path='/subcat' element={<ProtectedRoute><SubCategory /></ProtectedRoute>} />
-        <Route path='/requirementstatus' element={<ProtectedRoute><RequiremenStatus /></ProtectedRoute>} />
-        <Route path='/addrequrement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />
-        <Route path='/requirement-detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
+
+        {/* Requirement */}
+        <Route path='/dashboard/requirement/addrequirement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />
+        <Route path='/dashboard/requirement/detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
+        <Route path='/dashboard/requirement/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/requirement/allrequirement' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
+
+
         <Route path='/login' element={<LoginPage />}></Route>
-        <Route path='/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
-        <Route path='/requirementtable' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
          <Route path='/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
 

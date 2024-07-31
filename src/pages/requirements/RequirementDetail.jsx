@@ -4,7 +4,8 @@ import userImage from '../.././assets/user.webp';
 import { Link, useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { parseISO, format } from 'date-fns';
-
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RequirementDetail() {
     const [data, setData] = useState({});
@@ -29,7 +30,8 @@ export default function RequirementDetail() {
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/requirement/delete/${id}`);
-            navigate('/requirementstatus');
+            toast.warn('Requirement Deleted!')
+            navigate('/dashboard/requirement/allrequirement');
         } catch (error) {
             console.log(error);
         }
@@ -38,7 +40,7 @@ export default function RequirementDetail() {
     return (
         <Sidebar page={'Requirement'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <Link to='/addrequrement' className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                <Link to='/dashboard/requirement/addrequirement' className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Requirement
                 </Link>
             </div>
@@ -117,21 +119,22 @@ export default function RequirementDetail() {
                 </div>
                 <div className='my-auto '>
                 <button
-                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
                         onClick={() => setIsDeleteConfirmOpen(true)}
                     >
                         Delete
                     </button>
                     <button
-                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
-                        onClick={()=>{navigate(`/editRequirement/${id}`)}}
+                        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
+                        onClick={()=>{navigate(`/dashboard/requirement/editRequirement/${id}`)}}
                     >
                         Edit
                     </button>
                     <button
-                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4`}
+                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-32`}
+                        onClick={()=>{navigate('/dashboard/requirement/allrequirement')}}
                     >
-                        Save
+                        Back
                     </button>
 
                 </div>

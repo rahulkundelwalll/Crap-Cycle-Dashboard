@@ -10,6 +10,7 @@ const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
 export default function Requirement_Table() {
     const [data, setData] = React.useState([]);
+    const [initialData, setInitialData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
@@ -23,9 +24,9 @@ export default function Requirement_Table() {
 
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,
-                    requirement_id: `RQ${item.req_id}`,
+                    requirement_id: item.req_id,
                     category_name: item.cat_name,
-                    category_id: `CAT${item.list_cat_id}`,
+                    category_id: item.list_cat_id,
                     quantity: `${item.req_quantity} kg`,
                     date: new Date(item.create_at).toLocaleDateString(),
                     bided_quantity:item.req_price,
@@ -80,11 +81,11 @@ export default function Requirement_Table() {
 
     return (
         <>
-            <Sidebar page={'Requirement Table'}>
+            <Sidebar page={'Order Management'}>
                 <div className='flex justify-around items-center mt-5'>
                 <button
                         className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/requirementtable')}
+                        onClick={() => navigate('/dashboard/requirement/allrequirement')}
                     >
                         Requirement Table
                     </button>
@@ -150,6 +151,7 @@ export default function Requirement_Table() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -166,6 +168,11 @@ export default function Requirement_Table() {
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
                                         <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate('/supplytable')}>
+                                            View
+                                        </button>
+                                    </td>
+                                    <td className="py-2 px-4">
+                                        <button className=" text-back px-2 py-1 rounded hover:text-blue-400 " onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
                                             View
                                         </button>
                                     </td>

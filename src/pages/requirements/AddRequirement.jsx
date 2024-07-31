@@ -3,7 +3,8 @@ import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function AddRequirement() {
     const [formData, setFormData] = useState({
         category: {},
@@ -15,12 +16,11 @@ export default function AddRequirement() {
         buyer: {},
         address: "",
         imageFile: null,
-        imagePreview: userImage
+        imagePreview: userImage,
     });
     const [categories, setCategories] = useState([]);
     const [buyers, setBuyers] = useState([]);
     const [dropingAdd,setDropingAdd]= useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
         const fetchCategories = async () => {
@@ -39,6 +39,7 @@ export default function AddRequirement() {
             try {
                 const res = await axios.get('/api/buyer/allbuyer');
                 setBuyers(res.data.data);
+                // console.log(res.data.data)
             } catch (err) {
                 console.log(err);
             }
@@ -53,6 +54,7 @@ export default function AddRequirement() {
                 try{
                     const res = await axios.get(`/api/buyer/getbuyer/${formData.buyer.b_id}`);
                     setDropingAdd(res.data.dropingaddress)
+                    // console.log(res.data.dropingaddress)
                 }catch(err)
                 {
                     console.log(err);
@@ -71,37 +73,35 @@ export default function AddRequirement() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        if (name === 'buyer') {
-            const buyer = JSON.parse(value);
-            setFormData((prev) => ({
-                ...prev,
-                buyer: buyer,
-                address: buyer.b_address
-            }));
-        } else if (name === 'category') {
-            setFormData((prev) => ({
-                ...prev,
-                category: JSON.parse(value)
-            }));
+        
+        if (name === 'buyer' || name === 'category') {
+            try {
+                const parsedValue = value ? JSON.parse(value) : {};
+                if (name === 'buyer') {
+                    setFormData(prev => ({
+                        ...prev,
+                        buyer: parsedValue,
+                        address: parsedValue.b_address || ''
+                    }));
+                } else if (name === 'category') {
+                    setFormData(prev => ({
+                        ...prev,
+                        category: parsedValue
+                    }));
+                }
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
         } else {
-            setFormData((prev) => ({
+            setFormData(prev => ({
                 ...prev,
                 [name]: value
             }));
         }
     };
+    
 
-    const handleFileChange = (event) => {
-        const { name, files } = event.target;
-        if (files.length > 0) {
-            const file = files[0];
-            setFormData((prev) => ({
-                ...prev,
-                [name]: file,
-                imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview
-            }));
-        }
-    };
+    // console.log(formData.category.cat_image)
 
     const handleClick = async (event) => {
         event.preventDefault();
@@ -112,17 +112,17 @@ export default function AddRequirement() {
             req_status: "pending",
             req_note: formData.note,
             b_id: formData.buyer.b_id,
-            b_name: formData.buyer.b_id,
+            b_name: formData.buyer.b_name,
             b_add: formData.buyer.b_address,
             b_drop_add: formData.address,
-            b_mobile: formData.buyer.b_mobile,  // Corrected typo
+            b_moile: formData.buyer.b_mobile,  // Corrected typo
             list_cat_id: formData.category.cat_id,
             cat_name: formData.category.cat_name,
             cat_image: formData.category.cat_image
         };
     
         // Debug: Check the contents of the data object
-        console.log(data);
+        // console.log(data);
     
         try {
             const response = await axios.post('/api/requirement/add-requirement', data, {
@@ -131,26 +131,22 @@ export default function AddRequirement() {
                 },
             });
             // console.log(response.data);
-            navigate('/requirementstatus')
+            toast.success('Requirement Added!')
+            navigate('/dashboard/requirement/allrequirement')
         } catch (error) {
+            toast.error(error.response.data.message)
             console.error('Error adding requirement:', error);
         }
     };
     
     
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-    };
+   
     
     return (
         <Sidebar page={"Requirement Adding"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="User" />
-                    <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
-                        Upload Image
-                    </label>
-                    <input type="file" id="imageFile" name="imageFile" accept="image/*" onChange={handleFileChange} className='hidden' />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image?`/upload/${formData.category.cat_image}`:userImage} alt="User" />
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
@@ -160,7 +156,7 @@ export default function AddRequirement() {
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        <option value="" disabled>Select Category</option>
+                        <option value="" >Select Category</option>
                         {categories.map((category, index) => (
                             <option key={index} value={JSON.stringify(category)}>{category.cat_name}</option>
                         ))}
@@ -211,7 +207,7 @@ export default function AddRequirement() {
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        <option value="" disabled>Select Buyer</option>
+                        <option value="" >Select Buyer</option>
                         {buyers.map((buyer, index) => (
                             <option key={index} value={JSON.stringify(buyer)}>{buyer.b_name}</option>
                         ))}
@@ -222,7 +218,7 @@ export default function AddRequirement() {
                         onChange={handleChange}
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     >
-                        <option value="" disabled>Select Buyer</option>
+                        <option value="" >Select Droping Address</option>
                         {dropingAdd.map((add, index) => (
                             <option key={index} value={add.dropingAddress}>{add.dropingAddress}</option>
                         ))}
@@ -235,23 +231,14 @@ export default function AddRequirement() {
                         >
                             Save
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate('/dashboard/requirement/allrequirement')}}>
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-            {isModalOpen && (
-                <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
-                    <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5'>
-                        <div className='flex justify-between items-center mb-4'>
-                            <h2 className='text-xl font-bold'>Uploaded Document</h2>
-                            <button onClick={toggleModal} className='text-red-500 text-xl'>&times;</button>
-                        </div>
-                        <iframe src={formData.pdfFileUrl} className='w-full h-full border'></iframe>
-                    </div>
-                </div>
-            )}
+           
         </Sidebar>
     );
 }

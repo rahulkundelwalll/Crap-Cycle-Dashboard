@@ -3,7 +3,8 @@ import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function AddRequirement() {
     const Id = useParams().id;
     const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ export default function AddRequirement() {
     const [categories, setCategories] = useState([]);
     const [buyers, setBuyers] = useState([]);
     const [dropingAdd, setDropingAdd] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const navigate = useNavigate();
 
 
@@ -36,10 +37,10 @@ export default function AddRequirement() {
                     },
                     buyer:{
                         b_id: res.data.results[0].b_id,
-                        b_moile: res.data.results[0].b_moile,
+                        b_mobile: res.data.results[0].b_moile,
                         b_drop_add: res.data.results[0].b_drop_add,
                         b_name: res.data.results[0].b_name,
-                        b_add: res.data.results[0].b_add,
+                        b_address: res.data.results[0].b_add,
                     },
                     quantity:res.data.results[0].req_quantity,
                     price:res.data.results[0].req_price,
@@ -72,6 +73,7 @@ export default function AddRequirement() {
             try {
                 const res = await axios.get('/api/buyer/allbuyer');
                 setBuyers(res.data.data);
+                // console.log(res.data.data[0])
             } catch (err) {
                 console.log(err);
             }
@@ -122,18 +124,7 @@ export default function AddRequirement() {
         }
     };
 
-    const handleFileChange = (event) => {
-        const { name, files } = event.target;
-        if (files.length > 0) {
-            const file = files[0];
-            setFormData((prev) => ({
-                ...prev,
-                [name]: file,
-                imagePreview: name === 'imageFile' ? URL.createObjectURL(file) : prev.imagePreview
-            }));
-        }
-    };
-
+ 
     const handleClick = async (event) => {
         event.preventDefault();
 
@@ -143,10 +134,10 @@ export default function AddRequirement() {
             req_status: "pending",
             req_note: formData.note,
             b_id: formData.buyer.b_id,
-            b_name: formData.buyer.b_id,
+            b_name: formData.buyer.b_name,
             b_add: formData.buyer.b_address,
             b_drop_add: formData.address,
-            b_mobile: formData.buyer.b_mobile,  // Corrected typo
+            b_moile: formData.buyer.b_mobile ,  // Corrected typo
             list_cat_id: formData.category.cat_id,
             cat_name: formData.category.cat_name,
             cat_image: formData.category.cat_image
@@ -162,26 +153,22 @@ export default function AddRequirement() {
                 },
             });
             // console.log(response.data);
-            navigate('/requirementstatus')
+            toast.success('requirement Detailed Updated!');
+            navigate(`/dashboard/requirement/detail/${Id}`)
         } catch (error) {
             console.error('Error adding requirement:', error);
+            toast.error(error.response.data.message);
         }
     };
 
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-    };
 
     return (
         <Sidebar page={"Requirement Adding"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="User" />
-                    <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
-                        Upload Image
-                    </label>
-                    <input type="file" id="imageFile" name="imageFile" accept="image/*" onChange={handleFileChange} className='hidden' />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image?`/upload/${formData.category.cat_image}`:userImage} alt="User" />
+                
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
@@ -262,27 +249,20 @@ export default function AddRequirement() {
                     <div className='flex items-center'>
                         <button
                             onClick={handleClick}
-                            className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'
+                            className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300 w-32'
                         >
                             Save
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300 w-32'
+                        onClick={()=>{
+                            navigate(`/dashboard/requirement/detail/${Id}`)
+                        }}>
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-            {isModalOpen && (
-                <div className='fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50'>
-                    <div className='bg-white p-6 rounded-lg shadow-lg w-4/5 h-4/5'>
-                        <div className='flex justify-between items-center mb-4'>
-                            <h2 className='text-xl font-bold'>Uploaded Document</h2>
-                            <button onClick={toggleModal} className='text-red-500 text-xl'>&times;</button>
-                        </div>
-                        <iframe src={formData.pdfFileUrl} className='w-full h-full border'></iframe>
-                    </div>
-                </div>
-            )}
+           
         </Sidebar>
     );
 }

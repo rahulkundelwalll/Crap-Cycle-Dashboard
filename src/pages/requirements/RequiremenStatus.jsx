@@ -6,7 +6,8 @@ import { CiSearch } from "react-icons/ci";
 import { FaFilter } from "react-icons/fa";
 import axios from 'axios';
 import { parseISO, format } from 'date-fns';
-
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const sortByOptions = ['req_price', 'req_quantity', 'create_at', 'final_amount'];
 const searchOptions = ['req_price', 'req_quantity', 'create_at', 'final_amount', 'cat_name', 'list_cat_id', 'req_id'];
 const filterList = ['Pending', 'Confirmed', 'Cancelled', 'Delivered'];
@@ -88,7 +89,7 @@ export default function RequirementStatus() {
         const fetchData = async () => {
             try {
                 const res = await axios.get('/api/requirement/all-requirement');
-                console.log(res.data.results);
+              
                 setData(res.data.results);
                 setInitialData(res.data.results);
             } catch (err) {
@@ -102,7 +103,7 @@ export default function RequirementStatus() {
         <>
             <Sidebar page={'Requirement Management'}>
                 <div className='flex justify-end text-xl font-bold mt-5'>
-                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/addrequrement')}>
+                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/dashboard/requirement/addrequirement')}>
                         + Add Requirement
                     </button>
                 </div>
@@ -184,7 +185,7 @@ export default function RequirementStatus() {
                                     <td className="py-2 px-4">{row.req_quantity * row.req_price}</td>
                                     <td className="py-2 px-4">{row.req_status}</td>
                                     <td className="py-2 px-4">
-                                        <Link to={`/requirement-detail/${row.req_id}`} className="text-blue-500 hover:underline">
+                                        <Link to={`/dashboard/requirement/detail/${row.req_id}`} className="text-blue-500 hover:underline">
                                             View
                                         </Link>
                                     </td>
