@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-
+import userImage from '../../assets/user.webp';
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CategoryDetail(props) {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function CategoryDetail(props) {
                     category: res.data.data[0].cat_name,
                     discription: res.data.data[0].cat_description,
                     categoryId: res.data.data[0].cat_id,
-                    imagePreview: res.data.data[0].cat_image ? `../../../upload/${res.data.data[0].cat_image}` : "../.././assets/user.webp",
+                    imagePreview: res.data.data[0].cat_image ? `/upload/${res.data.data[0].cat_image}` :userImage,
                     subcategory: data.subcategory // Keep the existing subcategory array
                 });
 
@@ -70,17 +71,18 @@ export default function CategoryDetail(props) {
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/category/delete-cat/${id}`);
-            navigate('/category');
+            toast.warn("Category Deleted !")
+            navigate('/dashboard/category/category');
         } catch (err) {
             console.log(err);
-            alert("Failed to delete category.");
+            toast.error("Failed to delete category.");
         }
     };
-
+    // console.log(data)
     return (
         <Sidebar page={'Category'}>
             <div className='flex justify-end text-xl font-bold mt-5'>
-                <button onClick={() => navigate('/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
+                <button onClick={() => navigate('/dashboard/category/addcategory')} className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3">
                     + Add Category
 
                 </button>
@@ -113,11 +115,12 @@ export default function CategoryDetail(props) {
                             <tr>
                                 <td className="border px-4 py-2 font-bold">Sub Category:</td>
                                 <td className="border px-4 py-2 text-blue-500">
-                                    {data.subcategory?.map((item, index) => (
+                                    
+                                    {data.subcategory.length>0?data.subcategory?.map((item, index) => (
                                         <React.Fragment key={item.cat_id}>
                                             <Link
                                                 to={{
-                                                    pathname: `/CategoryDetail/${item.cat_id}`,
+                                                    pathname: `/dashboard/category/CategoryDetail/${item.cat_id}`,
                                                     state: { cat: cat ? cat : '' + data.category + '/', cat_id: data.categoryId }
                                                 }}
                                             >
@@ -125,7 +128,7 @@ export default function CategoryDetail(props) {
                                             </Link>
                                             {index !== data.subcategory.length - 1 && ','}
                                         </React.Fragment>
-                                    ))}
+                                    )):`NULL`}
                                 </td>
                             </tr>
                             <tr>
@@ -137,21 +140,21 @@ export default function CategoryDetail(props) {
                 </div>
                 <div className='my-auto '>
                     <button
-                        onClick={() => navigate('/addcategory', { state: { cat: cat ? cat : '' + data.category + '/', cat_id: data.categoryId } })}
-                        className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3"
+                        onClick={() => navigate('/dashboard/category/addcategory', { state: { cat: cat ? cat : '' + data.category + '/', cat_id: data.categoryId } })}
+                        className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3 w-52"
                     >
-                        + Add Category
+                        + Add SubCategory
                     </button>
 
                     <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-52"
                         onClick={() => setIsDeleteConfirmOpen(true)}
                     >
                         Delete
                     </button>
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4"
-                        onClick={() => { navigate(`/editcategory/${id}`) }}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl m-4 w-52"
+                        onClick={() => { navigate(`/dashboard/category/editcategory/${id}`) }}
                     >
                         Edit
                     </button>

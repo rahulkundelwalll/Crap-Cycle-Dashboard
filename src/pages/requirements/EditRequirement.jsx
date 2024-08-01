@@ -54,7 +54,7 @@ export default function AddRequirement() {
 
         }
         fetchData();
-    }, [])
+    }, [Id])
 
     useEffect(() => {
         const fetchCategories = async () => {

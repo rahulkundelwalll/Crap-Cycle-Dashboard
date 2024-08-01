@@ -4,71 +4,23 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import axios from 'axios';
-
-
-
-const initialData = [
-    {
-        "s_no": 1,
-        "category_name": "Electronics",
-        "category_id": "CAT123",
-        "current_requirement": 100,
-        "bidden_requirement": 90,
-        "no_of_listing": 50,
-        "no_of_bidding": 45,
-        "category_details": "Details about Electronics"
-    },
-    {
-        "s_no": 2,
-        "category_name": "Home Appliances",
-        "category_id": "CAT124",
-        "current_requirement": 200,
-        "bidden_requirement": 180,
-        "no_of_listing": 75,
-        "no_of_bidding": 70,
-        "category_details": "Details about Home Appliances"
-    },
-    {
-        "s_no": 3,
-        "category_name": "Fashion",
-        "category_id": "CAT125",
-        "current_requirement": 150,
-        "bidden_requirement": 140,
-        "no_of_listing": 60,
-        "no_of_bidding": 55,
-        "category_details": "Details about Fashion"
-    },
-    {
-        "s_no": 4,
-        "category_name": "Books",
-        "category_id": "CAT126",
-        "current_requirement": 120,
-        "bidden_requirement": 110,
-        "no_of_listing": 80,
-        "no_of_bidding": 75,
-        "category_details": "Details about Books"
-    },
-    {
-        "s_no": 5,
-        "category_name": "Toys",
-        "category_id": "CAT127",
-        "current_requirement": 90,
-        "bidden_requirement": 85,
-        "no_of_listing": 40,
-        "no_of_bidding": 38,
-        "category_details": "Details about Toys"
-    }
-];
+import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['current_requirement', 'bidden_requirement', 'no_of_listing', 'no_of_bidding'];
 const searchOptions = ['category_name', 'category_id', 'category_details'];
+const categoryMap = new Map();
+categoryMap.set(-1, "N/A");
 
 export default function CategoryManagement() {
-    const [data, setData] = React.useState(initialData);
+    const [data, setData] = React.useState([]);
+    const [initialData, setInitialData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [perPage] = React.useState(10); // Number of items per page
+
     const navigate = useNavigate();
 
     const handleSortChange = (event) => {
@@ -100,30 +52,43 @@ export default function CategoryManagement() {
 
     const handleSearchClick = () => {
         if (searchColumn) {
-            const filteredData = initialData.filter(item => 
+            const filteredData = initialData.filter(item =>
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
+            setCurrentPage(0); // Reset to the first page after search
         }
     };
 
-    React.useEffect(()=>{
-        const fetchData = async ()=>{
-            try{
+    const handlePageClick = (event) => {
+        setCurrentPage(event.selected);
+    };
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
                 const res = await axios.get('/api/category/category-bidden');
-                setData(res.data.data)
-            }catch(err){
-                console.log(err)
+                setData(res.data.data);
+                setInitialData(res.data.data);
+                res.data.data.forEach((cat) => {
+                    categoryMap.set(cat.cat_id, cat.cat_name);
+                });
+            } catch (err) {
+                console.log(err);
             }
         };
         fetchData();
-    },[])
+    }, []);
+
+    // Calculate current page data
+    const offset = currentPage * perPage;
+    const currentPageData = data.slice(offset, offset + perPage);
 
     return (
         <>
             <Sidebar page={'Category Management'}>
                 <div className='flex justify-end text-xl font-bold mt-5'>
-                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event) => navigate('/addcategory')}>
+                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event) => navigate('/dashboard/category/addcategory')}>
                         + Add Category
                     </button>
                 </div>
@@ -160,10 +125,7 @@ export default function CategoryManagement() {
                         onChange={handleSearchChange}
                         className='text-center w-1/4 p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    {/* <button >
-                        Search
-                    </button> */}
-                    < CiSearch className='cursor-pointer hover:scale-125  text-2xl ease-in duration-300' onClick={handleSearchClick} />
+                    <CiSearch className='cursor-pointer hover:scale-125  text-2xl ease-in duration-300' onClick={handleSearchClick} />
                 </div>
                 <div className="mx-auto pt-10 container w-screen">
                     <table className="min-w-full bg-white border border-gray-200">
@@ -176,24 +138,23 @@ export default function CategoryManagement() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bidden Requirement</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. of Listing</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. of Bidding</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">parent</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Details</th>
-                                
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {data.map((row, index) => (
+                            {currentPageData.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{index + 1}</td>
+                                    <td className="py-2 px-4">{offset + index + 1}</td>
                                     <td className="py-2 px-4">{row.cat_name}</td>
                                     <td className="py-2 px-4">{row.cat_id}</td>
                                     <td className="py-2 px-4">{row.curr_requirement}</td>
                                     <td className="py-2 px-4">{row.bidden_requirement}</td>
                                     <td className="py-2 px-4">{row.No_listing}</td>
                                     <td className="py-2 px-4">{row.no_bidding}</td>
-                                    <td className="py-2 px-4">{row.parent}</td>
+                                    <td className="py-2 px-4">{categoryMap.get(row.parent)}</td>
                                     <td className="py-2 px-4">
-                                        <Link to={`/CategoryDetail/${row.cat_id}`} className="text-blue-500 hover:underline">
+                                        <Link to={`/dashboard/category/CategoryDetail/${row.cat_id}`} className="text-blue-500 hover:underline">
                                             View
                                         </Link>
                                     </td>
@@ -201,6 +162,24 @@ export default function CategoryManagement() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="flex justify-center mt-4">
+                    <ReactPaginate
+                        previousLabel={'Previous'}
+                        nextLabel={'Next'}
+                        breakLabel={'...'}
+                        breakClassName={'break-me'}
+                        pageCount={Math.ceil(data.length / perPage)}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'flex space-x-2'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        previousLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        nextLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        activeLinkClassName={'bg-gray-200 font-bold'}
+                    />
                 </div>
             </Sidebar>
         </>

@@ -80,13 +80,12 @@ function App() {
         <Route path='/dashboard/delivery_agent/edit/:id' element={<ProtectedRoute><EditDeliveryAgent /></ProtectedRoute>} />
 
 
-
-        <Route path='/category' element={<ProtectedRoute><CategoryManagement /></ProtectedRoute>} />
-        <Route path='/addcategory' element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
-        <Route path='/editcategory/:id' element={<ProtectedRoute><Editcategory /></ProtectedRoute>} />
-        <Route path='/CategoryDetail/:id' element={<ProtectedRoute><CategoryDetail cat='' /></ProtectedRoute>} />
-        <Route path='/addsubcat' element={<ProtectedRoute><AddSubCat /></ProtectedRoute>} />
-        <Route path='/subcat' element={<ProtectedRoute><SubCategory /></ProtectedRoute>} />
+        {/* category */}
+        <Route path='/dashboard/category/category' element={<ProtectedRoute><CategoryManagement /></ProtectedRoute>} />
+        <Route path='/dashboard/category/addcategory' element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
+        <Route path='/dashboard/category/editcategory/:id' element={<ProtectedRoute><Editcategory /></ProtectedRoute>} />
+        <Route path='/dashboard/category/CategoryDetail/:id' element={<ProtectedRoute><CategoryDetail cat='' /></ProtectedRoute>} />
+       
 
         {/* Requirement */}
         <Route path='/dashboard/requirement/addrequirement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />

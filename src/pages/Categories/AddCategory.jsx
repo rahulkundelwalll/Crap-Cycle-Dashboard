@@ -3,6 +3,7 @@ import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
 import { useNavigate,useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 export default function AddCategory() {
     const [hierarchical, setHierarchical] = React.useState([]);
     const location =useLocation();
@@ -15,7 +16,8 @@ export default function AddCategory() {
         categoryDescription: "",
         subcategory: "",
         imageFile: null,
-        imagePreview: userImage
+        imagePreview: userImage,
+        imageName:""
     });
 
    React.useEffect(() => {
@@ -51,7 +53,7 @@ export default function AddCategory() {
         }
     };
 
-    const handleClick = (event) => {
+    const handleClick = async (event) => {
         event.preventDefault();
         const formDataToSend = new FormData();
         formDataToSend.append('categoryName',formData.categoryName)
@@ -59,16 +61,18 @@ export default function AddCategory() {
         formDataToSend.append('imageFile',formData.imageFile)
         formDataToSend.append('parent',cat_id?cat_id:-1)
         try{
-            const res = axios.post('/api/category/add',formDataToSend,{
+            const res =await axios.post('/api/category/add',formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }
             });
-            console.log(res);
-            navigate('/category');
+            // console.log(res);
+            toast.success("category created!")
+            navigate('/dashboard/category/category');
         }catch(err)
         {
             console.log(err);
+            toast.error("Duplicate Entry");
         }
         
         
@@ -129,7 +133,8 @@ export default function AddCategory() {
                         >
                             Save
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate('/dashboard/category/category')}}>
                             Cancel
                         </button>
                     </div>

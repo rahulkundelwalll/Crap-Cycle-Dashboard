@@ -3,7 +3,7 @@ import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import axios from 'axios';
 import { useNavigate,useParams } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 export default function Editcategory() {
 
     const navigate = useNavigate();
@@ -14,10 +14,10 @@ export default function Editcategory() {
         subcategory: "",
         parent:'',
         imageFile: null,
-        imagePreview: userImage
+        imagePreview: userImage,
+        imageName:""
     });
 
-    const subcategories = ["steel", "plastic"]; // Dummy data
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -28,12 +28,14 @@ export default function Editcategory() {
     };
 
     const handleFileChange = (event) => {
-        const { files } = event.target;
+        const { name,files } = event.target;
         if (files.length > 0) {
             const file = files[0];
             setFormData((prev) => ({
                 ...prev,
                 imageFile: file,
+                
+                imageName: name === 'imageFile' ? file.name : prev.imageName,
                 imagePreview: URL.createObjectURL(file)
             }));
         }
@@ -47,10 +49,11 @@ export default function Editcategory() {
                     categoryName:res.data.data[0].cat_name,
                     categoryDescription:res.data.data[0].cat_description,
                     imagePreview: `../../../upload/${res.data.data[0].cat_image}`,
+                    imageName:res.data.data[0].cat_image,
                     parent:res.data.data[0].parent
 
                 })
-                console.log(formData)
+                // console.log(formData)
             } 
             fetchData();
         }catch(err)
@@ -63,19 +66,24 @@ export default function Editcategory() {
         const formDataToSend = new FormData();
         formDataToSend.append('categoryName',formData.categoryName)
         formDataToSend.append('categoryDescription',formData.categoryDescription)
-        formDataToSend.append('imageFile',formData.imageFile)
+        formDataToSend.append('imageName',formData.imageName)
         formDataToSend.append('parent',formData.parent)
+        if(formData.imageFile)
+        {
+            formDataToSend.append('imageFile',formData.imageFile)
+        }
         try{
             const res = await axios.put(`/api/category/edit/${id}`,formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }
             });
-            console.log(res);
-            navigate('/category');
+            toast.success("category updated!")
+            navigate(`/dashboard/category/editcategory/${id}`);
         }catch(err)
         {
             console.log(err);
+            toast.error("Duplicate Entry");
         }
         
         
@@ -85,7 +93,7 @@ export default function Editcategory() {
         <Sidebar page={"Category"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imagePreview} alt="Category" />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.imageName?formData.imagePreview:userImage} alt="Category" />
                     <label htmlFor="imageFile" className='mt-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Image
                     </label>
@@ -127,7 +135,8 @@ export default function Editcategory() {
                         >
                             Save
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        onClick={()=>{navigate(`/dashboard/category/CategoryDetail/${id}`)}}>
                             Cancel
                         </button>
                     </div>
