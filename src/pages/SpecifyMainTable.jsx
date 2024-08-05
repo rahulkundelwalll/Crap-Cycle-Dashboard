@@ -59,6 +59,19 @@ export default function SpecificMainTable() {
         }
     };
 
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post('/api/your-endpoint', {
+                requirement_id: requirementId,
+                supply_id: supplyId,
+                quantity:quantity,
+            });
+            console.log('Response:', response.data);
+        } catch (error) {
+            console.error('Error submitting data:', error);
+        }
+    };
+
     return (
         <>
             <Sidebar page={'Requirement Table'}>
@@ -104,7 +117,10 @@ export default function SpecificMainTable() {
                         onChange={(e) => setQuantity(e.target.value)}
                         className='text-center w-1/4 p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <button className='bg-slate-400 hover:bg-slate-600 box-border rounded-2xl p-1 border-1 text-white'>
+                     <button
+                        className='bg-slate-400 hover:bg-slate-600 box-border rounded-2xl p-1 border-1 text-white'
+                        onClick={handleSubmit}
+                    >
                         Submit
                     </button>
                 </div>

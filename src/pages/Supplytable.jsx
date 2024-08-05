@@ -23,6 +23,10 @@ export default function SupplyTable() {
                 const res = await axios.get('/api/supply/all-supply');
                 console.log(res.data.results);
                 const fetchedData = res.data.results.map(item => ({
+                    s_id:item.s_id,
+                    v_id:item.v_id,
+                    cat_id:item.list_cat_id,
+                    cat_name:item.cat_name,
                     id: item.id,  // Add ID for each item
                     vendor_name: item.v_name,
                     supply_quantity: item.s_qty,
@@ -104,8 +108,8 @@ export default function SupplyTable() {
 
     const handleBellClick = async (item) => {
         const notificationData = {
-            s_id: item.id,
-            v_id: item.vendor_id,  // Make sure to include vendor_id in your data
+            s_id: item.s_id,
+            v_id: item.v_id,  // Make sure to include vendor_id in your data
             asked_price: item.asked_price,
             asked_quantity: item.asked_quantity,
             prev_price: item.supply_rate,
@@ -195,6 +199,7 @@ export default function SupplyTable() {
                             <tr>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Name</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
                                
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
@@ -210,6 +215,7 @@ export default function SupplyTable() {
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{index + 1}</td>
                                     <td className="py-2 px-4">{row.vendor_name}</td>
+                                    <td className="py-2 px-4">{row.s_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
                                     
                                     <td className="py-2 px-4">{row.supply_rate}</td>

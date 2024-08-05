@@ -1,7 +1,6 @@
 import React from 'react';
 import Sidebar from '../component/Sidebar';
 import { useNavigate } from "react-router-dom";
-import { CiSearch } from "react-icons/ci";
 import axios from 'axios';
 
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
@@ -19,7 +18,7 @@ export default function MainTable() {
         const fetchData = async () => {
             try {
                 const res = await axios.get('/api/order/get-approve-order');
-              console.log(res);
+                console.log(res);
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,
                     order_id: `OR${item.order_id}`,
@@ -27,11 +26,10 @@ export default function MainTable() {
                     category_id: `CAT${item.list_cat_id}`,
                     supply_quantity: `${item.supply_quantity} kg`,
                     date: new Date(item.create_at).toLocaleDateString(),
-                    requirement_id:item.requir_id,
-                    suuply_id:item.supply_id,
+                    requirement_id: item.requir_id,
+                    suuply_id: item.supply_id,
                     status: item.req_status
                 }));
-         
                 setData(fetchedData);
             } catch (err) {
                 console.log(err);
@@ -55,6 +53,19 @@ export default function MainTable() {
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
+        }
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post('/api/order/add-order', {
+                req_id: requirementId,
+                s_id: supplyId,
+                quantity:quantity,
+            });
+            console.log('Response:', response.data);
+        } catch (error) {
+            console.error('Error submitting data:', error);
         }
     };
 
@@ -103,7 +114,10 @@ export default function MainTable() {
                         onChange={(e) => setQuantity(e.target.value)}
                         className='text-center w-1/4 p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                    <button className='bg-slate-400 hover:bg-slate-600 box-border rounded-2xl p-1 border-1 text-white'>
+                    <button
+                        className='bg-slate-400 hover:bg-slate-600 box-border rounded-2xl p-1 border-1 text-white'
+                        onClick={handleSubmit}
+                    >
                         Submit
                     </button>
                 </div>
