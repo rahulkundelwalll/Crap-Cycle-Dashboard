@@ -17,31 +17,31 @@ export default function Order_History() {
     const [searchColumn, setSearchColumn] = React.useState('');
     const navigate = useNavigate();
 
-    // React.useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await axios.get('/api/requirement/all-requirement');
-
-    //             const fetchedData = res.data.results.map(item => ({
-    //                 s_no: item.req_id,
-    //                 requirement_id: item.req_id,
-    //                 category_name: item.cat_name,
-    //                 category_id: item.list_cat_id,
-    //                 quantity: `${item.req_quantity} kg`,
-    //                 date: new Date(item.create_at).toLocaleDateString(),
-    //                 bided_quantity:item.req_price,
-    //                 buyerid:item.b_id,
-    //                 status: item.req_status
-    //             }));
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/order/get-order-history');
+                console.log(res);
+                const fetchedData = res.data.results.map(item => ({
+                    s_no: item.req_id,
+                    requirement_id: item.req_id,
+                    category_name: item.cat_name,
+                    category_id: item.list_cat_id,
+                    quantity: `${item.req_quantity} kg`,
+                    date: new Date(item.create_at).toLocaleDateString(),
+                    bided_quantity:item.req_price,
+                    buyerid:item.b_id,
+                    status: item.req_status
+                }));
          
-    //             setData(fetchedData);
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     };
+                setData(fetchedData);
+            } catch (err) {
+                console.log(err);
+            }
+        };
     
-    //     fetchData();
-    // }, []);
+        fetchData();
+    }, []);
     
     const handleSortChange = (event) => {
         setSortBy(event.target.value);
@@ -150,7 +150,7 @@ export default function Order_History() {
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
                                     <td className="py-2 px-4">
-    <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/table/${row.requirement_id}`)}>
+    <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/complete-requirement/${row.requirement_id}`)}>
         View
     </button>
 </td>

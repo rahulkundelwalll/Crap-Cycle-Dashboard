@@ -92,7 +92,7 @@ function App() {
         <Route path='/dashboard/requirement/detail/:id' element={<ProtectedRoute><RequirementDetail /></ProtectedRoute>} />
         <Route path='/dashboard/requirement/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
         <Route path='/dashboard/requirement/allrequirement' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
-        <Route path='/complete-requirement' element={<ProtectedRoute><CompletedRequirements /></ProtectedRoute>}></Route>
+        <Route path='/complete-requirement/:id' element={<ProtectedRoute><CompletedRequirements /></ProtectedRoute>}></Route>
         
        {/* Order */}
        <Route path='/order-history' element={<ProtectedRoute><Order_History /></ProtectedRoute>}></Route>

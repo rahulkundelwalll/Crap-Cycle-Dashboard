@@ -19,7 +19,7 @@ export default function SpecificMainTable() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/order/get-requirement-order/${req_id}');
+                const res = await axios.get(`/api/order/get-requirement-order/${req_id}`);
               console.log(res);
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,

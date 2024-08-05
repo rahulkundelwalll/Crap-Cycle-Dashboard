@@ -66,10 +66,10 @@ const OrderMangement = () => {
 
         {/* Buyer's ID Section */}
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="font-bold text-lg">Buyer's ID: {buyer.id}</h2>
-          <p>Buyer's Name: {buyer.name}</p>
-          <p>Buyer's Phone No.: {buyer.phone}</p>
-          <p>Buyer's Address: {buyer.address}</p>
+          <h2 className="font-bold text-lg">Buyer ID: {buyer.id}</h2>
+          <p>Buyer Name: {buyer.name}</p>
+          <p>Buyer Phone No.: {buyer.phone}</p>
+          <p>Buyer Address: {buyer.address}</p>
           <p>Order drop location: {buyer.dropLocation}</p>
         </div>
 
