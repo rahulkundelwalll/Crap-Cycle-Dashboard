@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await axios.get('/api/Autharization/checkAuth');
         setAuth(response.data);
+        // console.log(response.data);
       } catch (error) {
         setAuth(null);
       } finally {
