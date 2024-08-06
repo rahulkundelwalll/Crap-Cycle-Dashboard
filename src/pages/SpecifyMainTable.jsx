@@ -1,9 +1,10 @@
 import React from 'react';
 import Sidebar from '../component/Sidebar';
-import { useNavigate } from "react-router-dom";
-import { CiSearch } from "react-icons/ci";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for styling
+
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
 export default function SpecificMainTable() {
@@ -13,6 +14,7 @@ export default function SpecificMainTable() {
     const [requirementId, setRequirementId] = React.useState('');
     const [supplyId, setSupplyId] = React.useState('');
     const [quantity, setQuantity] = React.useState('');
+    const [flag, setFlag] = React.useState(0);
     const navigate = useNavigate();
     const { req_id } = useParams();
 
@@ -20,27 +22,26 @@ export default function SpecificMainTable() {
         const fetchData = async () => {
             try {
                 const res = await axios.get(`/api/order/get-requirement-order/${req_id}`);
-              console.log(res);
-                const fetchedData = res.data.results.map(item => ({
+                console.log(res);
+                const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,
                     order_id: `OR${item.order_id}`,
                     category_name: item.cat_name,
                     category_id: `CAT${item.list_cat_id}`,
-                    supply_quantity: `${item.supply_quantity} kg`,
-                    date: new Date(item.create_at).toLocaleDateString(),
-                    requirement_id:item.requir_id,
-                    suuply_id:item.supply_id,
-                    status: item.req_status
+                    supply_quantity: `${item.order_qty} kg`,
+                    requirement_id: item.req_id,
+                    supply_id: item.s_id,
+                    status: item.order_status
                 }));
-         
                 setData(fetchedData);
             } catch (err) {
-                console.log(err);
+                console.error('Error fetching data:', err);
+                toast.error('Failed to fetch data');
             }
         };
-    
+
         fetchData();
-    }, []);
+    }, [req_id, flag]);
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -52,7 +53,7 @@ export default function SpecificMainTable() {
 
     const handleSearchClick = () => {
         if (searchColumn) {
-            const filteredData = data.filter(item => 
+            const filteredData = data.filter(item =>
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
@@ -61,14 +62,17 @@ export default function SpecificMainTable() {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('/api/your-endpoint', {
-                requirement_id: requirementId,
-                supply_id: supplyId,
-                quantity:quantity,
+            const response = await axios.post('/api/order/add-order', {
+                req_id: requirementId,
+                s_id: supplyId,
+                quantity: quantity,
             });
+            setFlag((prev) => prev + 1);
             console.log('Response:', response.data);
         } catch (error) {
             console.error('Error submitting data:', error);
+            
+            toast.error(error.response.data.error);
         }
     };
 
@@ -117,7 +121,7 @@ export default function SpecificMainTable() {
                         onChange={(e) => setQuantity(e.target.value)}
                         className='text-center w-1/4 p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
-                     <button
+                    <button
                         className='bg-slate-400 hover:bg-slate-600 box-border rounded-2xl p-1 border-1 text-white'
                         onClick={handleSubmit}
                     >
@@ -134,7 +138,6 @@ export default function SpecificMainTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -149,7 +152,6 @@ export default function SpecificMainTable() {
                                     <td className="py-2 px-4">{row.category_name}</td>
                                     <td className="py-2 px-4">{row.category_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    <td className="py-2 px-4">{row.date}</td>
                                     <td className="py-2 px-4">{row.requirement_id}</td>
                                     <td className="py-2 px-4">{row.supply_id}</td>
                                     <td className="py-2 px-4">{row.status}</td>
@@ -164,6 +166,7 @@ export default function SpecificMainTable() {
                     </table>
                 </div>
             </Sidebar>
+            <ToastContainer />
         </>
     );
 }

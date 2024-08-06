@@ -2,7 +2,8 @@ import React from 'react';
 import Sidebar from '../component/Sidebar';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the styles for react-toastify
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
 export default function MainTable() {
@@ -12,7 +13,7 @@ export default function MainTable() {
     const [requirementId, setRequirementId] = React.useState('');
     const [supplyId, setSupplyId] = React.useState('');
     const [quantity, setQuantity] = React.useState('');
-    const [flag,setFlag] = React.useState(0);
+    const [flag, setFlag] = React.useState(0);
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -26,7 +27,6 @@ export default function MainTable() {
                     category_name: item.cat_name,
                     category_id: `CAT${item.list_cat_id}`,
                     supply_quantity: `${item.order_qty} kg`,
-                    // date: new Date(item.create_at).toLocaleDateString(),
                     requirement_id: item.req_id,
                     supply_id: item.s_id,
                     status: item.order_status
@@ -36,7 +36,7 @@ export default function MainTable() {
                 console.log(err);
             }
         };
-    
+
         fetchData();
     }, [flag]);
 
@@ -62,14 +62,13 @@ export default function MainTable() {
             const response = await axios.post('/api/order/add-order', {
                 req_id: requirementId,
                 s_id: supplyId,
-                quantity:quantity,
+                quantity: quantity,
             });
-            setFlag((prev)=>{
-                return prev+1
-            })
+            setFlag((prev) => prev + 1);
             console.log('Response:', response.data);
         } catch (error) {
             console.error('Error submitting data:', error);
+            toast.error(error.response.data.error);
         }
     };
 
@@ -135,7 +134,6 @@ export default function MainTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
-                                {/* <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th> */}
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -150,7 +148,6 @@ export default function MainTable() {
                                     <td className="py-2 px-4">{row.category_name}</td>
                                     <td className="py-2 px-4">{row.category_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    {/* <td className="py-2 px-4">{row.date}</td> */}
                                     <td className="py-2 px-4">{row.requirement_id}</td>
                                     <td className="py-2 px-4">{row.supply_id}</td>
                                     <td className="py-2 px-4">{row.status}</td>
@@ -165,6 +162,7 @@ export default function MainTable() {
                     </table>
                 </div>
             </Sidebar>
+            <ToastContainer />
         </>
     );
 }
