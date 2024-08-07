@@ -17,7 +17,12 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await axios.get('/api/Autharization/checkAuth');
-        setAuth(response.data);
+        if(response.data.user.role==='dashboardUser')
+        {
+          setAuth(response.data);
+        }
+        
+        
         // console.log(response.data);
       } catch (error) {
         setAuth(null);

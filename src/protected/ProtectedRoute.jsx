@@ -5,6 +5,7 @@ import AuthContext from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
   const { auth, loading } = useContext(AuthContext);
+  console.log(auth)
   const location = useLocation();
 
   if (loading) {
