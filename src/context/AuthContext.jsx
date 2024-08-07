@@ -54,14 +54,13 @@ export const AuthProvider = ({ children }) => {
     try {
       await axios.post('/api/Autharization/logout');
       setAuth(null);
-      toast.success("Logout")
+      toast.success("Logged out successfully");
       navigate('/login');
-      
     } catch (error) {
       console.error('Logout failed', error);
     }
   };
-
+  
   return (
     <AuthContext.Provider value={{ auth, loading, login, logout }}>
       {children}
