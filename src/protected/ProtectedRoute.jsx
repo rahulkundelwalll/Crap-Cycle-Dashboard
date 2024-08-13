@@ -5,15 +5,15 @@ import AuthContext from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
   const { auth, loading } = useContext(AuthContext);
-  console.log(auth)
+  console.log(auth)  
   const location = useLocation();
 
-  if (loading) {
+  if (loading ) {
     // Optionally, render a loading indicator here
     return <div>Loading...</div>;
   }
 
-  if (!auth) {
+  if (!auth|| auth.user.role !="dashboardUser") {
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
