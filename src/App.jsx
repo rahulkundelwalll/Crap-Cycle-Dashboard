@@ -96,7 +96,7 @@ function App() {
         
        {/* Order */}
        <Route path='/order-history' element={<ProtectedRoute><Order_History /></ProtectedRoute>}></Route>
-       <Route path='/order-mangagement' element={<ProtectedRoute><OrderMangement /></ProtectedRoute>}></Route>
+       <Route path='/order-mangagement/:id' element={<ProtectedRoute><OrderMangement /></ProtectedRoute>}></Route>
 
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>

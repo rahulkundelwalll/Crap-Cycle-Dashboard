@@ -23,7 +23,7 @@ export default function MainTable() {
                 console.log(res);
                 const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,
-                    order_id: `OR${item.order_id}`,
+                    order_id: item.order_id,
                     category_name: item.cat_name,
                     category_id: `CAT${item.list_cat_id}`,
                     supply_quantity: `${item.order_qty} kg`,
@@ -152,8 +152,8 @@ export default function MainTable() {
                                     <td className="py-2 px-4">{row.supply_id}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate('/supplytable')}>
-                                            View
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/order-mangagement/${row.order_id}`)}>
+                                            Edit
                                         </button>
                                     </td>
                                 </tr>
