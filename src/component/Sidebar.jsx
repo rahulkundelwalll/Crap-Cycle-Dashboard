@@ -11,11 +11,14 @@ import AuthContext from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
     const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
         const savedState = localStorage.getItem('expandUserManagement');
+        return savedState === 'true';
+    });
+    const [expandOrderManagement, setExpandOrderManagement] = React.useState(() => {
+        const savedState = localStorage.getItem('expandOrderManagement');
         return savedState === 'true';
     });
     const { logout } = React.useContext(AuthContext);
@@ -24,6 +27,14 @@ export default function Sidebar({ children, page }) {
         setExpandUserManagement(prev => {
             const newState = !prev;
             localStorage.setItem('expandUserManagement', newState);
+            return newState;
+        });
+    }
+
+    const toggleOrderManagement = () => {
+        setExpandOrderManagement(prev => {
+            const newState = !prev;
+            localStorage.setItem('expandOrderManagement', newState);
             return newState;
         });
     }
@@ -77,19 +88,23 @@ export default function Sidebar({ children, page }) {
                                 <span className="   text-2xl">Category Management</span>
                             </li>
                             </Link>
-                            <Link to='/dashboard/requirement/allrequirement'>
-                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-                                <DiCodepen className=" text-4xl" />
-                                <span className=" text-2xl">Order Management</span>
+                            <li className="flexspace-x-2 cursor-pointer flex-col">
+                                <div className='flex text-white hover:text-black' onClick={toggleOrderManagement}>
+                                    <DiCodepen className=" text-4xl" />
+                                    <span className="text-2xl">Order Management</span>
+                                </div>
+                                <ul className={expandOrderManagement ? 'text-white flex flex-col justify-center ms-10 text-xl' : 'hidden'}>
+                                    <Link to='/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
+                                    <Link to='/dashboard/requirement/allrequirement'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
+                                    <Link to='/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
+                                </ul>
                             </li>
-                            </Link>
                             <Link to='/dashboard/requirement/addrequirement'>
                             <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
                                 <GiNotebook className="text-4xl " />
                                 <span className="  text-2xl">Add Requirement</span>
                             </li>
                             </Link>
-
                         </ul>
                     </div>
                     <div className="pb-10">
