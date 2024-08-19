@@ -1,9 +1,9 @@
 import React from 'react';
 import Sidebar from '../component/Sidebar';
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-import { CiSearch } from "react-icons/ci";
+import { useNavigate } from 'react-router-dom';
+import { CiSearch } from 'react-icons/ci';
 import axios from 'axios';
+import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
@@ -15,6 +15,8 @@ export default function Requirement_Table() {
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -29,12 +31,13 @@ export default function Requirement_Table() {
                     category_id: item.list_cat_id,
                     quantity: `${item.req_quantity} kg`,
                     date: new Date(item.create_at).toLocaleDateString(),
-                    bided_quantity:item.req_price,
-                    buyerid:item.b_id,
+                    bided_quantity: item.req_price,
+                    buyerid: item.b_id,
                     status: item.req_status
                 }));
          
                 setData(fetchedData);
+                setInitialData(fetchedData);
             } catch (err) {
                 console.log(err);
             }
@@ -72,17 +75,23 @@ export default function Requirement_Table() {
 
     const handleSearchClick = () => {
         if (searchColumn) {
-            const filteredData = data.filter(item => 
+            const filteredData = initialData.filter(item => 
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
+            setCurrentPage(0); // Reset to first page after search
         }
     };
 
+    const handlePageClick = (selectedPage) => {
+        setCurrentPage(selectedPage.selected);
+    };
+
+    const displayedData = data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
     return (
         <>
-            <Sidebar page={'Order Management'}>
-                
+            <Sidebar page={'Requirement Table'}>
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
@@ -136,9 +145,9 @@ export default function Requirement_Table() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {data.map((row, index) => (
+                            {displayedData.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{index + 1}</td>
+                                    <td className="py-2 px-4">{currentPage * itemsPerPage + index + 1}</td>
                                     <td className="py-2 px-4">{row.requirement_id}</td>
                                     <td className="py-2 px-4">{row.category_name}</td>
                                     <td className="py-2 px-4">{row.category_id}</td>
@@ -148,15 +157,12 @@ export default function Requirement_Table() {
                                     <td className="py-2 px-4">{row.buyerid}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
-                                    <td className="py-2 px-4">
-    <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/table/${row.requirement_id}`)}>
-        View
-    </button>
-</td>
-
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/table/${row.requirement_id}`)}>
+                                            View
+                                        </button>
                                     </td>
                                     <td className="py-2 px-4">
-                                        <button className=" text-back px-2 py-1 rounded hover:text-blue-400 " onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
+                                        <button className="text-black px-2 py-1 rounded hover:text-blue-400" onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
                                             Edit
                                         </button>
                                     </td>
@@ -164,6 +170,22 @@ export default function Requirement_Table() {
                             ))}
                         </tbody>
                     </table>
+                    <ReactPaginate
+                        previousLabel={'Previous'}
+                        nextLabel={'Next'}
+                        breakLabel={'...'}
+                        breakClassName={'break-me'}
+                        pageCount={Math.ceil(data.length / itemsPerPage)}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'flex space-x-2 mt-4'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        previousLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        nextLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        activeClassName={'bg-blue-500 text-white'}
+                    />
                 </div>
             </Sidebar>
         </>

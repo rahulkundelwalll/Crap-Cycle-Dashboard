@@ -4,6 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import axios from 'axios';
+import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['vendor_ratings', 'supply_quantity', 'supply_rate', 'price_range'];
 const searchOptions = ['vendor_name'];
@@ -15,18 +16,20 @@ export default function SupplyTable() {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
     const [notification, setNotification] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await axios.get('/api/supply/all-supply');
                 console.log(res.data.results);
                 const fetchedData = res.data.results.map(item => ({
-                    s_id:item.s_id,
-                    v_id:item.v_id,
-                    cat_id:item.list_cat_id,
-                    cat_name:item.cat_name,
+                    s_id: item.s_id,
+                    v_id: item.v_id,
+                    cat_id: item.list_cat_id,
+                    cat_name: item.cat_name,
                     id: item.id,  // Add ID for each item
                     vendor_name: item.v_name,
                     supply_quantity: item.s_qty,
@@ -79,6 +82,7 @@ export default function SupplyTable() {
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
             setData(filteredData);
+            setCurrentPage(0); // Reset to first page after search
         }
     };
 
@@ -126,14 +130,18 @@ export default function SupplyTable() {
             console.log(err);
             setNotification('Failed to send notification.');
             setTimeout(() => setNotification(''), 3000);
-     
         }
     };
+
+    const handlePageClick = (selectedPage) => {
+        setCurrentPage(selectedPage.selected);
+    };
+
+    const displayedData = data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     return (
         <>
             <Sidebar page={'Supply Table'}>
-               
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
@@ -182,54 +190,67 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Name</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
-                               
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
-                               
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price </th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {data.map((row, index) => (
+                            {displayedData.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{index + 1}</td>
+                                    <td className="py-2 px-4">{currentPage * itemsPerPage + index + 1}</td>
                                     <td className="py-2 px-4">{row.vendor_name}</td>
                                     <td className="py-2 px-4">{row.s_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    
                                     <td className="py-2 px-4">{row.supply_rate}</td>
-                                    
                                     <td className="py-2 px-4 text-center">
-                                        <input 
-                                            type="text" 
-                                            placeholder="" 
-                                            value={row.asked_price} 
-                                            onChange={(e) => handleAskedPriceChange(index, e.target.value)} 
+                                        <input
+                                            type="text"
+                                            placeholder=""
+                                            value={row.asked_price}
+                                            onChange={(e) => handleAskedPriceChange(currentPage * itemsPerPage + index, e.target.value)}
                                             className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
                                     <td className="py-2 px-4 text-center">
-                                        <input 
-                                            type="text" 
-                                            placeholder="" 
-                                            value={row.asked_quantity} 
-                                            onChange={(e) => handleAskedQuantityChange(index, e.target.value)} 
+                                        <input
+                                            type="text"
+                                            placeholder=""
+                                            value={row.asked_quantity}
+                                            onChange={(e) => handleAskedQuantityChange(currentPage * itemsPerPage + index, e.target.value)}
                                             className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4 text-center">
-                                        <FaBell 
-                                            className='cursor-pointer text-xl hover:text-blue-500' 
-                                            onClick={() => handleBellClick(row)} 
+                                        <FaBell
+                                            className='cursor-pointer text-xl hover:text-blue-500'
+                                            onClick={() => handleBellClick(row)}
                                         />
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    <ReactPaginate
+                        previousLabel={'Previous'}
+                        nextLabel={'Next'}
+                        breakLabel={'...'}
+                        pageCount={Math.ceil(data.length / itemsPerPage)}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination flex justify-center mt-4'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        previousClassName={'page-item'}
+                        previousLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        nextClassName={'page-item'}
+                        nextLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
+                        activeClassName={'bg-blue-500 text-white'}
+                    />
                 </div>
             </Sidebar>
         </>

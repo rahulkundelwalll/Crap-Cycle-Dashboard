@@ -74,8 +74,7 @@ export default function MainTable() {
 
     return (
         <>
-            <Sidebar page={'Requirement Table'}>
-               
+            <Sidebar page={'MainOrder Table'}>
                 <div className='flex justify-around items-center mt-3'>
                     <input
                         type='text'
@@ -105,42 +104,43 @@ export default function MainTable() {
                         Submit
                     </button>
                 </div>
-                
-                <div className="mx-auto pt-10 container w-screen">
-                    <table className="min-w-full bg-white border border-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement Id</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {data.map((row, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{index + 1}</td>
-                                    <td className="py-2 px-4">{row.order_id}</td>
-                                    <td className="py-2 px-4">{row.category_name}</td>
-                                    <td className="py-2 px-4">{row.category_id}</td>
-                                    <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    <td className="py-2 px-4">{row.requirement_id}</td>
-                                    <td className="py-2 px-4">{row.supply_id}</td>
-                                    <td className="py-2 px-4">{row.status}</td>
-                                    <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/order-mangagement/${row.order_id}`)}>
-                                            Edit
-                                        </button>
-                                    </td>
+                <div className="mx-auto pt-10 container w-screen overflow-auto">
+                    <div className="min-w-full bg-white border border-gray-200 overflow-x-auto">
+                        <table className="min-w-full bg-white border border-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category ID</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement Id</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {data.map((row, index) => (
+                                    <tr key={index} className="hover:bg-gray-50">
+                                        <td className="py-2 px-4">{index + 1}</td>
+                                        <td className="py-2 px-4">{row.order_id}</td>
+                                        <td className="py-2 px-4">{row.category_name}</td>
+                                        <td className="py-2 px-4">{row.category_id}</td>
+                                        <td className="py-2 px-4">{row.supply_quantity}</td>
+                                        <td className="py-2 px-4">{row.requirement_id}</td>
+                                        <td className="py-2 px-4">{row.supply_id}</td>
+                                        <td className="py-2 px-4">{row.status}</td>
+                                        <td className="py-2 px-4">
+                                            <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/order-mangagement/${row.order_id}`)}>
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </Sidebar>
             <ToastContainer />
