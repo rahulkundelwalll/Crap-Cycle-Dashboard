@@ -6,63 +6,69 @@ import Sidebar from '../component/Sidebar';
 const CompletedRequirements = () => {
     const { id } = useParams(); // Extract the ID from the route parameters
     const [orderDetails, setOrderDetails] = useState({});
-    const [buyerDetails, setBuyerDetails] = useState({});
     const [completedOrders, setCompletedOrders] = useState([]);
 
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const res = await axios.get(`/api/order/get-requirement-order/${id}`);
-                console.log(res);
-                setOrderDetails(res.data);
+                const res = await axios.get(`/api/requirement/requirement-detail/${id}`);
+                setOrderDetails(res.data.results[0]);
             } catch (error) {
                 console.error('Error fetching order details:', error);
             }
         };
 
-        const fetchBuyerDetails = async () => {
-            try {
-                const res = await axios.get(`/api/buyer/details/${id}`);
-                setBuyerDetails(res.data);
-            } catch (error) {
-                console.error('Error fetching buyer details:', error);
-            }
-        };
-
         const fetchCompletedOrders = async () => {
             try {
-                const res = await axios.get(`/api/order/completed/${id}`);
-                setCompletedOrders(res.data);
+                const res = await axios.get(`/api/order/get-require-order/${id}`);
+                setCompletedOrders(res.data.data);
+                console.log(res.data.data)
             } catch (error) {
                 console.error('Error fetching completed orders:', error);
             }
         };
 
         fetchOrderDetails();
-        fetchBuyerDetails();
         fetchCompletedOrders();
     }, [id]); // Dependency array includes the ID
+
+    const handlePaymentToggle = async (orderId, currentStatus, index) => {
+        const newStatus = currentStatus === 'Paid' ? 'Unpaid' : 'Paid';
+        try {
+            await axios.patch(`/api/order/payment/${orderId}`, {
+                status: newStatus,
+            });
+            // Update the payment status locally after successful API call
+            setCompletedOrders(prevOrders => {
+                const updatedOrders = [...prevOrders];
+                updatedOrders[index].payment = newStatus;
+                return updatedOrders;
+            });
+        } catch (error) {
+            console.error('Error updating payment status:', error);
+        }
+    };
 
     return (
         <Sidebar page={'Complete Requirements'}>
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-screen-lg mx-auto mt-6">
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <div className="p-4 rounded-lg shadow-md">
                         <h2 className="font-bold">Order Details</h2>
-                        <p>Requirement ID: {orderDetails.requirementId}</p>
-                        <p>Category Name: {orderDetails.categoryName}</p>
-                        <p>Overall Quantity: {orderDetails.overallQuantity}</p>
-                        <p>Category ID: {orderDetails.categoryId}</p>
-                        <p>Order Value: {orderDetails.orderValue}</p>
-                        <p>Pick up Date: {orderDetails.pickUpDate}</p>
+                        <p>Requirement ID: {orderDetails.req_id}</p>
+                        <p>Category Name: {orderDetails.cat_name}</p>
+                        <p>Quantity: {orderDetails.req_quantity}</p>
+                        <p>Price: {orderDetails.req_price}</p>
+                        <p>Note: {orderDetails.req_note}</p>
+                        <p>Status: {orderDetails.req_status}</p>
                     </div>
-                    <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <div className="p-4 rounded-lg shadow-md">
                         <h2 className="font-bold">Buyer's Details</h2>
-                        <p>Buyer's Name: {buyerDetails.name}</p>
-                        <p>Buyer's Phone No.: {buyerDetails.phone}</p>
-                        <p>Buyer's Address: {buyerDetails.address}</p>
-                        <p>Order drop location: {buyerDetails.dropLocation}</p>
-                        <p>Buyer's ID: {buyerDetails.buyerId}</p>
+                        <p>Buyer's Name: {orderDetails.b_name}</p>
+                        <p>Buyer's Phone No.: {orderDetails.b_moile}</p>
+                        <p>Buyer's Address: {orderDetails.b_add}</p>
+                        <p>Order drop location: {orderDetails.b_drop_add}</p>
+                        <p>Buyer's ID: {orderDetails.b_id}</p>
                     </div>
                 </div>
 
@@ -85,17 +91,20 @@ const CompletedRequirements = () => {
                         <tbody className="divide-y divide-gray-200">
                             {completedOrders.map((order, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{order.sNo}</td>
-                                    <td className="py-2 px-4">{order.vendorName}</td>
-                                    <td className="py-2 px-4">{order.vendorId}</td>
-                                    <td className="py-2 px-4">{order.orderId}</td>
-                                    <td className="py-2 px-4">{order.quantity}</td>
-                                    <td className="py-2 px-4">{order.pickupLocation}</td>
-                                    <td className="py-2 px-4">{order.deliveryAgent}</td>
-                                    <td className="py-2 px-4">{order.deliveryAgentId}</td>
-                                    <td className="py-2 px-4">{order.amount}</td>
+                                    <td className="py-2 px-4">{index + 1}</td>
+                                    <td className="py-2 px-4">{order.v_name}</td>
+                                    <td className="py-2 px-4">{order.v_id}</td>
+                                    <td className="py-2 px-4">{order.order_id}</td>
+                                    <td className="py-2 px-4">{order.order_qty}</td>
+                                    <td className="py-2 px-4">{order.v_address}</td>
+                                    <td className="py-2 px-4">{order.d_name}</td>
+                                    <td className="py-2 px-4">{order.d_id}</td>
+                                    <td className="py-2 px-4">{order.order_price}</td>
                                     <td className="py-2 px-4">
-                                        <span className={`px-2 py-1 rounded-full text-white ${order.payment === "Paid" ? "bg-green-500" : "bg-red-500"}`}>
+                                        <span
+                                            className={`px-2 py-1 rounded-full text-white cursor-pointer ${order.payment === "Paid" ? "bg-green-500" : "bg-red-500"}`}
+                                            onClick={() => handlePaymentToggle(order.order_id, order.payment, index)}
+                                        >
                                             {order.payment}
                                         </span>
                                     </td>

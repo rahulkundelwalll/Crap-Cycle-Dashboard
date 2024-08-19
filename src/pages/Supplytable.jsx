@@ -24,7 +24,7 @@ export default function SupplyTable() {
         const fetchData = async () => {
             try {
                 const res = await axios.get('/api/supply/all-supply');
-                console.log(res.data.results);
+                
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,
                     v_id: item.v_id,
@@ -40,7 +40,9 @@ export default function SupplyTable() {
                     asked_price: '',
                     asked_quantity: ''
                 }));
+                
                 setData(fetchedData);
+                console.log(fetchedData);
             } catch (err) {
                 console.log(err);
             }
@@ -188,6 +190,8 @@ export default function SupplyTable() {
                             <tr>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Name</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
@@ -202,6 +206,8 @@ export default function SupplyTable() {
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-2 px-4">{currentPage * itemsPerPage + index + 1}</td>
                                     <td className="py-2 px-4">{row.vendor_name}</td>
+                                    <td className="py-2 px-4">{row.cat_name}</td>
+                                    <td className="py-2 px-4">{row.cat_id}</td>
                                     <td className="py-2 px-4">{row.s_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity}</td>
                                     <td className="py-2 px-4">{row.supply_rate}</td>

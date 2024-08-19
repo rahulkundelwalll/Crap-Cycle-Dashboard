@@ -141,7 +141,7 @@ export default function Requirement_Table() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
+                              
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -157,15 +157,11 @@ export default function Requirement_Table() {
                                     <td className="py-2 px-4">{row.buyerid}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/table/${row.requirement_id}`)}>
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/complete-requirement/${row.requirement_id}`)}>
                                             View
                                         </button>
                                     </td>
-                                    <td className="py-2 px-4">
-                                        <button className="text-black px-2 py-1 rounded hover:text-blue-400" onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
-                                            Edit
-                                        </button>
-                                    </td>
+                                   
                                 </tr>
                             ))}
                         </tbody>
