@@ -82,26 +82,7 @@ export default function Requirement_Table() {
     return (
         <>
             <Sidebar page={'Order Management'}>
-                <div className='flex justify-around items-center mt-5'>
-                <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/dashboard/requirement/allrequirement')}
-                    >
-                        Requirement Table
-                    </button>
-                    <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/supplytable')}
-                    >
-                        Supply Table
-                    </button>
-                    <button
-                        className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/maintable')}
-                    >
-                        Main Table
-                        </button>
-                </div>
+                
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
