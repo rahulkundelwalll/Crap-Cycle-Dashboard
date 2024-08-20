@@ -53,6 +53,7 @@ import UpdateLinks from './pages/Other';
 import UpdateContact from './pages/Other/UpdateContact';
 import UpdatePrivacy from './pages/Other/UpdatePrivacy';
 import UpdateTnc from './pages/Other/UpdateTnc';
+import GetPassword from './pages/Other/GetPassword';
 function App() {
 
 
@@ -111,6 +112,7 @@ function App() {
          <Route path='/update-tnc' element={<ProtectedRoute><UpdateTnc /></ProtectedRoute>}></Route>
          <Route path='/update-privacy' element={<ProtectedRoute><UpdatePrivacy  /></ProtectedRoute>}></Route>
          <Route path='/update-contact' element={<ProtectedRoute><UpdateContact/></ProtectedRoute>}></Route>
+         <Route path='/get-password' element={<ProtectedRoute><GetPassword/></ProtectedRoute>}></Route>
 
         
 

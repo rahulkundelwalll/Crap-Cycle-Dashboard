@@ -26,6 +26,12 @@ export default function UpdateLinks() {
                     >
                         Update Contact
                     </Link>
+                    <Link 
+                        to="/get-password" 
+                        className="px-4 py-2 border border-gray-400 rounded-full text-gray-700 hover:text-black hover:border-black transition ease-in-out duration-300"
+                    >
+                        Get Password
+                    </Link>
                 </div>
             </div>
         </Sidebar>
