@@ -38,7 +38,8 @@ export default function SupplyTable() {
                     approve_quantity: '',
                     price_range: '',
                     asked_price: '',
-                    asked_quantity: ''
+                    asked_quantity: '',
+                    vendor_supply:item.vendor_supply
                 }));
                 
                 setData(fetchedData);
@@ -194,6 +195,7 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
@@ -210,6 +212,7 @@ export default function SupplyTable() {
                                     <td className="py-2 px-4">{row.cat_id}</td>
                                     <td className="py-2 px-4">{row.s_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity} kg</td>
+                                    <td className="py-2 px-4">{row.vendor_supply} kg</td>
                                     <td className="py-2 px-4">{row.supply_rate} Rs</td>
                                     <td className="py-2 px-4 text-center">
                                         <input

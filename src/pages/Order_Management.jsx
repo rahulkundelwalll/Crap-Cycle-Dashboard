@@ -11,17 +11,18 @@ const OrderManagement = () => {
   const [selectedAgent, setSelectedAgent] = useState({ d_id: '', d_mobile: '', d_name: '' });
   const [pickupDate, setPickupDate] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const fetchOrderData = async () => {
+    try {
+      const response = await axios.get(`/api/order/get-order-detail/${id}`);
+      setOrderData(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error('Error fetching order data:', error);
+    }
+  };
   useEffect(() => {
-    const fetchOrderData = async () => {
-      try {
-        const response = await axios.get(`/api/order/get-order-detail/${id}`);
-        setOrderData(response.data.data);
-        console.log(response.data.data);
-      } catch (error) {
-        console.error('Error fetching order data:', error);
-      }
-    };
-
+    fetchOrderData();
+    
     const fetchAgents = async () => {
       try {
         const response = await axios.get(`/api/delivery/get-all-agent`);
@@ -76,6 +77,7 @@ const OrderManagement = () => {
     try {
       const res = await axios.patch(`/api/order/changestatus/${orderData[0].order_id}`, { status: status });
       console.log(res);
+      fetchOrderData();
     } catch (err) {
       console.log(err);
     }
@@ -129,10 +131,8 @@ const OrderManagement = () => {
       })
       if(res.status===200)
       {
-        toast.success("transition Id added ");
-      }
-      else{
-        toast.success("Internal Service Error ");
+        fetchOrderData();
+      
       }
       
 
