@@ -209,8 +209,8 @@ export default function SupplyTable() {
                                     <td className="py-2 px-4">{row.cat_name}</td>
                                     <td className="py-2 px-4">{row.cat_id}</td>
                                     <td className="py-2 px-4">{row.s_id}</td>
-                                    <td className="py-2 px-4">{row.supply_quantity}</td>
-                                    <td className="py-2 px-4">{row.supply_rate}</td>
+                                    <td className="py-2 px-4">{row.supply_quantity} kg</td>
+                                    <td className="py-2 px-4">{row.supply_rate} Rs</td>
                                     <td className="py-2 px-4 text-center">
                                         <input
                                             type="text"

@@ -109,7 +109,7 @@ export default function AddRequirement() {
         const data = {
             req_quantity: formData.quantity,
             req_price: formData.price,
-            req_status: "pending",
+            req_status: "Pending",
             req_note: formData.note,
             b_id: formData.buyer.b_id,
             b_name: formData.buyer.b_name,

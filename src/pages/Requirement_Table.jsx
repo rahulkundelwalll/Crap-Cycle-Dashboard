@@ -141,6 +141,7 @@ export default function Requirement_Table() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
                               
                             </tr>
                         </thead>
@@ -153,7 +154,7 @@ export default function Requirement_Table() {
                                     <td className="py-2 px-4">{row.category_id}</td>
                                     <td className="py-2 px-4">{row.quantity}</td>
                                     <td className="py-2 px-4">{row.date}</td>
-                                    <td className="py-2 px-4">{row.bided_quantity}</td>
+                                    <td className="py-2 px-4">Rs {row.bided_quantity}</td>
                                     <td className="py-2 px-4">{row.buyerid}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">
@@ -161,6 +162,11 @@ export default function Requirement_Table() {
                                             View
                                         </button>
                                     </td>
+                                    <td className="py-2 px-4">
+                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
+                                            Edit
+                                        </button>
+                                        </td>
                                    
                                 </tr>
                             ))}
