@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../component/Sidebar';
 import axios from 'axios';
-
+import ConfirmationModal from '../component/ConfirmationModal';
+import { toast } from 'react-toastify';
 const OrderManagement = () => {
   const { id } = useParams();
   const [orderData, setOrderData] = useState(null);
   const [agents, setAgents] = useState([]);
   const [selectedAgent, setSelectedAgent] = useState({ d_id: '', d_mobile: '', d_name: '' });
   const [pickupDate, setPickupDate] = useState('');
-
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
@@ -70,13 +71,12 @@ const OrderManagement = () => {
     }
   };
 
- 
-  const handleStatus  = async (status)=>{
-    try{
-      const res = await axios.patch(`/api/order/changestatus/${orderData[0].order_id}`,{status:status});
+
+  const handleStatus = async (status) => {
+    try {
+      const res = await axios.patch(`/api/order/changestatus/${orderData[0].order_id}`, { status: status });
       console.log(res);
-    }catch(err)
-    {
+    } catch (err) {
       console.log(err);
     }
   }
@@ -107,14 +107,46 @@ const OrderManagement = () => {
     order_id, cat_name, list_cat_id, order_qty, order_price, order_status, b_id,
     b_name, b_mobile, b_drop_address,
     v_id, v_name, v_mobile, v_address,
-    order_otp, d_id, d_mobile, d_name, pick_up,d_phone
+    order_otp, d_id, d_mobile, d_name, pick_up, d_phone
   } = orderData[0];
+
+
+  const handleComplete = () => {
+    // <ConfirmationModal/>
+    setShowModal(true);
+  }
+
+  const handleTransitionStatus = async (transitionId) => {
+    console.log(transitionId)
+    if(!transitionId)
+      {
+          toast.error("Enter Transition Id");
+          return;
+      }
+    try {
+      const res = await axios.patch(`/api/order/add-transitionId/${orderData[0].order_id}`,{
+        transitionId:transitionId
+      })
+      if(res.status===200)
+      {
+        toast.success("transition Id added ");
+      }
+      else{
+        toast.success("Internal Service Error ");
+      }
+      
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Sidebar page={'Order Management'}>
       <div className="bg-white p-6 rounded-lg max-w-screen-lg mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">
+          <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
+            onClick={handleComplete}>
             Completed
           </button>
         </div>
@@ -134,8 +166,8 @@ const OrderManagement = () => {
               <p className="text-gray-700 w-full">Order Status: <span>{order_status}</span></p>
             </div>
             <div className="flex mt-2">
-              <button onClick={async()=>{await handleStatus("Delivered")}} className="border-2 border-green-600 bg-green-600 text-white hover:bg-white hover:text-green-600 px-4 py-2 rounded-full mr-2">Delivered</button>
-              <button onClick={async()=>{await handleStatus("Rejected")}}className="border-2 border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 px-4 py-2 rounded-full">Rejected</button>
+              <button onClick={async () => { await handleStatus("Delivered") }} className="border-2 border-green-600 bg-green-600 text-white hover:bg-white hover:text-green-600 px-4 py-2 rounded-full mr-2">Delivered</button>
+              <button onClick={async () => { await handleStatus("Rejected") }} className="border-2 border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 px-4 py-2 rounded-full">Rejected</button>
             </div>
           </div>
 
@@ -206,6 +238,11 @@ const OrderManagement = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleTransitionStatus}
+      />
     </Sidebar>
   );
 };
