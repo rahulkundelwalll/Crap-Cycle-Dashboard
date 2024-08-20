@@ -48,6 +48,11 @@ import ProtectedRoute from './protected/ProtectedRoute';
 //Order
 import Order_History from './pages/OrderHistory';
 import OrderMangement from './pages/Order_Management';
+
+import UpdateLinks from './pages/Other';
+import UpdateContact from './pages/Other/UpdateContact';
+import UpdatePrivacy from './pages/Other/UpdatePrivacy';
+import UpdateTnc from './pages/Other/UpdateTnc';
 function App() {
 
 
@@ -102,6 +107,12 @@ function App() {
         <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
          <Route path='/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
          <Route path='/table/:req_id' element={<ProtectedRoute><SpecificMainTable /></ProtectedRoute>}></Route>
+         <Route path='/update-links' element={<ProtectedRoute><UpdateLinks /></ProtectedRoute>}></Route>
+         <Route path='/update-tnc' element={<ProtectedRoute><UpdateTnc /></ProtectedRoute>}></Route>
+         <Route path='/update-privacy' element={<ProtectedRoute><UpdatePrivacy  /></ProtectedRoute>}></Route>
+         <Route path='/update-contact' element={<ProtectedRoute><UpdateContact/></ProtectedRoute>}></Route>
+
+        
 
 
       </Routes>

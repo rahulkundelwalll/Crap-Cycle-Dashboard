@@ -7,6 +7,7 @@ import { DiCodepen } from "react-icons/di";
 import { IoExitSharp } from "react-icons/io5";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
+import { FaLink } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -105,6 +106,12 @@ export default function Sidebar({ children, page }) {
                                 <span className="  text-2xl">Add Requirement</span>
                             </li>
                             </Link>
+                            <Link to='/update-links'>
+                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                                <FaLink className="text-4xl " />
+                                <span className="  text-2xl">Update Links</span>
+                            </li>
+                            </Link>
                         </ul>
                     </div>
                     <div className="pb-10">
@@ -113,6 +120,7 @@ export default function Sidebar({ children, page }) {
                             <span className="text-2xl">logout</span>
                         </div>
                     </div>
+                    
                 </div>
                 <div className={sideButton ? "flex justify-start items-center h-screen" : 'self-center flex justify-center'}>
                     <button className='text-4xl rounded-e-3xl h-40 bg-gradient-to-r from-customTeal to-green-500 shadow-left hover:text-white' onClick={sideButtonFunction}>
