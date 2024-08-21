@@ -54,6 +54,11 @@ import UpdateContact from './pages/Other/UpdateContact';
 import UpdatePrivacy from './pages/Other/UpdatePrivacy';
 import UpdateTnc from './pages/Other/UpdateTnc';
 import GetPassword from './pages/Other/GetPassword';
+
+
+
+
+import DeactivateAccount from './pages/DeactivateAccount'
 function App() {
 
 
@@ -115,7 +120,7 @@ function App() {
          <Route path='/get-password' element={<ProtectedRoute><GetPassword/></ProtectedRoute>}></Route>
 
         
-
+        <Route path='/dashboard/deactivateaccount' element= {<ProtectedRoute><DeactivateAccount/></ProtectedRoute>}></Route>
 
       </Routes>
 

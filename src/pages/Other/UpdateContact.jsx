@@ -35,7 +35,9 @@ export default function UpdateContact() {
         e.preventDefault();
         try {
             await axios.post('/api/other/contact', contactInfo);
-            toast.success('Contact information updated successfully');
+            // toast.success('Contact information updated successfully');
+            window.alert("Contact information updated successfully");
+
         } catch (error) {
             console.error('Error updating contact info:', error);
         }
