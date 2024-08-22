@@ -72,8 +72,8 @@ export default function Sidebar({ children, page }) {
 
     return (
         <>
-            <div className='flex'>
-                <div className={`ps-10 bg-gradient-to-r from-customTeal to-green-500 md:w-3/5 w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl shadow-2xl ${sideButton ? 'hidden' : ""}`}>
+            <div className='flex h-screen'>
+                <div className={`ps-10 bg-gradient-to-r from-customTeal to-green-500 md:w-3/5 h-full  w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl shadow-2xl ${sideButton ? 'hidden' : ""}`}>
                     <div className='box-border text-center '>
                         <h2 className='box-border font-bold text-start text-white text-3xl'>Welcome Back,</h2>
                         <h1 className='text-4xl font-bold text-start text-white'>Pawan Mishra!</h1>
