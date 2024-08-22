@@ -36,13 +36,17 @@ function DeactivatedAccountInfo() {
   return (
     <Sidebar page={'Delivery Agent'}>
     <div className="flex justify-center ">
-      <div className="bg-white p-8 rounded border w-full max-w-2xl mx-4">
+      <div className="bg-white p-8 rounded border w-full  mx-4">
         <h2 className="text-lg font-medium mb-6">Deactivated Accounts</h2>
         <table className="w-full border-collapse">
           <thead>
             <tr>
               <th className="border-b-2 p-4 text-left">Vendor ID</th>
               <th className="border-b-2 p-4 text-left">Vendor Name</th>
+              <th className="border-b-2 p-4 text-left">Phone No.  </th>
+              <th className="border-b-2 p-4 text-left">Company Name</th>
+              <th className="border-b-2 p-4 text-left">Email ID</th>
+              <th className="border-b-2 p-4 text-left">Address</th>
               <th className="border-b-2 p-4 text-left">Reason</th>
             </tr>
           </thead>
@@ -52,6 +56,10 @@ function DeactivatedAccountInfo() {
                 <tr key={account.v_id}>
                   <td className="border-b p-4">{account.v_id}</td>
                   <td className="border-b p-4">{account.v_name}</td>
+                  <td className="border-b p-4">{account.v_mobile}</td>
+                  <td className="border-b p-4">{account.v_email}</td>
+                  <td className="border-b p-4">{account.v_companyname}</td>
+                  <td className="border-b p-4">{account.v_address}</td>
                   <td className="border-b p-4">{account.Reason}</td>
                 </tr>
               ))

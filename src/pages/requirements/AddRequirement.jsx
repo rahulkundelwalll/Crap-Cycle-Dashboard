@@ -150,6 +150,8 @@ export default function AddRequirement() {
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
+                <div className='w-full flex justify-between'>
+                <label className='text-right pr-4'>Select Category : </label>
                     <select
                         name='category'
                         value={JSON.stringify(formData.category)}
@@ -161,6 +163,9 @@ export default function AddRequirement() {
                             <option key={index} value={JSON.stringify(category)}>{category.cat_name}</option>
                         ))}
                     </select>
+                    </div>  
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Category Name : </label>
                     <input
                         type="text"
                         name='categoryName'
@@ -169,6 +174,9 @@ export default function AddRequirement() {
                         readOnly
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Quantity : </label>
                     <input
                         type="text"
                         name='quantity'
@@ -177,6 +185,9 @@ export default function AddRequirement() {
                         placeholder='Quantity'
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Price : </label>
                     <input
                         type="text"
                         name='price'
@@ -185,6 +196,9 @@ export default function AddRequirement() {
                         placeholder='Price'
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Amount : </label>
                     <input
                         type="text"
                         name='amount'
@@ -193,6 +207,9 @@ export default function AddRequirement() {
                         readOnly
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
                     />
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Note : </label>
                     <input
                         type="text"
                         name='note'
@@ -201,6 +218,9 @@ export default function AddRequirement() {
                         placeholder='Note'
                         className='placeholder:text-center mb-4 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-red-500'
                     />
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Select Buyer : </label>
                     <select
                         name='buyer'
                         value={JSON.stringify(formData.buyer)}
@@ -212,6 +232,9 @@ export default function AddRequirement() {
                             <option key={index} value={JSON.stringify(buyer)}>{buyer.b_name}</option>
                         ))}
                     </select>
+                    </div>
+                    <div className='w-full flex justify-between'>
+                    <label className='text-right pr-4'>Select Droping Address : </label>
                     <select
                         name='address'
                         value={formData.address}
@@ -223,15 +246,16 @@ export default function AddRequirement() {
                             <option key={index} value={add.dropingAddress}>{add.dropingAddress}</option>
                         ))}
                     </select>
+                    </div>
                     
                     <div className='flex items-center'>
                         <button
                             onClick={handleClick}
-                            className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'
+                            className='px-6 py-2 mr-10 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300  w-32'
                         >
                             Save
                         </button>
-                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'
+                        <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300 w-32'
                         onClick={()=>{navigate('/dashboard/requirement/allrequirement')}}>
                             Cancel
                         </button>
