@@ -50,7 +50,7 @@ const OrderManagement = () => {
   const handleDateChange = (event) => {
     setPickupDate(event.target.value);
   };
-
+  
   const handleAssign = async () => {
     try {
       await axios.patch(`/api/order/assign-deleveryagent/${orderData[0].order_id}`, {
@@ -145,10 +145,10 @@ const OrderManagement = () => {
     <Sidebar page={'Order Management'}>
       <div className="bg-white p-6 rounded-lg max-w-screen-lg mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
+          {orderData[0].payment == "Paid"? <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span>:<button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
             onClick={handleComplete}>
             Completed
-          </button>
+          </button>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
