@@ -32,23 +32,7 @@ const CompletedRequirements = () => {
         fetchCompletedOrders();
     }, [id]); // Dependency array includes the ID
 
-    const handlePaymentToggle = async (orderId, currentStatus, index,req_id) => {
-        const newStatus = currentStatus === 'Paid' ? 'Unpaid' : 'Paid';
-        try {
-            await axios.put(`/api/order/payment/${orderId}`, {
-                status: newStatus,
-                req_id:req_id
-            });
-            // Update the payment status locally after successful API call
-            setCompletedOrders(prevOrders => {
-                const updatedOrders = [...prevOrders];
-                updatedOrders[index].payment = newStatus;
-                return updatedOrders;
-            });
-        } catch (error) {
-            console.error('Error updating payment status:', error);
-        }
-    };
+   
 
     return (
         <Sidebar page={'Complete Requirements'}>
@@ -104,7 +88,7 @@ const CompletedRequirements = () => {
                                     <td className="py-2 px-4">
                                         <span
                                             className={`px-2 py-1 rounded-full text-white cursor-pointer ${order.payment === "Paid" ? "bg-green-500" : "bg-red-500"}`}
-                                            onClick={() => handlePaymentToggle(order.order_id, order.payment, index,orderDetails.req_id)}
+                                           
                                         >
                                             {order.payment}
                                         </span>
