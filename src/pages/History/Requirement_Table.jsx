@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from '../component/Sidebar';
+import Sidebar from '../../component/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import ReactPaginate from 'react-paginate';
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
 
-export default function Requirement_Table() {
+export default function Requirement_TableHistory() {
     const [data, setData] = React.useState([]);
     const [initialData, setInitialData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
@@ -22,7 +22,7 @@ export default function Requirement_Table() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/requirement/pending-requirement');
+                const res = await axios.get('/api/requirement/complete-requirement');
 
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,
@@ -141,7 +141,7 @@ export default function Requirement_Table() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Id</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
+                           
                               
                             </tr>
                         </thead>
@@ -162,11 +162,7 @@ export default function Requirement_Table() {
                                             View
                                         </button>
                                     </td>
-                                    <td className="py-2 px-4">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/dashboard/requirement/detail/${row.requirement_id}`)}>
-                                            Edit
-                                        </button>
-                                        </td>
+                                    
                                    
                                 </tr>
                             ))}

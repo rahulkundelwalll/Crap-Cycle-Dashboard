@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Sidebar from '../component/Sidebar';
+import Sidebar from '../../component/Sidebar';
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
@@ -9,7 +9,7 @@ import ReactPaginate from 'react-paginate';
 const sortByOptions = ['vendor_ratings', 'supply_quantity', 'supply_rate', 'price_range'];
 const searchOptions = ['vendor_name'];
 
-export default function SupplyTable() {
+export default function SupplyTableHistory() {
     const [data, setData] = React.useState([]);
     const [sortby, setSortBy] = React.useState('');
     const [ascending, setAscending] = React.useState(true);
@@ -23,7 +23,7 @@ export default function SupplyTable() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/supply/pending-supply');
+                const res = await axios.get('/api/supply/complete-supply');
                 
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,
@@ -113,28 +113,7 @@ export default function SupplyTable() {
         setData(updatedData);
     };
 
-    const handleBellClick = async (item) => {
-        const notificationData = {
-            s_id: item.s_id,
-            v_id: item.v_id,  // Make sure to include vendor_id in your data
-            asked_price: item.asked_price,
-            asked_quantity: item.asked_quantity,
-            prev_price: item.supply_rate,
-            prev_quantity: item.supply_quantity,
-            cat_id: item.cat_id,  // Make sure to include cat_id in your data
-            cat_name: item.cat_name  // Make sure to include cat_name in your data
-        };
-
-        try {
-            const res = await axios.post('/api/notification/new-notification', notificationData);
-            setNotification('Notification sent successfully!');
-            setTimeout(() => setNotification(''), 3000);
-        } catch (err) {
-            console.log(err);
-            setNotification('Failed to send notification.');
-            setTimeout(() => setNotification(''), 3000);
-        }
-    };
+    
 
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
@@ -197,10 +176,9 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                             
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                         
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -214,31 +192,9 @@ export default function SupplyTable() {
                                     <td className="py-2 px-4">{row.supply_quantity} kg</td>
                                     <td className="py-2 px-4">{row.vendor_supply} kg</td>
                                     <td className="py-2 px-4">{row.supply_rate} Rs</td>
-                                    <td className="py-2 px-4 text-center">
-                                        <input
-                                            type="text"
-                                            placeholder=""
-                                            value={row.asked_price}
-                                            onChange={(e) => handleAskedPriceChange(currentPage * itemsPerPage + index, e.target.value)}
-                                            className="text-center w-full p-1 border border-gray-300 rounded"
-                                        />
-                                    </td>
-                                    <td className="py-2 px-4 text-center">
-                                        <input
-                                            type="text"
-                                            placeholder=""
-                                            value={row.asked_quantity}
-                                            onChange={(e) => handleAskedQuantityChange(currentPage * itemsPerPage + index, e.target.value)}
-                                            className="text-center w-full p-1 border border-gray-300 rounded"
-                                        />
-                                    </td>
+                                    
                                     <td className="py-2 px-4">{row.status}</td>
-                                    <td className="py-2 px-4 text-center">
-                                        <FaBell
-                                            className='cursor-pointer text-xl hover:text-blue-500'
-                                            onClick={() => handleBellClick(row)}
-                                        />
-                                    </td>
+                                    
                                 </tr>
                             ))}
                         </tbody>

@@ -22,6 +22,10 @@ export default function Sidebar({ children, page }) {
         const savedState = localStorage.getItem('expandOrderManagement');
         return savedState === 'true';
     });
+    const [expandOrderHistory, setExpandOrderHistory] = React.useState(() => {
+        const savedState = localStorage.getItem('expandOrderHistory');
+        return savedState === 'true';
+    });
     const { logout } = React.useContext(AuthContext);
 
     const toggleUserManagement = () => {
@@ -36,6 +40,14 @@ export default function Sidebar({ children, page }) {
         setExpandOrderManagement(prev => {
             const newState = !prev;
             localStorage.setItem('expandOrderManagement', newState);
+            return newState;
+        });
+    }
+
+    const toggleOrderHistory = () => {
+        setExpandOrderHistory(prev => {
+            const newState = !prev;
+            localStorage.setItem('expandOrderHistory', newState);
             return newState;
         });
     }
@@ -61,7 +73,7 @@ export default function Sidebar({ children, page }) {
     return (
         <>
             <div className='flex'>
-                <div className={`ps-10 bg-gradient-to-r from-customTeal to-green-500 md:w-3/5 h-screen w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl shadow-2xl ${sideButton ? 'hidden' : ""}`}>
+                <div className={`ps-10 bg-gradient-to-r from-customTeal to-green-500 md:w-3/5 w-3/5 flex flex-col justify-around lg-custom:w-3/12 rounded-e-3xl shadow-2xl ${sideButton ? 'hidden' : ""}`}>
                     <div className='box-border text-center '>
                         <h2 className='box-border font-bold text-start text-white text-3xl'>Welcome Back,</h2>
                         <h1 className='text-4xl font-bold text-start text-white'>Pawan Mishra!</h1>
@@ -98,6 +110,17 @@ export default function Sidebar({ children, page }) {
                                     <Link to='/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
                                     <Link to='/dashboard/requirement/allrequirement'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
                                     <Link to='/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
+                                </ul>
+                            </li>
+                            <li className="flexspace-x-2 cursor-pointer flex-col">
+                                <div className='flex text-white hover:text-black' onClick={toggleOrderHistory}>
+                                    <DiCodepen className=" text-4xl" />
+                                    <span className="text-2xl">Order History</span>
+                                </div>
+                                <ul className={expandOrderHistory ? 'text-white flex flex-col justify-center ms-10 text-xl' : 'hidden'}>
+                                    <Link to='/dashboard/history/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
+                                    <Link to='/dashboard/history/requirementtable'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
+                                    <Link to='/dashboard/history/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
                                 </ul>
                             </li>
                             <Link to='/dashboard/requirement/addrequirement'>

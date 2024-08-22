@@ -55,8 +55,10 @@ import UpdatePrivacy from './pages/Other/UpdatePrivacy';
 import UpdateTnc from './pages/Other/UpdateTnc';
 import GetPassword from './pages/Other/GetPassword';
 
-
-
+import MainTableHistory from './pages/History/MainTable';
+import SupplyTableHistory from './pages/History/Supplytable';
+import Requirement_TableHistory from './pages/History/Requirement_Table';
+import OrderManagementHistory from './pages/History/Order_MangementHistory';
 
 import DeactivateAccount from './pages/DeactivateAccount'
 function App() {
@@ -121,6 +123,11 @@ function App() {
 
         
         <Route path='/dashboard/deactivateaccount' element= {<ProtectedRoute><DeactivateAccount/></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/maintable' element= {<ProtectedRoute><MainTableHistory/></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/supplytable' element= {<ProtectedRoute><SupplyTableHistory/></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/requirementtable' element= {<ProtectedRoute><Requirement_TableHistory/></ProtectedRoute>}></Route>
+        <Route path='/order-info/:id' element= {<ProtectedRoute><OrderManagementHistory/></ProtectedRoute>}></Route>
+
 
       </Routes>
 
