@@ -34,10 +34,10 @@ function DeactivatedAccountInfo() {
   }
 
   return (
-    <Sidebar page={'Delivery Agent'}>
+    <Sidebar page={'Deactivated Accounts'}>
     <div className="flex justify-center ">
       <div className="bg-white p-8 rounded border w-full  mx-4">
-        <h2 className="text-lg font-medium mb-6">Deactivated Accounts</h2>
+     
         <table className="w-full border-collapse">
           <thead>
             <tr>

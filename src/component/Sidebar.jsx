@@ -1,5 +1,6 @@
-import React from 'react';
+import React ,{useEffect,useState} from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import { FaLaptopHouse, FaUserCircle } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { GiNotebook } from "react-icons/gi";
@@ -8,12 +9,14 @@ import { IoExitSharp } from "react-icons/io5";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaLink } from 'react-icons/fa';
+import { FaHandshake } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUserAltSlash } from "react-icons/fa";
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
+    const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
     const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
         const savedState = localStorage.getItem('expandUserManagement');
         return savedState === 'true';
@@ -27,7 +30,20 @@ export default function Sidebar({ children, page }) {
         return savedState === 'true';
     });
     const { logout } = React.useContext(AuthContext);
-
+    useEffect(() => {
+        const fetchNotifications = async () => {
+          try {
+            const interestedVendorResponse = await axios.get('/api/Autharization/interested-vendor-count');
+            console.log(interestedVendorResponse);
+           
+            setInterestedVendorNotifications(interestedVendorResponse.data.data.count);
+          } catch (err) {
+            console.error('Error fetching notifications:', err);
+          }
+        };
+    
+        fetchNotifications();
+      }, []);
     const toggleUserManagement = () => {
         setExpandUserManagement(prev => {
             const newState = !prev;
@@ -142,6 +158,15 @@ export default function Sidebar({ children, page }) {
                                     <span className="  text-xl">Deactivated Account</span>
                                 </li>
                             </Link>
+                            <Link to='/dashboard/interested-vendor'>
+        <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+          <FaHandshake className="text-xl" />
+          <span className="text-xl">Interested Vendor</span>
+          {interestedVendorNotifications > 0 && (
+            <span className="ml-2 text-red-500 font-bold">{interestedVendorNotifications}</span>
+          )}
+        </li>
+      </Link>
                         </ul>
                     </div>
                     <div className="pb-10">
