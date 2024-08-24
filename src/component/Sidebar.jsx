@@ -1,4 +1,4 @@
-import React ,{useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaLaptopHouse, FaUserCircle } from "react-icons/fa";
@@ -14,6 +14,7 @@ import AuthContext from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUserAltSlash } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
     const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
@@ -32,18 +33,18 @@ export default function Sidebar({ children, page }) {
     const { logout } = React.useContext(AuthContext);
     useEffect(() => {
         const fetchNotifications = async () => {
-          try {
-            const interestedVendorResponse = await axios.get('/api/Autharization/interested-vendor-count');
-            console.log(interestedVendorResponse);
-           
-            setInterestedVendorNotifications(interestedVendorResponse.data.data.count);
-          } catch (err) {
-            console.error('Error fetching notifications:', err);
-          }
+            try {
+                const interestedVendorResponse = await axios.get('/api/Autharization/interested-vendor-count');
+                console.log(interestedVendorResponse);
+
+                setInterestedVendorNotifications(interestedVendorResponse.data.data.count);
+            } catch (err) {
+                console.error('Error fetching notifications:', err);
+            }
         };
-    
+
         fetchNotifications();
-      }, []);
+    }, []);
     const toggleUserManagement = () => {
         setExpandUserManagement(prev => {
             const newState = !prev;
@@ -159,14 +160,20 @@ export default function Sidebar({ children, page }) {
                                 </li>
                             </Link>
                             <Link to='/dashboard/interested-vendor'>
-        <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-          <FaHandshake className="text-xl" />
-          <span className="text-xl">Interested Vendor</span>
-          {interestedVendorNotifications > 0 && (
-            <span className="ml-2 text-red-500 font-bold">{interestedVendorNotifications}</span>
-          )}
-        </li>
-      </Link>
+                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                                    <FaHandshake className="text-xl" />
+                                    <span className="text-xl">Interested Vendor</span>
+                                    {interestedVendorNotifications > 0 && (
+                                        <div className="relative">
+                                            <FaStar className='text-3xl text-blue-500' />
+                                            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500 font-bold text-sm">
+                                                {interestedVendorNotifications}
+                                            </span>
+                                        </div>
+                                    )}
+                                </li>
+                            </Link>
+
                         </ul>
                     </div>
                     <div className="pb-10">
@@ -188,8 +195,8 @@ export default function Sidebar({ children, page }) {
                         <FaRegUserCircle style={{ color: 'green' }} className='text-3xl items-center mt-1 ' />
                         <h1 style={{ color: 'green' }}>{page}</h1>
                     </div>
-                    <div style={{height:"90%"}} className=' overflow-auto'>
-                    {children}
+                    <div style={{ height: "90%" }} className=' overflow-auto'>
+                        {children}
                     </div>
                 </div>
             </div>

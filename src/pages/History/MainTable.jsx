@@ -94,7 +94,7 @@ export default function MainTableHistory() {
                     </button>
                 </div>
                 <div className="mx-auto pt-10 container  overflow-auto">
-=
+
                     <div className="min-w-full bg-white border border-gray-200 overflow-x-auto">
                         <table className="min-w-full bg-white border border-gray-200">
                             <thead className="bg-gray-50">
