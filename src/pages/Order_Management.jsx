@@ -143,7 +143,7 @@ const OrderManagement = () => {
 
   return (
     <Sidebar page={'Order Management'}>
-      <div className="bg-white p-6 rounded-lg max-w-screen-lg mx-auto mt-8">
+      <div className="bg-white p-6 rounded-lg  mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
           {orderData[0].payment == "Paid"? <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span>:<button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
             onClick={handleComplete}>

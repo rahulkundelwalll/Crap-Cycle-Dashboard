@@ -48,13 +48,13 @@ export default function Vendor() {
 
     return (
         <>
-            <Sidebar page={'Vendor'}>
+            <Sidebar page={'Vendor'} c>
                 <div className="flex justify-end text-xl font-bold mt-5 ">
                     <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/dashboard/vendor/add')}>
                         + Add Vendor
                     </button>
                 </div>
-                <div className="mx-auto pt-10 container w-screen">
+                <div className="mx-auto pt-10 container">
                     <div className="mb-4 flex justify-center">
                         <input
                             type="text"

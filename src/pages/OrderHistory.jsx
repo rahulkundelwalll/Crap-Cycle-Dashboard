@@ -119,7 +119,7 @@ export default function Order_History() {
                     />
                     <CiSearch className='cursor-pointer hover:scale-125 text-2xl ease-in duration-300' onClick={handleSearchClick} />
                 </div>
-                <div className="mx-auto pt-10 container w-screen">
+                <div className="mx-auto pt-10 container ">
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">
                             <tr>

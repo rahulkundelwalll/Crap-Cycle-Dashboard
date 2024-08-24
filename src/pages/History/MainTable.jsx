@@ -65,6 +65,7 @@ export default function MainTableHistory() {
     return (
         <>
             <Sidebar page={'MainOrder Table'}>
+
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         className='text-center w-1/4 p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -92,7 +93,8 @@ export default function MainTableHistory() {
                         Search
                     </button>
                 </div>
-                <div className="mx-auto pt-10 container w-screen overflow-auto">
+                <div className="mx-auto pt-10 container  overflow-auto">
+=
                     <div className="min-w-full bg-white border border-gray-200 overflow-x-auto">
                         <table className="min-w-full bg-white border border-gray-200">
                             <thead className="bg-gray-50">

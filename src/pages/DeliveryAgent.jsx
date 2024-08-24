@@ -53,7 +53,7 @@ export default function DeliveryAgent() {
                         + Add Agents
                     </button>
                 </div>
-                <div className="mx-auto pt-10 container w-screen">
+                <div className="mx-auto pt-10 container ">
                     <div className="mb-4 flex justify-center">
                         <input
                             type="text"

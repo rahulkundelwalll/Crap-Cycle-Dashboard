@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }) => {
     // Optionally, render a loading indicator here
     return <div>Loading...</div>;
   }
-
+  
   if (!auth|| auth.user.role !="dashboardUser") {
     return <Navigate to="/login" state={{ from: location }} />;
   }
