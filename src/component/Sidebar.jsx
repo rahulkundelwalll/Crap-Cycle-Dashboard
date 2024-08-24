@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaLaptopHouse, FaUserCircle } from "react-icons/fa";
@@ -17,6 +18,7 @@ import { FaUserAltSlash } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
+    const navigate=useNavigate();
     const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
     const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
         const savedState = localStorage.getItem('expandUserManagement');
@@ -45,6 +47,18 @@ export default function Sidebar({ children, page }) {
 
         fetchNotifications();
     }, []);
+
+    const handleInterestedVendorClick = async () => {
+        try {
+            await axios.post('/api/Autharization/mark-all-unread'); // Adjust the API endpoint as needed
+            setInterestedVendorNotifications(0); // Reset the notification count to 0
+            navigate('/dashboard/interested-vendor'); // Navigate to the interested vendor page
+        } catch (err) {
+            console.error('Error marking notifications as unread:', err);
+        }
+    };
+
+
     const toggleUserManagement = () => {
         setExpandUserManagement(prev => {
             const newState = !prev;
@@ -159,20 +173,20 @@ export default function Sidebar({ children, page }) {
                                     <span className="  text-xl">Deactivated Account</span>
                                 </li>
                             </Link>
-                            <Link to='/dashboard/interested-vendor'>
-                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
-                                    <FaHandshake className="text-xl" />
-                                    <span className="text-xl">Interested Vendor</span>
-                                    {interestedVendorNotifications > 0 && (
-                                        <div className="relative">
-                                            <FaStar className='text-3xl text-blue-500' />
-                                            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500 font-bold text-sm">
+                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer" onClick={handleInterestedVendorClick}>
+                                <FaHandshake className="text-xl" />
+                                <span className="text-xl">Interested Vendor</span>
+                                {interestedVendorNotifications > 0 && (
+                                    <div className="relative">
+                                        <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                                            <span className="text-white font-bold text-sm">
                                                 {interestedVendorNotifications}
                                             </span>
                                         </div>
-                                    )}
-                                </li>
-                            </Link>
+                                    </div>
+                                )}
+                            </li>
+
 
                         </ul>
                     </div>

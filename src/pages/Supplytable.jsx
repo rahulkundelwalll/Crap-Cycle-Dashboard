@@ -24,7 +24,7 @@ export default function SupplyTable() {
         const fetchData = async () => {
             try {
                 const res = await axios.get('/api/supply/pending-supply');
-                
+
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,
                     v_id: item.v_id,
@@ -35,13 +35,13 @@ export default function SupplyTable() {
                     supply_quantity: item.s_qty,
                     supply_rate: item.s_price,
                     status: item.s_status,
-                    approve_quantity: '',
-                    price_range: '',
                     asked_price: '',
+                    lower_limit: '',
+                    upper_limit: '',
                     asked_quantity: '',
-                    vendor_supply:item.vendor_supply
+                    vendor_supply: item.vendor_supply
                 }));
-                
+
                 setData(fetchedData);
                 console.log(fetchedData);
             } catch (err) {
@@ -95,15 +95,15 @@ export default function SupplyTable() {
         setData(updatedData);
     };
 
-    const handlePriceRangeChange = (index, value) => {
+    const handleLowerLimitChange = (index, value) => {
         const updatedData = [...data];
-        updatedData[index].price_range = value;
+        updatedData[index].lower_limit = value;
         setData(updatedData);
     };
 
-    const handleAskedPriceChange = (index, value) => {
+    const handleUpperLimitChange = (index, value) => {
         const updatedData = [...data];
-        updatedData[index].asked_price = value;
+        updatedData[index].upper_limit = value;
         setData(updatedData);
     };
 
@@ -114,15 +114,18 @@ export default function SupplyTable() {
     };
 
     const handleBellClick = async (item) => {
+    
         const notificationData = {
             s_id: item.s_id,
-            v_id: item.v_id,  // Make sure to include vendor_id in your data
-            asked_price: item.asked_price,
+            v_id: item.v_id,
+            asked_price: `${item.lower_limit}-${item.upper_limit}`,
             asked_quantity: item.asked_quantity,
             prev_price: item.supply_rate,
             prev_quantity: item.supply_quantity,
-            cat_id: item.cat_id,  // Make sure to include cat_id in your data
-            cat_name: item.cat_name  // Make sure to include cat_name in your data
+            cat_id: item.cat_id,
+            cat_name: item.cat_name,
+            lower_price:item.lower_limit,
+            upper_price:item.upper_limit
         };
 
         try {
@@ -185,7 +188,7 @@ export default function SupplyTable() {
                         {notification}
                     </div>
                 )}
-                <div className="mx-auto pt-10 container ">
+                <div className="mx-auto pt-10 container">
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
@@ -197,46 +200,53 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lower Limit</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Upper Limit</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="py-2 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {displayedData.map((row, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{currentPage * itemsPerPage + index + 1}</td>
-                                    <td className="py-2 px-4">{row.vendor_name}</td>
-                                    <td className="py-2 px-4">{row.cat_name}</td>
-                                    <td className="py-2 px-4">{row.cat_id}</td>
-                                    <td className="py-2 px-4">{row.s_id}</td>
-                                    <td className="py-2 px-4">{row.supply_quantity} kg</td>
-                                    <td className="py-2 px-4">{row.vendor_supply} kg</td>
-                                    <td className="py-2 px-4">{row.supply_rate} Rs</td>
-                                    <td className="py-2 px-4 text-center">
+                        <tbody>
+                            {displayedData.map((item, index) => (
+                                <tr key={item.s_id} className="border-b border-gray-200">
+                                    <td className="py-2 px-4 text-sm text-gray-700">{currentPage * itemsPerPage + index + 1}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_name}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.cat_name}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.cat_id}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.s_id}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.supply_quantity}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_supply}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.supply_rate}</td>
+                                    <td className="py-2 px-4">
                                         <input
-                                            type="text"
-                                            placeholder=""
-                                            value={row.asked_price}
-                                            onChange={(e) => handleAskedPriceChange(currentPage * itemsPerPage + index, e.target.value)}
-                                            className="text-center w-full p-1 border border-gray-300 rounded"
+                                            type="number"
+                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={item.lower_limit}
+                                            onChange={(e) => handleLowerLimitChange(index, e.target.value)}
                                         />
                                     </td>
-                                    <td className="py-2 px-4 text-center">
+                                    <td className="py-2 px-4">
                                         <input
-                                            type="text"
-                                            placeholder=""
-                                            value={row.asked_quantity}
-                                            onChange={(e) => handleAskedQuantityChange(currentPage * itemsPerPage + index, e.target.value)}
-                                            className="text-center w-full p-1 border border-gray-300 rounded"
+                                            type="number"
+                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={item.upper_limit}
+                                            onChange={(e) => handleUpperLimitChange(index, e.target.value)}
                                         />
                                     </td>
-                                    <td className="py-2 px-4">{row.status}</td>
+                                    <td className="py-2 px-4">
+                                        <input
+                                            type="number"
+                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={item.asked_quantity}
+                                            onChange={(e) => handleAskedQuantityChange(index, e.target.value)}
+                                        />
+                                    </td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.status}</td>
                                     <td className="py-2 px-4 text-center">
                                         <FaBell
-                                            className='cursor-pointer text-xl hover:text-blue-500'
-                                            onClick={() => handleBellClick(row)}
+                                            className="cursor-pointer hover:scale-125 text-2xl ease-in duration-300"
+                                            onClick={() => handleBellClick(item)}
                                         />
                                     </td>
                                 </tr>
@@ -260,6 +270,7 @@ export default function SupplyTable() {
                         nextLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
                         activeClassName={'bg-blue-500 text-white'}
                     />
+
                 </div>
             </Sidebar>
         </>
