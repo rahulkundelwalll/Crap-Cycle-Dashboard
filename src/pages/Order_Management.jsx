@@ -72,16 +72,27 @@ const OrderManagement = () => {
     }
   };
 
-
   const handleStatus = async (status) => {
     try {
-      const res = await axios.patch(`/api/order/changestatus/${orderData[0].order_id}`, { status: status });
-      console.log(res);
-      fetchOrderData();
+      const [orderRes, requirementRes] = await Promise.all([
+        axios.patch(`/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
+        axios.patch(`/api/requirement/requirementstatus/${orderData[0].req_id}`)
+      ]);
+  
+      if (orderRes.status === 200) {
+        console.log('Order status updated successfully:', orderRes.data);
+      }
+  
+      if (requirementRes.status === 200) {
+        console.log('Requirement status updated successfully:', requirementRes.data);
+      }
+  
+      fetchOrderData(); // Fetch the updated order data after both requests are completed
     } catch (err) {
       console.log(err);
     }
-  }
+  };
+  
   const handleRemove = async () => {
     try {
       await axios.post(`/api/order/remove-agent/${orderData[0].order_id}`, {
@@ -113,33 +124,45 @@ const OrderManagement = () => {
   } = orderData[0];
 
 
-  const handleComplete = () => {
+  const handleComplete =async () => {
     // <ConfirmationModal/>
-    setShowModal(true);
+  
+      setShowModal(true);
+    
+  
   }
 
   const handleTransitionStatus = async (transitionId) => {
-    console.log(transitionId)
-    if(!transitionId)
-      {
-          toast.error("Enter Transition Id");
-          return;
-      }
+    console.log(transitionId);
+  
+    if (!transitionId) {
+      toast.error("Enter Transition Id");
+      return;
+    }
+  
     try {
-      const res = await axios.patch(`/api/order/add-transitionId/${orderData[0].order_id}`,{
-        transitionId:transitionId
-      })
-      if(res.status===200)
-      {
+      const [orderRes, requirementRes] = await Promise.all([
+        axios.patch(`/api/order/add-transitionId/${orderData[0].order_id}`, {
+          transitionId: transitionId
+        }),
+        axios.patch(`/api/requirement/requirementstatus/${orderData[0].req_id}`)
+      ]);
+  
+      if (orderRes.status === 200) {
         fetchOrderData();
-      
+        toast.success("Order updated successfully!");
       }
-      
-
+  
+      if (requirementRes.status === 200) {
+        toast.success("Requirement status updated successfully!");
+      }
+  
     } catch (err) {
       console.log(err);
+      toast.error("An error occurred while updating the data.");
     }
-  }
+  };
+  
 
   return (
     <Sidebar page={'Order Management'}>
