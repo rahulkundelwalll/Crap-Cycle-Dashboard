@@ -168,7 +168,7 @@ export default function MainTable() {
                                         <td className="py-2 px-4">{row.supply_id}</td>
                                         <td className="py-2 px-4">{row.status}</td>
                                         <td className="py-2 px-4">
-                                            <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/order-mangagement/${row.order_id}`)}>
+                                            <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => navigate(`/dashboard/order-mangagement/${row.order_id}`)}>
                                                 Edit
                                             </button>
                                         </td>

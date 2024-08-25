@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('https://lytte-backend.onrender.com/api/Autharization/login', { email, password });
+      const response = await axios.post('/api/Autharization/login', { email, password });
       if (response.status === 200) {
         setAuth(response.data);
         toast("Welcome Pawan!")

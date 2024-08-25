@@ -71,7 +71,7 @@ export default function SpecificMainTable() {
             console.log('Response:', response.data);
         } catch (error) {
             console.error('Error submitting data:', error);
-            
+
             toast.error(error.response.data.error);
         }
     };
@@ -94,7 +94,7 @@ export default function SpecificMainTable() {
                     </button>
                     <button
                         className='bg-white text-black px-4 py-2 rounded border-2 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 ease-in-out'
-                        onClick={() => navigate('/maintable')}
+                        onClick={() => navigate('/dashboard/maintable')}
                     >
                         Main Table
                     </button>
@@ -128,7 +128,7 @@ export default function SpecificMainTable() {
                         Submit
                     </button>
                 </div>
-                
+
                 <div className="mx-auto pt-10 container w-screen">
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">

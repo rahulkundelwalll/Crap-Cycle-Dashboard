@@ -71,7 +71,7 @@ function App() {
       <Routes>
         {/* dashboard */}
         <Route path='/' element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
-        <Route path='/dashboard/Profile' element={<div className="bg-gray-100 min-h-screen flex items-center justify-center"><ProtectedRoute ><Profile /></ProtectedRoute></div>}/>
+        <Route path='/dashboard/Profile' element={<div className="bg-gray-100 min-h-screen flex items-center justify-center"><ProtectedRoute ><Profile /></ProtectedRoute></div>} />
 
         {/* Vendor */}
         <Route path='/dashboard/vendor/vendors' element={<ProtectedRoute><Vendor /></ProtectedRoute>} />
@@ -85,8 +85,8 @@ function App() {
         <Route path='/dashboard/buyer/buyers' element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
         <Route path='/dashboard/buyer/profile/:id' element={<ProtectedRoute><BuyerProfile /></ProtectedRoute>} />
         <Route path='/dashboard/buyer/edit/:id' element={<ProtectedRoute><EditBuyer /></ProtectedRoute>} />
-        
-        
+
+
         {/* Delivery agent */}
         <Route path='/dashboard/delivery_agent/allgents' element={<ProtectedRoute><DeliveryAgent /></ProtectedRoute>} />
         <Route path='/dashboard/delivery_agent/profile/:id' element={<ProtectedRoute><DeliveryAgentProfile /></ProtectedRoute>} />
@@ -99,7 +99,7 @@ function App() {
         <Route path='/dashboard/category/addcategory' element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
         <Route path='/dashboard/category/editcategory/:id' element={<ProtectedRoute><Editcategory /></ProtectedRoute>} />
         <Route path='/dashboard/category/CategoryDetail/:id' element={<ProtectedRoute><CategoryDetail cat='' /></ProtectedRoute>} />
-       
+
 
         {/* Requirement */}
         <Route path='/dashboard/requirement/addrequirement' element={<ProtectedRoute><AddRequirement /></ProtectedRoute>} />
@@ -107,28 +107,27 @@ function App() {
         <Route path='/dashboard/requirement/editRequirement/:id' element={<ProtectedRoute><EditRequirement /></ProtectedRoute>}></Route>
         <Route path='/dashboard/requirement/allrequirement' element={<ProtectedRoute><Requirement_Table /></ProtectedRoute>}></Route>
         <Route path='/complete-requirement/:id' element={<ProtectedRoute><CompletedRequirements /></ProtectedRoute>}></Route>
-        
-       {/* Order */}
-       <Route path='/order-history' element={<ProtectedRoute><Order_History /></ProtectedRoute>}></Route>
-       <Route path='/order-mangagement/:id' element={<ProtectedRoute><OrderMangement /></ProtectedRoute>}></Route>
 
+        {/* Order */}
         <Route path='/login' element={<LoginPage />}></Route>
-        <Route path='/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
-         <Route path='/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
-         <Route path='/table/:req_id' element={<ProtectedRoute><SpecificMainTable /></ProtectedRoute>}></Route>
-         <Route path='/update-links' element={<ProtectedRoute><UpdateLinks /></ProtectedRoute>}></Route>
-         <Route path='/update-tnc' element={<ProtectedRoute><UpdateTnc /></ProtectedRoute>}></Route>
-         <Route path='/update-privacy' element={<ProtectedRoute><UpdatePrivacy  /></ProtectedRoute>}></Route>
-         <Route path='/update-contact' element={<ProtectedRoute><UpdateContact/></ProtectedRoute>}></Route>
-         <Route path='/get-password' element={<ProtectedRoute><GetPassword/></ProtectedRoute>}></Route>
 
-        
-        <Route path='/dashboard/deactivateaccount' element= {<ProtectedRoute><DeactivateAccount/></ProtectedRoute>}></Route>
-        <Route path='/dashboard/history/maintable' element= {<ProtectedRoute><MainTableHistory/></ProtectedRoute>}></Route>
-        <Route path='/dashboard/history/supplytable' element= {<ProtectedRoute><SupplyTableHistory/></ProtectedRoute>}></Route>
-        <Route path='/dashboard/history/requirementtable' element= {<ProtectedRoute><Requirement_TableHistory/></ProtectedRoute>}></Route>
-        <Route path='/dashboard/interested-vendor' element= {<ProtectedRoute><InterestedVendorInfo/></ProtectedRoute>}></Route>
-        <Route path='/order-info/:id' element= {<ProtectedRoute><OrderManagementHistory/></ProtectedRoute>}></Route>
+
+        <Route path='/dashboard/order-mangagement/:id' element={<ProtectedRoute><OrderMangement /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/supplytable' element={<ProtectedRoute><SupplyTable /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/maintable' element={<ProtectedRoute><MainTable /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/update-links' element={<ProtectedRoute><UpdateLinks /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/update-tnc' element={<ProtectedRoute><UpdateTnc /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/update-privacy' element={<ProtectedRoute><UpdatePrivacy /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/update-contact' element={<ProtectedRoute><UpdateContact /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/get-password' element={<ProtectedRoute><GetPassword /></ProtectedRoute>}></Route>
+
+
+        <Route path='/dashboard/deactivateaccount' element={<ProtectedRoute><DeactivateAccount /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/maintable' element={<ProtectedRoute><MainTableHistory /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/supplytable' element={<ProtectedRoute><SupplyTableHistory /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/history/requirementtable' element={<ProtectedRoute><Requirement_TableHistory /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/interested-vendor' element={<ProtectedRoute><InterestedVendorInfo /></ProtectedRoute>}></Route>
+        <Route path='/dashboard/order-info/:id' element={<ProtectedRoute><OrderManagementHistory /></ProtectedRoute>}></Route>
 
 
       </Routes>

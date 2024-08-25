@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://lytte-backend.onrender.com/', // Your backend server
+        target: 'http://localhost:3000', // Your backend server
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },

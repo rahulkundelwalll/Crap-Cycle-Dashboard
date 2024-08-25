@@ -18,7 +18,7 @@ import { FaUserAltSlash } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
     const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
         const savedState = localStorage.getItem('expandUserManagement');
@@ -139,9 +139,9 @@ export default function Sidebar({ children, page }) {
                                     <span className="text-xl">Order Management</span>
                                 </div>
                                 <ul className={expandOrderManagement ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
+                                    <Link to='/dashboard/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
                                     <Link to='/dashboard/requirement/allrequirement'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
-                                    <Link to='/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
+                                    <Link to='/dashboard/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
                                 </ul>
                             </li>
                             <li className="flexspace-x-2 cursor-pointer flex-col">
@@ -161,7 +161,7 @@ export default function Sidebar({ children, page }) {
                                     <span className="  text-xl">Add Requirement</span>
                                 </li>
                             </Link>
-                            <Link to='/update-links'>
+                            <Link to='/dashboard/update-links'>
                                 <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
                                     <FaLink className="text-xl " />
                                     <span className="  text-xl">Update Links</span>
