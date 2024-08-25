@@ -11,6 +11,7 @@ const OrderManagement = () => {
   const [selectedAgent, setSelectedAgent] = useState({ d_id: '', d_mobile: '', d_name: '' });
   const [pickupDate, setPickupDate] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
   const fetchOrderData = async () => {
     try {
       const response = await axios.get(`/api/order/get-order-detail/${id}`);
@@ -81,6 +82,8 @@ const OrderManagement = () => {
   
       if (orderRes.status === 200) {
         console.log('Order status updated successfully:', orderRes.data);
+        setStatusMessage(`Order ${status} successfully!`);
+        setTimeout(() => setStatusMessage(''), 1000); 
       }
   
       if (requirementRes.status === 200) {
@@ -153,9 +156,7 @@ const OrderManagement = () => {
         toast.success("Order updated successfully!");
       }
   
-      if (requirementRes.status === 200) {
-        toast.success("Requirement status updated successfully!");
-      }
+      
   
     } catch (err) {
       console.log(err);
@@ -192,6 +193,11 @@ const OrderManagement = () => {
               <button onClick={async () => { await handleStatus("Delivered") }} className="border-2 border-green-600 bg-green-600 text-white hover:bg-white hover:text-green-600 px-4 py-2 rounded-full mr-2">Delivered</button>
               <button onClick={async () => { await handleStatus("Rejected") }} className="border-2 border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 px-4 py-2 rounded-full">Rejected</button>
             </div>
+            {statusMessage && (
+              <div className="mt-2 text-green-600 font-semibold">
+                {statusMessage}
+              </div>
+            )}
           </div>
 
           {/* Buyer’s Section */}

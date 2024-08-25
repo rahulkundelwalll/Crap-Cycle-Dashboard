@@ -20,7 +20,7 @@ const CompletedRequirements = () => {
 
         const fetchCompletedOrders = async () => {
             try {
-                const res = await axios.get(`/api/order/get-require-order/${id}`);
+                const res = await axios.get(`/api/order/get-required-order/${id}`);
                 setCompletedOrders(res.data.data);
                 console.log(res.data.data)
             } catch (error) {
@@ -70,6 +70,7 @@ const CompletedRequirements = () => {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery Agent</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery Agent ID</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
                             </tr>
                         </thead>
@@ -85,6 +86,7 @@ const CompletedRequirements = () => {
                                     <td className="py-2 px-4">{order.d_name}</td>
                                     <td className="py-2 px-4">{order.d_id}</td>
                                     <td className="py-2 px-4">{order.order_price}</td>
+                                    <td className="py-2 px-4">{order.order_status}</td>
                                     <td className="py-2 px-4">
                                         <span
                                             className={`px-2 py-1 rounded-full text-white  ${order.payment === "Paid" ? "bg-green-500" : "bg-red-500"}`}
