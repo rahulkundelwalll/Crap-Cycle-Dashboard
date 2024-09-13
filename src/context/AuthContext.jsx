@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 axios.defaults.withCredentials = true;
 const AuthContext = createContext();
 
+
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,8 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await axios.get('/api/Autharization/checkAuth');
-        if(response.data.user.role==='dashboardUser')
+        console.log(response.data)
+        if(response?.data?.user?.role==='dashboardUser')
         {
           setAuth(response.data);
         }
