@@ -6,7 +6,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
+// https://crap-cycle-waste-solution.s3.ap-south-1.amazonaws.com/imageFile-1726259713588-14104409.png
 export default function VendorProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -24,14 +24,14 @@ export default function VendorProfile() {
                 const res = await axios.get(`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
                 setCategories(res.data.category);
-                setVendroImage(`/upload/${res.data.data.v_image}`)
+                setVendroImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data.v_image}`)
             } catch (err) {
                 console.log(err);
             }
         };
         fetchData();
     }, [id]); // Added id to dependency array to fetch data when id change
-
+    // console.log(process.env.REACT_APP_IMAGE_URL)
     const confirmDelete = async () => {
         try {
             const res = await axios.delete(`/api/vendor/delete-vendor/${id}`);
@@ -48,7 +48,7 @@ export default function VendorProfile() {
     };
 
     const togglePdfModal = () => {
-        setPdfUrl(`/upload/${data.v_document}`); // Set the URL of the PDF to be displayed
+        setPdfUrl(`${import.meta.env.VITE_IMAGE_URL+data.v_document}`); // Set the URL of the PDF to be displayed
         setIsPdfModalOpen(!isPdfModalOpen); // Toggle the PDF modal
     };
 

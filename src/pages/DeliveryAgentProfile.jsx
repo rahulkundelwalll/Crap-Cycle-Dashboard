@@ -23,7 +23,7 @@ export default function DeliveryAgentProfile() {
             try {
                 const res = await axios.get(`/api/delivery/agent-detail/${id}`)
                 setData(res.data.data[0])
-                setAgentImage(`/upload/${res.data.data[0].d_image}`)
+                setAgentImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data[0].d_image}`)
 
             } catch (err) {
                 console.log(err)
@@ -46,7 +46,7 @@ export default function DeliveryAgentProfile() {
         setShowConfirmDialog(false); // Close delete confirmation dialog
     };
     const togglePdfModal = () => {
-        setPdfUrl(`/upload/${data.d_document}`); // Set the URL of the PDF to be displayed
+        setPdfUrl(`${import.meta.env.VITE_IMAGE_URL+data.d_document}`); // Set the URL of the PDF to be displayed
         setIsPdfModalOpen(!isPdfModalOpen); // Toggle the PDF modal
     };
     return (

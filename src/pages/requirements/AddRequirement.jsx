@@ -146,7 +146,7 @@ export default function AddRequirement() {
         <Sidebar page={"Requirement Adding"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image?`/upload/${formData.category.cat_image}`:userImage} alt="User" />
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image?`${import.meta.env.VITE_IMAGE_URL+formData.category.cat_image}`:userImage} alt="User" />
                 </div>
 
                 <form className='flex flex-col items-center w-full'>

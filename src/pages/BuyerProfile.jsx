@@ -49,7 +49,7 @@ export default function BuyerProfile() {
                 setData(res.data.data)
                 setCategories(res.data.category)
                 setDropingAdds(res.data.dropingaddress)
-                setBuyerImage(`/upload/${res.data.data.b_image}`)
+                setBuyerImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data.b_image}`)
                 console.log(buyerImage);
             } catch (error) {
                 console.log(error)
@@ -68,7 +68,7 @@ export default function BuyerProfile() {
         }
     };
     const togglePdfModal = () => {
-        setPdfUrl(`/upload/${data.b_document}`); // Set the URL of the PDF to be displayed
+        setPdfUrl(`${import.meta.env.VITE_IMAGE_URL+data.b_document}`); // Set the URL of the PDF to be displayed
         setIsPdfModalOpen(!isPdfModalOpen); // Toggle the PDF modal
     };
     

@@ -47,10 +47,10 @@ export default function EditAgent() {
                         companyName: fetchData.d_company_name,
                         address: fetchData.d_address,
                         location: fetchData.d_location,
-                        imagePreview: `/upload/${fetchData.d_image}`,
+                        imagePreview: `${import.meta.env.VITE_IMAGE_URL+fetchData.d_image}`,
                         imageName: fetchData.d_image,
                         pdfFileName: fetchData.d_document,
-                        pdfFileUrl: `/upload/${fetchData.d_document}`
+                        pdfFileUrl: `${import.meta.env.VITE_IMAGE_URL+fetchData.d_document}`
                     }
                 })
                 // setAgentImage(`/upload/${res.data.data[0].d_image}`)

@@ -35,17 +35,17 @@ export default function AddRequirement() {
                         cat_name: res.data.results[0].cat_name,
 
                     },
-                    buyer:{
+                    buyer: {
                         b_id: res.data.results[0].b_id,
                         b_mobile: res.data.results[0].b_moile,
                         b_drop_add: res.data.results[0].b_drop_add,
                         b_name: res.data.results[0].b_name,
                         b_address: res.data.results[0].b_add,
                     },
-                    quantity:res.data.results[0].req_quantity,
-                    price:res.data.results[0].req_price,
-                    address:res.data.results[0].b_drop_add,
-                    note:res.data.results[0].req_note,
+                    quantity: res.data.results[0].req_quantity,
+                    price: res.data.results[0].req_price,
+                    address: res.data.results[0].b_drop_add,
+                    note: res.data.results[0].req_note,
                 });
                 console.log(res.data.results[0])
             } catch (err) {
@@ -124,7 +124,7 @@ export default function AddRequirement() {
         }
     };
 
- 
+
     const handleClick = async (event) => {
         event.preventDefault();
 
@@ -137,7 +137,7 @@ export default function AddRequirement() {
             b_name: formData.buyer.b_name,
             b_add: formData.buyer.b_address,
             b_drop_add: formData.address,
-            b_moile: formData.buyer.b_mobile ,  // Corrected typo
+            b_moile: formData.buyer.b_mobile,  // Corrected typo
             list_cat_id: formData.category.cat_id,
             cat_name: formData.category.cat_name,
             cat_image: formData.category.cat_image
@@ -167,8 +167,8 @@ export default function AddRequirement() {
         <Sidebar page={"Requirement Adding"}>
             <div className='flex flex-col items-center mt-10 p-6 h-auto w-4/5 mx-auto border-2 border-gray-300 shadow-lg rounded-3xl'>
                 <div className='flex flex-col items-center mb-10'>
-                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image?`/upload/${formData.category.cat_image}`:userImage} alt="User" />
-                
+                    <img className='h-24 w-24 bg-cover rounded-full border-4 border-blue-500' src={formData.category.cat_image ? `${import.meta.env.VITE_IMAGE_URL + formData.category.cat_image}` : userImage} alt="User" />
+
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
@@ -254,15 +254,15 @@ export default function AddRequirement() {
                             Save
                         </button>
                         <button className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300 w-32'
-                        onClick={()=>{
-                            navigate(`/dashboard/requirement/detail/${Id}`)
-                        }}>
+                            onClick={() => {
+                                navigate(`/dashboard/requirement/detail/${Id}`)
+                            }}>
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-           
+
         </Sidebar>
     );
 }

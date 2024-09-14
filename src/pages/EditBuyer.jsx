@@ -51,10 +51,10 @@ export default function AddBuyer() {
                         categories: res.data.category,
                         pdfFile: null,
                         imageFile: null,
-                        imagePreview: `/upload/${fetchData.b_image}`,
+                        imagePreview: `${import.meta.env.VITE_IMAGE_URL+fetchData.b_image}`,
                         imageName:fetchData.b_image,
                         pdfFileName: fetchData.b_document,
-                        pdfFileUrl: `/upload/${fetchData.b_document}`
+                        pdfFileUrl: `${import.meta.env.VITE_IMAGE_URL+fetchData.b_document}`
                     }
                 })
 

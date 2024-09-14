@@ -48,8 +48,8 @@ export default function AddVendor() {
                 setFormData((prev)=>{
                     return {
                         ...prev,
-                        imagePreview:`/upload/${res.data.data.v_image}`,
-                        pdfFileUrl:`/upload/${res.data.data.v_document}`,
+                        imagePreview:`${import.meta.env.VITE_IMAGE_URL+res.data.data.v_image}`,
+                        pdfFileUrl:`${import.meta.env.VITE_IMAGE_URL+res.data.data.v_document}`,
                         pdfFileName:res.data.data.v_document,
                         imageName:res.data.data.v_image,
                         personName:res.data.data.v_name,

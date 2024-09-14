@@ -29,7 +29,7 @@ export default function CategoryDetail(props) {
                     category: res.data.data[0].cat_name,
                     discription: res.data.data[0].cat_description,
                     categoryId: res.data.data[0].cat_id,
-                    imagePreview: res.data.data[0].cat_image ? `/upload/${res.data.data[0].cat_image}` :userImage,
+                    imagePreview: res.data.data[0].cat_image ? `${import.meta.env.VITE_IMAGE_URL+res.data.data[0].cat_image}` :userImage,
                     subcategory: data.subcategory // Keep the existing subcategory array
                 });
 

@@ -48,7 +48,7 @@ export default function RequirementDetail() {
                 <span className="text-gray-400">Profile</span>
             </div>
             <div className='flex flex-col items-center h-4/6 w-4/5 mx-auto border-2 border-gray-400 rounded-3xl'>
-                <img src={data.cat_image?`../../../upload/` + data.cat_image:userImage
+                <img src={data.cat_image?import.meta.env.VITE_IMAGE_URL + data.cat_image:userImage
                 } className='h-24  bg-cover mt-10 rounded-full' alt="User" />
                 <div className='mt-10 w-full'>
                     <table className="table-auto border-collapse border border-white-400 w-full">
