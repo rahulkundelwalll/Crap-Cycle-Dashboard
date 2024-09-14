@@ -16,7 +16,7 @@ export default function RequirementDetail() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/requirement/requirement-detail/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirement-detail/${id}`);
                 setData(res.data.results[0]);
                 console.log(res.data.results[0])
             } catch (err) {
@@ -29,7 +29,7 @@ export default function RequirementDetail() {
     // Example addresses
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/requirement/delete/${id}`);
+            await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/requirement/delete/${id}`);
             toast.warn('Requirement Deleted!')
             navigate('/dashboard/requirement/allrequirement');
         } catch (error) {

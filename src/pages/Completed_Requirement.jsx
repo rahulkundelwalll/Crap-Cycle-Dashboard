@@ -11,7 +11,7 @@ const CompletedRequirements = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const res = await axios.get(`/api/requirement/requirement-detail/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirement-detail/${id}`);
                 setOrderDetails(res.data.results[0]);
             } catch (error) {
                 console.error('Error fetching order details:', error);
@@ -20,7 +20,7 @@ const CompletedRequirements = () => {
 
         const fetchCompletedOrders = async () => {
             try {
-                const res = await axios.get(`/api/order/get-required-order/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/order/get-required-order/${id}`);
                 setCompletedOrders(res.data.data);
                 console.log(res.data.data)
             } catch (error) {

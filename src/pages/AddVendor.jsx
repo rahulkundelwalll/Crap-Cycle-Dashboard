@@ -40,7 +40,7 @@ export default function AddVendor() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -95,7 +95,7 @@ export default function AddVendor() {
         }
 
         try {
-            const res = await axios.post('/api/vendor/save-vendor', formDataToSend, {
+            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/vendor/save-vendor', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

@@ -14,7 +14,7 @@ export default function Buyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/buyer/allbuyer');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/buyer/allbuyer');
                 setData(res.data.data);
                 
             } catch (err) {

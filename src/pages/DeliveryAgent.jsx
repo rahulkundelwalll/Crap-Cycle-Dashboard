@@ -14,7 +14,7 @@ export default function DeliveryAgent() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/delivery/get-all-agent');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/delivery/get-all-agent');
                 setData(res.data.data);
             } catch (err) {
                 console.log(err);

@@ -8,7 +8,7 @@ export default function AddSubcategory({ parentId, onSubcategoryAdded }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/api/subcategory/add', {
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/subcategory/add', {
                 subcategoryName,
                 parentId
             });

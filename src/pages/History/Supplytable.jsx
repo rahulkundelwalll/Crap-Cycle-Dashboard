@@ -23,7 +23,7 @@ export default function SupplyTableHistory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/supply/complete-supply');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/supply/complete-supply');
                 
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,

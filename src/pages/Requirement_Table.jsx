@@ -22,7 +22,7 @@ export default function Requirement_Table() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/requirement/pending-requirement');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/requirement/pending-requirement');
 
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,

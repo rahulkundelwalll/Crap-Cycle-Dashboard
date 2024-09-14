@@ -25,7 +25,7 @@ export default function MainTableHistory() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/order/get-order-history');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/order/get-order-history');
                 console.log(res);
                 const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,

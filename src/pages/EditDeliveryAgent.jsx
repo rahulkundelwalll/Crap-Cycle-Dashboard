@@ -35,7 +35,7 @@ export default function EditAgent() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/delivery/agent-detail/${id}`)
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/delivery/agent-detail/${id}`)
                 const fetchData = res.data.data[0];
                 // console.log(fetchData)
                 setFormData((prev) => {
@@ -97,7 +97,7 @@ export default function EditAgent() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.put(`/api/delivery/edit/${id}`, data, {
+            const response = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/delivery/edit/${id}`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

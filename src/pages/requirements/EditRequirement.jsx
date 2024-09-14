@@ -27,7 +27,7 @@ export default function AddRequirement() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/requirement/requirement-detail/${Id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirement-detail/${Id}`);
                 setFormData({
                     category: {
                         cat_id: res.data.results[0].list_cat_id,
@@ -59,7 +59,7 @@ export default function AddRequirement() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get('/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -71,7 +71,7 @@ export default function AddRequirement() {
     useEffect(() => {
         const fetchBuyers = async () => {
             try {
-                const res = await axios.get('/api/buyer/allbuyer');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/buyer/allbuyer');
                 setBuyers(res.data.data);
                 // console.log(res.data.data[0])
             } catch (err) {
@@ -85,7 +85,7 @@ export default function AddRequirement() {
         if (formData.buyer.b_id) {
             const deliveryAdd = async () => {
                 try {
-                    const res = await axios.get(`/api/buyer/getbuyer/${formData.buyer.b_id}`);
+                    const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${formData.buyer.b_id}`);
                     setDropingAdd(res.data.dropingaddress)
                 } catch (err) {
                     console.log(err);
@@ -147,7 +147,7 @@ export default function AddRequirement() {
         console.log(data);
 
         try {
-            const response = await axios.put(`/api/requirement/edit/${Id}`, data, {
+            const response = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/requirement/edit/${Id}`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

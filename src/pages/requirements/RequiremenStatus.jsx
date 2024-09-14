@@ -88,7 +88,7 @@ export default function RequirementStatus() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/requirement/all-requirement');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/requirement/all-requirement');
               
                 setData(res.data.results);
                 setInitialData(res.data.results);

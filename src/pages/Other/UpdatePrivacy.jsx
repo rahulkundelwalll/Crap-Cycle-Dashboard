@@ -10,7 +10,7 @@ export default function Updateprivacy() {
         // Fetch the existing privacy from the backend
         const fetchprivacy = async () => {
             try {
-                const response = await axios.get('/api/other/privacy');
+                const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/privacy');
                 setprivacy(response.data.privacy); // Adjusted to access 'privacy' field from the response
             } catch (error) {
                 console.error('Error fetching privacy:', error);
@@ -26,7 +26,7 @@ export default function Updateprivacy() {
 
     const handleSaveClick = async () => {
         try {
-            await axios.post('/api/other/privacy', { privacy:privacy }); // Posting the updated privacy to the backend
+            await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/other/privacy', { privacy:privacy }); // Posting the updated privacy to the backend
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating privacy:', error);

@@ -55,12 +55,12 @@ export default function BuyerProfile() {
                 console.log(error)
             }
         }
-        fetchData()
+        fetchData()    
     }, [id]);
     
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/buyer/deletbuyer/${id}`);
+            await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/buyer/deletbuyer/${id}`);
             toast.warn("Buyer deleted!")
             navigate('/dashboard/buyer/buyers');
         } catch (error) {

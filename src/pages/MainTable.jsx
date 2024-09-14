@@ -29,7 +29,7 @@ export default function MainTable() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/order/get-current-order');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/order/get-current-order');
                 console.log(res);
                 const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,
@@ -66,7 +66,7 @@ export default function MainTable() {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('/api/order/add-order', {
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/order/add-order', {
                 req_id: requirementId,
                 s_id: supplyId,
                 quantity: quantity,

@@ -43,7 +43,7 @@ export default function Editcategory() {
     React.useEffect(() => {
         try {
             const fetchData = async () => {
-                const res = await axios.get(`/api/category/category/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/category/${id}`);
                 console.log(res.data.data[0]);
                 setFormData({
                     categoryName: res.data.data[0].cat_name,
@@ -71,7 +71,7 @@ export default function Editcategory() {
             formDataToSend.append('imageFile', formData.imageFile)
         }
         try {
-            const res = await axios.put(`/api/category/edit/${id}`, formDataToSend, {
+            const res = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/category/edit/${id}`, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

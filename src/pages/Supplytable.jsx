@@ -23,7 +23,7 @@ export default function SupplyTable() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/supply/pending-supply');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/supply/pending-supply');
 
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,
@@ -129,7 +129,7 @@ export default function SupplyTable() {
         };
 
         try {
-            const res = await axios.post('/api/notification/new-notification', notificationData);
+            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/notification/new-notification', notificationData);
             setNotification('Notification sent successfully!');
             setTimeout(() => setNotification(''), 3000);
         } catch (err) {

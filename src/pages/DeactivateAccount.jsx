@@ -9,7 +9,7 @@ function DeactivatedAccountInfo() {
   useEffect(() => {
     const fetchDeactivatedAccounts = async () => {
       try {
-        const response = await axios.get('/api/other/deactivated-account-info');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/deactivated-account-info');
         setDeactivatedAccounts(response.data.data);
         setLoading(false);
       } catch (err) {

@@ -21,7 +21,7 @@ export default function DeliveryAgentProfile() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/delivery/agent-detail/${id}`)
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/delivery/agent-detail/${id}`)
                 setData(res.data.data[0])
                 setAgentImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data[0].d_image}`)
 
@@ -33,7 +33,7 @@ export default function DeliveryAgentProfile() {
     }, [id])
     const confirmDelete = async () => {
         try {
-            const res = await axios.delete(`/api/delivery/delete/${id}`);
+            const res = await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/delivery/delete/${id}`);
             navigate('/dashboard/delivery_agent/allgents'); // Navigate to vendors list after deletion
             toast.warn("Delivery Agent deleted !");
         } catch (err) {

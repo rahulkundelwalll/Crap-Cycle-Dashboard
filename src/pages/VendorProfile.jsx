@@ -21,7 +21,7 @@ export default function VendorProfile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/vendor/vender-detail/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
                 setCategories(res.data.category);
                 setVendroImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data.v_image}`)
@@ -34,7 +34,7 @@ export default function VendorProfile() {
     // console.log(process.env.REACT_APP_IMAGE_URL)
     const confirmDelete = async () => {
         try {
-            const res = await axios.delete(`/api/vendor/delete-vendor/${id}`);
+            const res = await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/vendor/delete-vendor/${id}`);
             navigate('/dashboard/vendor/vendors'); // Navigate to vendors list after deletion
             toast.warn("Vender deleted !");
         } catch (err) {

@@ -14,7 +14,7 @@ const OrderManagement = () => {
   const [statusMessage, setStatusMessage] = useState('');
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(`/api/order/get-order-detail/${id}`);
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/order/get-order-detail/${id}`);
       setOrderData(response.data.data);
       console.log(response.data.data);
     } catch (error) {
@@ -26,7 +26,7 @@ const OrderManagement = () => {
     
     const fetchAgents = async () => {
       try {
-        const response = await axios.get(`/api/delivery/get-all-agent`);
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/delivery/get-all-agent`);
         setAgents(response.data.data);
       } catch (error) {
         console.error('Error fetching agents:', error);
@@ -54,7 +54,7 @@ const OrderManagement = () => {
   
   const handleAssign = async () => {
     try {
-      await axios.patch(`/api/order/assign-deleveryagent/${orderData[0].order_id}`, {
+      await axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/assign-deleveryagent/${orderData[0].order_id}`, {
         d_id: selectedAgent.d_id,
         d_name: selectedAgent.d_name,
         d_phone: selectedAgent.d_mobile,
@@ -76,8 +76,8 @@ const OrderManagement = () => {
   const handleStatus = async (status) => {
     try {
       const [orderRes, requirementRes] = await Promise.all([
-        axios.patch(`/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
-        axios.patch(`/api/requirement/requirementstatus/${orderData[0].req_id}`)
+        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
+        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirementstatus/${orderData[0].req_id}`)
       ]);
   
       if (orderRes.status === 200) {
@@ -98,7 +98,7 @@ const OrderManagement = () => {
   
   const handleRemove = async () => {
     try {
-      await axios.post(`/api/order/remove-agent/${orderData[0].order_id}`, {
+      await axios.post(import.meta.env.VITE_BACKEND_URL+`/api/order/remove-agent/${orderData[0].order_id}`, {
         order_id: orderData[0].order_id
       });
       // Update the local state to reflect the removed agent
@@ -145,10 +145,10 @@ const OrderManagement = () => {
   
     try {
       const [orderRes, requirementRes] = await Promise.all([
-        axios.patch(`/api/order/add-transitionId/${orderData[0].order_id}`, {
+        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/add-transitionId/${orderData[0].order_id}`, {
           transitionId: transitionId
         }),
-        axios.patch(`/api/requirement/requirementstatus/${orderData[0].req_id}`)
+        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirementstatus/${orderData[0].req_id}`)
       ]);
   
       if (orderRes.status === 200) {

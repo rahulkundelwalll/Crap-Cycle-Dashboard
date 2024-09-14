@@ -24,7 +24,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/category/category/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/category/${id}`);
                 setData({
                     category: res.data.data[0].cat_name,
                     discription: res.data.data[0].cat_description,
@@ -43,7 +43,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/category/get-subcat/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/get-subcat/${id}`);
                 setData((prev) => ({
                     ...prev,
                     subcategory: res.data.data || [] // Provide a default value of an empty array
@@ -57,7 +57,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchHierarchicalData = async () => {
             try {
-                const res = await axios.get(`/api/category/hierarchical-cat/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/hierarchical-cat/${id}`);
                 setHierarchical(res.data.data || []); // Ensure hierarchical is set to an array
                 
             } catch (err) {
@@ -70,7 +70,7 @@ export default function CategoryDetail(props) {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/category/delete-cat/${id}`);
+            await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/category/delete-cat/${id}`);
             toast.warn("Category Deleted !")
             navigate('/dashboard/category/category');
         } catch (err) {

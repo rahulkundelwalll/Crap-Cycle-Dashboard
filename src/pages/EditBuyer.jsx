@@ -34,7 +34,7 @@ export default function AddBuyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/buyer/getbuyer/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${id}`);
                 // setData(res.data.data)
                 const fetchData = res.data.data;
                 // console.log(res.data);
@@ -124,7 +124,7 @@ export default function AddBuyer() {
         }
 
         try {
-            const response = await axios.put(`/api/buyer/edit/${id}`, formDataToSend, {
+            const response = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/buyer/edit/${id}`, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -166,7 +166,7 @@ export default function AddBuyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
                 setCategoryOptions(res.data.data);
             } catch (err) {
                 console.log(err);

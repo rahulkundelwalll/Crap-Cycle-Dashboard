@@ -14,7 +14,7 @@ export default function GetPassword() {
     const handleSearch = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`/api/vendor/get-password?email=${email}`);
+            const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/get-password?email=${email}`);
             console.log(response);
             if (response.data.data) {
                 setPassword(response.data.data);

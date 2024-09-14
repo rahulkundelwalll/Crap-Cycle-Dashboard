@@ -23,7 +23,7 @@ export default function AddCategory() {
    React.useEffect(() => {
         const fetchHierarchicalData = async () => {
             try {
-                const res = await axios.get(`/api/category/hierarchical-cat/${cat_id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/hierarchical-cat/${cat_id}`);
                 setHierarchical(res.data.data || []); // Ensure hierarchical is set to an array
                 
             } catch (err) {
@@ -61,7 +61,7 @@ export default function AddCategory() {
         formDataToSend.append('imageFile',formData.imageFile)
         formDataToSend.append('parent',cat_id?cat_id:-1)
         try{
-            const res =await axios.post('/api/category/add',formDataToSend,{
+            const res =await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/category/add',formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }

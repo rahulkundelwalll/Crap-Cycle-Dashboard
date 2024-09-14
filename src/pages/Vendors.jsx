@@ -14,7 +14,7 @@ export default function Vendor() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/vendor/get-vendors');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/vendor/get-vendors');
                 setData(res.data.data); // Set fetched data to state
             } catch (err) {
                 console.log(err);

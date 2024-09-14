@@ -9,7 +9,7 @@ const OrderManagementHistory = () => {
 
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(`/api/order/get-order-detail/${id}`);
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/order/get-order-detail/${id}`);
       setOrderData(response.data.data);
       console.log(response.data.data);
     } catch (error) {

@@ -10,7 +10,7 @@ function InterestedVendorInfo() {
   useEffect(() => {
     const fetchInterestedVendors = async () => {
       try {
-        const response = await axios.get('/api/Autharization/signUp-get');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/Autharization/signUp-get');
         console.log(response);
         setInterestedVendors(response.data.data);
         setLoading(false);

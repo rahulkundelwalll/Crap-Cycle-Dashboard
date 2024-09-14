@@ -41,7 +41,7 @@ export default function AddVendor() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/vendor/vender-detail/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
                 // console.log(res.data.data)
                 // setCategories(res.data.category);
@@ -75,7 +75,7 @@ export default function AddVendor() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -133,7 +133,7 @@ export default function AddVendor() {
         }
 
         try {
-            const res = await axios.put(`/api/vendor/edit/${id}`, formDataToSend, {
+            const res = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/vendor/edit/${id}`, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

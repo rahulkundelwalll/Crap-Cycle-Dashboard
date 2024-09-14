@@ -16,7 +16,7 @@ export default function UpdateContact() {
         // Fetch existing contact information
         const fetchContactInfo = async () => {
             try {
-                const response = await axios.get('/api/other/contact');
+                const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/contact');
                 setContactInfo(response.data);
             } catch (error) {
                 console.error('Error fetching contact info:', error);
@@ -34,7 +34,7 @@ export default function UpdateContact() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/other/contact', contactInfo);
+            await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/other/contact', contactInfo);
             // toast.success('Contact information updated successfully');
             window.alert("Contact information updated successfully");
 

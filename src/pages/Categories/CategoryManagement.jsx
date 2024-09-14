@@ -67,7 +67,7 @@ export default function CategoryManagement() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/category/category-bidden');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/category-bidden');
                 setData(res.data.data);
                 setInitialData(res.data.data);
                 res.data.data.forEach((cat) => {

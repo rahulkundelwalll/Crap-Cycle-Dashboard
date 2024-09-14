@@ -84,7 +84,7 @@ export default function AddBuyer() {
         }
 
         try {
-            const response = await axios.post('/api/buyer/addbuyer', formDataToSend, {
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/buyer/addbuyer', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -126,7 +126,7 @@ export default function AddBuyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
                 setCategoryOptions(res.data.data);
             } catch (err) {
                 console.log(err);
