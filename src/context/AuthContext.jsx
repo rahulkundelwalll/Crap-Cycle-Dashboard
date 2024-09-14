@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('https://lytte-backend.onrender.com/api/Autharization/checkAuth');
+        const response = await axios.get('/api/Autharization/checkAuth');
         console.log(response.data)
         if(response?.data?.user?.role==='dashboardUser')
         {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('https://lytte-backend.onrender.com/api/Autharization/login', { email, password });
+      const response = await axios.post('/api/Autharization/login', { email, password });
       if (response.status === 200) {
         setAuth(response.data);
         toast("Welcome Pawan!")
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('https://lytte-backend.onrender.com/api/Autharization/logout');
+      await axios.post('/api/Autharization/logout');
       setAuth(null);
       toast.success("Logged out successfully");
       navigate('/login');
