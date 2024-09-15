@@ -45,7 +45,7 @@ export default function BuyerProfile() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/api/buyer/getbuyer/${id}`);
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${id}`);
                 setData(res.data.data)
                 setCategories(res.data.category)
                 setDropingAdds(res.data.dropingaddress)
