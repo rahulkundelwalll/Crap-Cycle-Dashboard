@@ -17,14 +17,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/Autharization/checkAuth');
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/checkAuth');
         console.log(response.data)
-        if(response?.data?.user?.role==='dashboardUser')
-        {
+        if (response?.data?.user?.role === 'dashboardUser') {
           setAuth(response.data);
         }
-        
-        
+
+
         // console.log(response.data);
       } catch (error) {
         setAuth(null);
@@ -35,13 +34,13 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
 
-    const interval = setInterval(checkAuth, 180000); // Check every minute
+    const interval = setInterval(checkAuth, 1800000000); // Check every minute
     return () => clearInterval(interval);
   }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/Autharization/login', { email, password });
+      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/login', { email, password });
       if (response.status === 200) {
         setAuth(response.data);
         toast("Welcome Pawan!")
@@ -54,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/Autharization/logout');
+      await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/logout');
       setAuth(null);
       toast.success("Logged out successfully");
       navigate('/login');
@@ -62,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout failed', error);
     }
   };
-  
+
   return (
     <AuthContext.Provider value={{ auth, loading, login, logout }}>
       {children}
