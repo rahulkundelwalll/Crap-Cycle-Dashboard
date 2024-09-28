@@ -7,7 +7,7 @@ import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['current_requirement', 'bidden_requirement', 'no_of_listing', 'no_of_bidding'];
-const searchOptions = ['category_name', 'category_id', 'category_details'];
+const searchOptions = ['cat_name', 'cat_id', 'curr_requirement', 'bidden_requirement', 'No_listing', 'no_bidding', 'parent'];
 const categoryMap = new Map();
 categoryMap.set(-1, "N/A");
 
@@ -51,13 +51,20 @@ export default function CategoryManagement() {
     };
 
     const handleSearchClick = () => {
-        if (searchColumn) {
-            const filteredData = initialData.filter(item =>
-                item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
-            );
+        if (searchColumn && searchTerm) {
+            const filteredData = initialData.filter(item => {
+                // Ensure that the item has the search column and perform case-insensitive search
+                if (item[searchColumn]) {
+                    return item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase());
+                }
+                return false;
+            });
             setData(filteredData);
-            setCurrentPage(0); // Reset to the first page after search
+        } else {
+            // If no search term or column is provided, reset to the initial data
+            setData(initialData);
         }
+        setCurrentPage(0); // Reset to the first page after search
     };
 
     const handlePageClick = (event) => {
@@ -67,7 +74,7 @@ export default function CategoryManagement() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/category-bidden');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/category/category-bidden');
                 setData(res.data.data);
                 setInitialData(res.data.data);
                 res.data.data.forEach((cat) => {

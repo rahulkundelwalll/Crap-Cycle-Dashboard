@@ -12,13 +12,15 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { FaLink } from 'react-icons/fa';
 import { FaHandshake } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaUserAltSlash } from "react-icons/fa";
-import { FaStar } from "react-icons/fa";
+import { useLocation } from 'react-router-dom';
+
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
     const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
     const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
         const savedState = localStorage.getItem('expandUserManagement');
@@ -100,7 +102,9 @@ export default function Sidebar({ children, page }) {
             alert(res.data.message);
         }
     }
-
+    const isActive = (path) => {
+        return location.pathname === path ? { color: 'red', fontWeight: 'bold' } : { color: 'white' };
+      };
     return (
         <>
             <div className='flex  h-screen'>
@@ -112,7 +116,7 @@ export default function Sidebar({ children, page }) {
                     </div>
                     <div className='h-150'>
                         <ul className='align flex flex-col space-y-4 '>
-                            <Link to='/'><li className="flex items-center space-x-2 cursor-pointer text-white hover:text-black">
+                        <Link to='/' style={isActive('/')}><li className="flex items-center space-x-2 cursor-pointer  hover:text-black">
                                 <FaLaptopHouse className="text-xl" />
                                 <span className="text-xl">Dashboard</span>
                             </li></Link>
@@ -122,26 +126,26 @@ export default function Sidebar({ children, page }) {
                                     <span className="text-xl">User Management</span>
                                 </div>
                                 <ul className={expandUserManagement ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/vendor/vendors'><li className='hover:text-black'>&#x2022;Vendors</li></Link>
-                                    <Link to='/dashboard/buyer/buyers'><li className='hover:text-black'>&#x2022;Buyers</li></Link>
-                                    <Link to='/dashboard/delivery_agent/allgents'><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
+                                    <Link to='/dashboard/vendor/vendors' style={isActive('/dashboard/vendor/vendors')}><li className='hover:text-black'>&#x2022;Vendors</li></Link>
+                                    <Link to='/dashboard/buyer/buyers' style={isActive('/dashboard/buyer/buyers')}><li className='hover:text-black'>&#x2022;Buyers</li></Link>
+                                    <Link to='/dashboard/delivery_agent/allgents' style={isActive('/dashboard/delivery_agent/allgents')}><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
                                 </ul>
                             </li>
-                            <Link to='/dashboard/category/category'>
-                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                            <Link to='/dashboard/category/category' style={isActive('/dashboard/category/category')}>
+                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
                                     <BiSolidCategory className=" text-xl " />
                                     <span className="   text-xl">Category Management</span>
                                 </li>
                             </Link>
-                            <li className="flexspace-x-2 cursor-pointer flex-col">
+                            <li className="flexspace-x-2 cursor-pointer flex-col" >
                                 <div className='flex text-white  items-center hover:text-black' onClick={toggleOrderManagement}>
                                     <DiCodepen className=" text-xl" />
                                     <span className="text-xl">Order Management</span>
                                 </div>
                                 <ul className={expandOrderManagement ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
-                                    <Link to='/dashboard/requirement/allrequirement'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
-                                    <Link to='/dashboard/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
+                                    <Link to='/dashboard/supplytable' style={isActive('/dashboard/supplytable')}><li className='hover:text-black'>&#x2022;Supply</li></Link>
+                                    <Link to='/dashboard/requirement/allrequirement' style={isActive('/dashboard/requirement/allrequirement')}><li className='hover:text-black'>&#x2022;Requirement</li></Link>
+                                    <Link to='/dashboard/maintable' style={isActive('/dashboard/maintable')}><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
                                 </ul>
                             </li>
                             <li className="flexspace-x-2 cursor-pointer flex-col">
@@ -150,32 +154,32 @@ export default function Sidebar({ children, page }) {
                                     <span className="text-xl">Order History</span>
                                 </div>
                                 <ul className={expandOrderHistory ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/history/supplytable'><li className='hover:text-black'>&#x2022;Supply</li></Link>
-                                    <Link to='/dashboard/history/requirementtable'><li className='hover:text-black'>&#x2022;Requirement</li></Link>
-                                    <Link to='/dashboard/history/maintable'><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
+                                    <Link to='/dashboard/history/supplytable' style={isActive('/dashboard/history/supplytable')}><li className='hover:text-black'>&#x2022;Supply</li></Link>
+                                    <Link to='/dashboard/history/requirementtable' style={isActive('/dashboard/history/requirementtable')}><li className='hover:text-black'>&#x2022;Requirement</li></Link>
+                                    <Link to='/dashboard/history/maintable' style={isActive('/dashboard/history/maintable')}><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
                                 </ul>
                             </li>
-                            <Link to='/dashboard/requirement/addrequirement'>
-                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                            <Link to='/dashboard/requirement/addrequirement' style={isActive('/dashboard/requirement/addrequirement')}>
+                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
                                     <GiNotebook className="text-xl " />
                                     <span className="  text-xl">Add Requirement</span>
                                 </li>
                             </Link>
-                            <Link to='/dashboard/update-links'>
-                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                            <Link to='/dashboard/update-links' style={isActive('/dashboard/update-links')}>
+                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
                                     <FaLink className="text-xl " />
                                     <span className="  text-xl">Update Links</span>
                                 </li>
                             </Link>
-                            <Link to='/dashboard/deactivateaccount'>
-                                <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer">
+                            <Link to='/dashboard/deactivateaccount' style={isActive('/dashboard/deactivateaccount')}>
+                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
                                     <FaUserAltSlash className="text-xl " />
                                     <span className="  text-xl">Deactivated Account</span>
                                 </li>
                             </Link>
-                            <li className="text-white hover:text-black flex items-center space-x-2 cursor-pointer" onClick={handleInterestedVendorClick}>
+                            <li className=" hover:text-black flex items-center space-x-2 cursor-pointer" style={isActive('/dashboard/interested-vendor')} onClick={handleInterestedVendorClick}>
                                 <FaHandshake className="text-xl" />
-                                <span className="text-xl">Interested Vendor</span>
+                                <span  className="text-xl">Interested Vendor</span>
                                 {interestedVendorNotifications > 0 && (
                                     <div className="relative">
                                         <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">

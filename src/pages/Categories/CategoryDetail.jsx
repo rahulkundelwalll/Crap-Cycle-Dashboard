@@ -91,7 +91,7 @@ export default function CategoryDetail(props) {
                 <span className="text-green-400">{hierarchical?.map((item, index) => (
                     <React.Fragment key={item.cat_id}>
                         /
-                        {item.cat_name}
+                        <Link to={`/dashboard/category/CategoryDetail/${item.cat_id}`}>{item.cat_name}</Link>
                         
                     </React.Fragment>
                 ))}</span>
