@@ -31,11 +31,30 @@ export default function AddVendor() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    
+        setFormData((prev) => {
+            // Apply validation only for 'personName'
+            if (name === 'personName') {
+                // Allow only alphabets and spaces, up to 30 characters
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                    return {
+                        ...prev,
+                        [name]: value
+                    };
+                } else {
+                    // Return previous state if the value doesn't match the regex
+                    return prev;
+                }
+            }
+    
+            // No validation for other fields, just update the state
+            return {
+                ...prev,
+                [name]: value
+            };
+        });
     };
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -135,6 +154,7 @@ export default function AddVendor() {
                         onChange={handleChange}
                         placeholder='Person Name'
                         className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        maxLength="30" // Restrict to 30 characters
                     />
                     <input
                         type="tel"
@@ -143,6 +163,8 @@ export default function AddVendor() {
                         onChange={handleChange}
                         placeholder='Phone Number'
                         className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        pattern="[0-9]*" // Allows only digits
+                        inputMode="numeric" // Ensures mobile keyboards show numbers
                     />
                     <input
                         type="email"
