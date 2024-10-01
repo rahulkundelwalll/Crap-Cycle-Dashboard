@@ -43,7 +43,7 @@ const CompletedRequirements = () => {
                         <p>Requirement ID: {orderDetails.req_id}</p>
                         <p>Category Name: {orderDetails.cat_name}</p>
                         <p>Quantity: {orderDetails.req_quantity}</p>
-                        <p>Price: {orderDetails.req_price}</p>
+                        <p>Price: {parseFloat(orderDetails.req_price).toFixed(2)}</p>
                         <p>Note: {orderDetails.req_note}</p>
                         <p>Status: {orderDetails.req_status}</p>
                     </div>
@@ -85,7 +85,7 @@ const CompletedRequirements = () => {
                                     <td className="py-2 px-4">{order.v_address}</td>
                                     <td className="py-2 px-4">{order.d_name}</td>
                                     <td className="py-2 px-4">{order.d_id}</td>
-                                    <td className="py-2 px-4">{order.order_price}</td>
+                                    <td className="py-2 px-4">{parseFloat(order.order_price).toFixed(2)}</td>
                                     <td className="py-2 px-4">{order.order_status}</td>
                                     <td className="py-2 px-4">
                                         <span

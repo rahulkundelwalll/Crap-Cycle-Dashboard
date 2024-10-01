@@ -217,7 +217,9 @@ export default function SupplyTable() {
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.s_id}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.supply_quantity}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_supply}</td>
-                                    <td className="py-2 px-4 text-sm text-gray-700">{item.supply_rate}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">
+                                    {parseFloat(item.supply_rate).toFixed(2)}
+                                        </td>
                                     <td className="py-2 px-4">
                                         <input
                                             type="number"

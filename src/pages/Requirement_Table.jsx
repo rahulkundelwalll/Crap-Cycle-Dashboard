@@ -154,7 +154,9 @@ export default function Requirement_Table() {
                                     <td className="py-2 px-4">{row.category_id}</td>
                                     <td className="py-2 px-4">{row.quantity}</td>
                                     <td className="py-2 px-4">{row.date}</td>
-                                    <td className="py-2 px-4">Rs {row.bided_quantity}</td>
+                                    <td className="py-2 px-4">
+                                        Rs  {parseFloat(row.bided_quantity).toFixed(2)}
+                                        </td>
                                     <td className="py-2 px-4">{row.buyerid}</td>
                                     <td className="py-2 px-4">{row.status}</td>
                                     <td className="py-2 px-4">

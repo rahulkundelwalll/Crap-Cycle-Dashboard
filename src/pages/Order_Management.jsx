@@ -186,7 +186,7 @@ const OrderManagement = () => {
             </div>
             <div className="w-full md:w-1/2">
               <p className="text-gray-700">Quantity: {order_qty}kg</p>
-              <p className="text-gray-700">Order Value: ₹{order_price}</p>
+              <p className="text-gray-700">Order Value: ₹{parseFloat(order_price).toFixed(2)}</p>
               <p className="text-gray-700 w-full">Order Status: <span>{order_status}</span></p>
             </div>
             <div className="flex mt-2">

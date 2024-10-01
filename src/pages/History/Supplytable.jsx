@@ -191,7 +191,9 @@ export default function SupplyTableHistory() {
                                     <td className="py-2 px-4">{row.s_id}</td>
                                     <td className="py-2 px-4">{row.supply_quantity} kg</td>
                                     <td className="py-2 px-4">{row.vendor_supply} kg</td>
-                                    <td className="py-2 px-4">{row.supply_rate} Rs</td>
+                                    <td className="py-2 px-4">
+                                    {parseFloat(row.supply_rate).toFixed(2)}
+                                        Rs</td>
                                     
                                     <td className="py-2 px-4">{row.status}</td>
                                     

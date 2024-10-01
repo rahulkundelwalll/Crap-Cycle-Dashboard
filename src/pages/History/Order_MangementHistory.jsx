@@ -42,11 +42,11 @@ const OrderManagementHistory = () => {
               <h3 className="font-bold text-lg">Order ID: <span>{order_id}</span></h3>
               <p className="text-gray-700">Category Name: {cat_name}</p>
               <p className="text-gray-700">Category ID: {list_cat_id}</p>
-              <p className="text-gray-700">Requirement ID: RQ59934</p>
+              <p className="text-gray-700">Requirement ID:{orderData[0].req_id}</p>
             </div>
             <div className="w-full md:w-1/2">
               <p className="text-gray-700">Quantity: {order_qty}kg</p>
-              <p className="text-gray-700">Order Value: ₹{order_price}</p>
+              <p className="text-gray-700">Order Value: ₹{parseFloat(order_price).toFixed(2)}</p>
               <p className="text-gray-700 w-full">Order Status: <span>{order_status}</span></p>
             </div>
           </div>
