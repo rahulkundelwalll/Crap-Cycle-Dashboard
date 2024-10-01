@@ -147,57 +147,92 @@ export default function AddVendor() {
                 </div>
 
                 <form className='flex flex-col items-center w-full' onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        name='personName'
-                        value={formData.personName}
-                        onChange={handleChange}
-                        placeholder='Person Name'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        maxLength="30" // Restrict to 30 characters
-                    />
-                    <input
-                        type="tel"
-                        name='phoneNumber'
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder='Phone Number'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        pattern="[0-9]*" // Allows only digits
-                        inputMode="numeric" // Ensures mobile keyboards show numbers
-                    />
-                    <input
-                        type="email"
-                        name='email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder='Email Id'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='password'
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder='password'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='companyName'
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        placeholder='Company Name'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='address'
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder='Address'
-                        className='placeholder:text-center mb-2 p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
+                <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='personName' className='mr-4 w-1/4 text-right'>
+            Person Name:
+        </label>
+        <input
+            type="text"
+            name='personName'
+            value={formData.personName}
+            onChange={handleChange}
+            id='personName'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            maxLength="30"
+        />
+    </div>
+
+    <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='phoneNumber' className='mr-4 w-1/4 text-right'>
+            Phone Number:
+        </label>
+        <input
+            type="tel"
+            name='phoneNumber'
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            id='phoneNumber'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            pattern="[0-9]*"
+            inputMode="numeric"
+        />
+    </div>
+
+    <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='email' className='mr-4 w-1/4 text-right'>
+            Email:
+        </label>
+        <input
+            type="email"
+            name='email'
+            value={formData.email}
+            onChange={handleChange}
+            id='email'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='password' className='mr-4 w-1/4 text-right'>
+            Password:
+        </label>
+        <input
+            type="text"
+            name='password'
+            value={formData.password}
+            onChange={handleChange}
+            id='password'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='companyName' className='mr-4 w-1/4 text-right'>
+            Company Name:
+        </label>
+        <input
+            type="text"
+            name='companyName'
+            value={formData.companyName}
+            onChange={handleChange}
+            id='companyName'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex flex-row items-center mb-4 w-3/4'>
+        <label htmlFor='address' className='mr-4 w-1/4 text-right'>
+            Address:
+        </label>
+        <input
+            type="text"
+            name='address'
+            value={formData.address}
+            onChange={handleChange}
+            id='address'
+            className='placeholder:text-center p-2 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
                     <div className='mb-4 w-3/4 flex justify-between items-center'>
                         <button
                             type="button"

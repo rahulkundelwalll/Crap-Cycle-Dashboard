@@ -98,22 +98,29 @@ export default function Editcategory() {
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
-                    <input
-                        type="text"
-                        name='categoryName'
-                        value={formData.categoryName}
-                        onChange={handleChange}
-                        placeholder='Category Name'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='categoryDescription'
-                        value={formData.categoryDescription}
-                        onChange={handleChange}
-                        placeholder='Category Description'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
+                <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='categoryName' className='w-1/4 text-right mr-4'>Category Name</label>
+        <input
+            type="text"
+            name='categoryName'
+            id='categoryName'
+            value={formData.categoryName}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='categoryDescription' className='w-1/4 text-right mr-4'>Category Description</label>
+        <input
+            type="text"
+            name='categoryDescription'
+            id='categoryDescription'
+            value={formData.categoryDescription}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
                     {/* <select
                         name='subcategory'
                         value={formData.subcategory}

@@ -146,60 +146,82 @@ export default function AddBuyer() {
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
-                    <input
-                        type="text"
-                        name='personName'
-                        value={formData.personName}
-                        onChange={handleChange}
-                        placeholder='Person Name'
-                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="tel"
-                        name='phoneNumber'
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder='Phone Number'
-                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="email"
-                        name='email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder='Email Id'
-                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-        
-                    <input
-                        type="text"
-                        name='companyName'
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        placeholder='Company Name'
-                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='address'
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder='Address'
-                        className='placeholder:text-center mb-2 p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <div className='flex w-3/4 mb-2'>
-                        <input
-                            type="text"
-                            name='dropinglocation'
-                            value={formData.dropinglocation}
-                            onChange={handleChange}
-                            placeholder='Droping Location'
-                            className='placeholder:text-center p-1 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        />
-                        <button type="button" onClick={addDroppingLocation} className='ml-2 px-4 py-1 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'>
-                            Add
-                        </button>
-                    </div>
+                <div className='flex justify-between items-center mb-2 w-3/4'>
+        <label htmlFor="personName" className='w-1/4 text-right pr-4'>Person Name:</label>
+        <input
+            type="text"
+            id="personName"
+            name='personName'
+            value={formData.personName}
+            onChange={handleChange}
+            className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex justify-between items-center mb-2 w-3/4'>
+        <label htmlFor="phoneNumber" className='w-1/4 text-right pr-4'>Phone Number:</label>
+        <input
+            type="tel"
+            id="phoneNumber"
+            name='phoneNumber'
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex justify-between items-center mb-2 w-3/4'>
+        <label htmlFor="email" className='w-1/4 text-right pr-4'>Email:</label>
+        <input
+            type="email"
+            id="email"
+            name='email'
+            value={formData.email}
+            onChange={handleChange}
+            className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex justify-between items-center mb-2 w-3/4'>
+        <label htmlFor="companyName" className='w-1/4 text-right pr-4'>Company Name:</label>
+        <input
+            type="text"
+            id="companyName"
+            name='companyName'
+            value={formData.companyName}
+            onChange={handleChange}
+            className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex justify-between items-center mb-2 w-3/4'>
+        <label htmlFor="address" className='w-1/4 text-right pr-4'>Address:</label>
+        <input
+            type="text"
+            id="address"
+            name='address'
+            value={formData.address}
+            onChange={handleChange}
+            className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex w-3/4 mb-2'>
+        <label htmlFor="dropinglocation" className='w-1/4 text-right pr-4'>Dropping Location:</label>
+        <div className='flex w-3/4'>
+            <input
+                type="text"
+                id="dropinglocation"
+                name='dropinglocation'
+                value={formData.dropinglocation}
+                onChange={handleChange}
+                className='p-1 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            />
+            <button type="button" onClick={addDroppingLocation} className='ml-2 px-4 py-1 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition duration-300'>
+                Add
+            </button>
+        </div>
+    </div>
                     <div className='w-3/4 mb-4'>
                         {formData.dropingLocations.map((location, index) => (
                             <div key={index} className='flex justify-between items-center p-2 mb-2 border border-gray-300 rounded-3xl'>

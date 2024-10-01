@@ -129,55 +129,77 @@ export default function EditAgent() {
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
-                    <input
-                        type="text"
-                        name='personName'
-                        value={formData.personName}
-                        onChange={handleChange}
-                        placeholder='Person Name'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="tel"
-                        name='phoneNumber'
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder='Phone Number'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="email"
-                        name='email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder='Email Id'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='companyName'
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        placeholder='Company Name'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='address'
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder='Address'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
-                    <input
-                        type="text"
-                        name='location'
-                        value={formData.location}
-                        onChange={handleChange}
-                        placeholder='Location'
-                        className='placeholder:text-center mb-4 p-3 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-                    />
+                <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='personName' className='w-1/4 text-right mr-4'>Person Name</label>
+        <input
+            type="text"
+            name='personName'
+            id='personName'
+            value={formData.personName}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
 
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='phoneNumber' className='w-1/4 text-right mr-4'>Phone Number</label>
+        <input
+            type="tel"
+            name='phoneNumber'
+            id='phoneNumber'
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='email' className='w-1/4 text-right mr-4'>Email Id</label>
+        <input
+            type="email"
+            name='email'
+            id='email'
+            value={formData.email}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='companyName' className='w-1/4 text-right mr-4'>Company Name</label>
+        <input
+            type="text"
+            name='companyName'
+            id='companyName'
+            value={formData.companyName}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='address' className='w-1/4 text-right mr-4'>Address</label>
+        <input
+            type="text"
+            name='address'
+            id='address'
+            value={formData.address}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
+
+    <div className='flex items-center w-3/4 mb-4'>
+        <label htmlFor='location' className='w-1/4 text-right mr-4'>Location</label>
+        <input
+            type="text"
+            name='location'
+            id='location'
+            value={formData.location}
+            onChange={handleChange}
+            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        />
+    </div>
                     <label htmlFor="pdfFile" className='mb-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Document
                     </label>
