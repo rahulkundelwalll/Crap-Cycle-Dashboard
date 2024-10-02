@@ -162,7 +162,7 @@ export default function AddVendor() {
         />
     </div>
 
-    <div className='flex flex-row items-center mb-4 w-3/4'>
+    <div className='flex flex-row items-center mb-4 w-3/4 '>
         <label htmlFor='phoneNumber' className='mr-4 w-1/4 text-right'>
             Phone Number:
         </label>
