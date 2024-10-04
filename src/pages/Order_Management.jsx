@@ -4,6 +4,8 @@ import Sidebar from '../component/Sidebar';
 import axios from 'axios';
 import ConfirmationModal from '../component/ConfirmationModal';
 import { toast } from 'react-toastify';
+import StatusModal from '../component/StatusModal';
+
 const OrderManagement = () => {
   const { id } = useParams();
   const [orderData, setOrderData] = useState(null);
@@ -12,28 +14,31 @@ const OrderManagement = () => {
   const [pickupDate, setPickupDate] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
+  const [showDeliveredModal, setShowDeliveredModal] = useState(false);
+  const [showRejectedModal, setShowRejectedModal] = useState(false);
+
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/order/get-order-detail/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/order/get-order-detail/${id}`);
       setOrderData(response.data.data);
       console.log(response.data.data);
     } catch (error) {
       console.error('Error fetching order data:', error);
     }
   };
+
   useEffect(() => {
     fetchOrderData();
     
     const fetchAgents = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/delivery/get-all-agent`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/delivery/get-all-agent`);
         setAgents(response.data.data);
       } catch (error) {
         console.error('Error fetching agents:', error);
       }
     };
 
-    fetchOrderData();
     fetchAgents();
   }, [id]);
 
@@ -54,13 +59,12 @@ const OrderManagement = () => {
   
   const handleAssign = async () => {
     try {
-      await axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/assign-deleveryagent/${orderData[0].order_id}`, {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/assign-deleveryagent/${orderData[0].order_id}`, {
         d_id: selectedAgent.d_id,
         d_name: selectedAgent.d_name,
         d_phone: selectedAgent.d_mobile,
         pick_up: pickupDate
       });
-      // Update the local state to reflect the assigned agent
       setOrderData(prevState => [{
         ...prevState[0],
         d_id: selectedAgent.d_id,
@@ -68,16 +72,18 @@ const OrderManagement = () => {
         d_mobile: selectedAgent.d_mobile,
         pick_up: pickupDate
       }]);
+      toast.success("Agent assigned successfully!");
     } catch (error) {
       console.error('Error assigning agent:', error);
+      toast.error("Error assigning agent. Please try again.");
     }
   };
 
   const handleStatus = async (status) => {
     try {
       const [orderRes, requirementRes] = await Promise.all([
-        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
-        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirementstatus/${orderData[0].req_id}`)
+        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
+        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/requirement/requirementstatus/${orderData[0].req_id}`)
       ]);
   
       if (orderRes.status === 200) {
@@ -90,18 +96,19 @@ const OrderManagement = () => {
         console.log('Requirement status updated successfully:', requirementRes.data);
       }
   
-      fetchOrderData(); // Fetch the updated order data after both requests are completed
+      fetchOrderData();
+      toast.success(`Order ${status} successfully!`);
     } catch (err) {
       console.log(err);
+      toast.error("Error updating order status. Please try again.");
     }
   };
   
   const handleRemove = async () => {
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL+`/api/order/remove-agent/${orderData[0].order_id}`, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/order/remove-agent/${orderData[0].order_id}`, {
         order_id: orderData[0].order_id
       });
-      // Update the local state to reflect the removed agent
       setOrderData(prevState => [{
         ...prevState[0],
         d_id: null,
@@ -110,8 +117,40 @@ const OrderManagement = () => {
         pick_up: null
       }]);
       setPickupDate('');
+      toast.success("Agent removed successfully!");
     } catch (error) {
       console.error('Error removing agent:', error);
+      toast.error("Error removing agent. Please try again.");
+    }
+  };
+
+  const handleComplete = () => {
+    setShowModal(true);
+  };
+
+  const handleTransitionStatus = async (transitionId) => {
+    console.log(transitionId);
+  
+    if (!transitionId) {
+      toast.error("Enter Transition Id");
+      return;
+    }
+  
+    try {
+      const [orderRes, requirementRes] = await Promise.all([
+        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/add-transitionId/${orderData[0].order_id}`, {
+          transitionId: transitionId
+        }),
+        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/requirement/requirementstatus/${orderData[0].req_id}`)
+      ]);
+  
+      if (orderRes.status === 200) {
+        fetchOrderData();
+        toast.success("Order updated successfully!");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("An error occurred while updating the data.");
     }
   };
 
@@ -126,53 +165,17 @@ const OrderManagement = () => {
     order_otp, d_id, d_mobile, d_name, pick_up, d_phone
   } = orderData[0];
 
-
-  const handleComplete =async () => {
-    // <ConfirmationModal/>
-  
-      setShowModal(true);
-    
-  
-  }
-
-  const handleTransitionStatus = async (transitionId) => {
-    console.log(transitionId);
-  
-    if (!transitionId) {
-      toast.error("Enter Transition Id");
-      return;
-    }
-  
-    try {
-      const [orderRes, requirementRes] = await Promise.all([
-        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/order/add-transitionId/${orderData[0].order_id}`, {
-          transitionId: transitionId
-        }),
-        axios.patch(import.meta.env.VITE_BACKEND_URL+`/api/requirement/requirementstatus/${orderData[0].req_id}`)
-      ]);
-  
-      if (orderRes.status === 200) {
-        fetchOrderData();
-        toast.success("Order updated successfully!");
-      }
-  
-      
-  
-    } catch (err) {
-      console.log(err);
-      toast.error("An error occurred while updating the data.");
-    }
-  };
-  
-
   return (
     <Sidebar page={'Order Management'}>
       <div className="bg-white p-6 rounded-lg  mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          {orderData[0].payment == "Paid"? <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span>:<button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
-            onClick={handleComplete}>
-            Completed
-          </button>}
+          {orderData[0].payment === "Paid" ? 
+            <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span> :
+            <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto"
+              onClick={handleComplete}>
+              Completed
+            </button>
+          }
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -190,8 +193,18 @@ const OrderManagement = () => {
               <p className="text-gray-700 w-full">Order Status: <span>{order_status}</span></p>
             </div>
             <div className="flex mt-2">
-              <button onClick={async () => { await handleStatus("Delivered") }} className="border-2 border-green-600 bg-green-600 text-white hover:bg-white hover:text-green-600 px-4 py-2 rounded-full mr-2">Delivered</button>
-              <button onClick={async () => { await handleStatus("Rejected") }} className="border-2 border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 px-4 py-2 rounded-full">Rejected</button>
+              <button 
+                onClick={() => setShowDeliveredModal(true)} 
+                className="border-2 border-green-600 bg-green-600 text-white hover:bg-white hover:text-green-600 px-4 py-2 rounded-full mr-2"
+              >
+                Delivered
+              </button>
+              <button 
+                onClick={() => setShowRejectedModal(true)} 
+                className="border-2 border-red-600 bg-red-600 text-white hover:bg-white hover:text-red-600 px-4 py-2 rounded-full"
+              >
+                Rejected
+              </button>
             </div>
             {statusMessage && (
               <div className="mt-2 text-green-600 font-semibold">
@@ -200,17 +213,17 @@ const OrderManagement = () => {
             )}
           </div>
 
-          {/* Buyer’s Section */}
+          {/* Buyer's Section */}
           <div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-bold text-lg">Buyer’s ID: {b_id}</h3>
+              <h3 className="font-bold text-lg">Buyer's ID: {b_id}</h3>
               <p className="text-gray-700">Name: {b_name}</p>
               <p className="text-gray-700">Phone: {b_mobile}</p>
               <p className="text-gray-700">Drop Location: {b_drop_address}</p>
             </div>
-            <hr></hr>
+            <hr />
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-bold text-lg">Vendor’s ID: {v_id}</h3>
+              <h3 className="font-bold text-lg">Vendor's ID: {v_id}</h3>
               <p className="text-gray-700">Name: {v_name}</p>
               <p className="text-gray-700">Phone: {v_mobile}</p>
               <p className="text-gray-700">Address: {v_address}</p>
@@ -267,10 +280,36 @@ const OrderManagement = () => {
           </div>
         </div>
       </div>
+
+      {/* Completion Modal */}
       <ConfirmationModal
         show={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={handleTransitionStatus}
+      />
+
+      {/* Delivered Confirmation Modal */}
+      <StatusModal
+        isOpen={showDeliveredModal}
+        onClose={() => setShowDeliveredModal(false)}
+        onConfirm={() => {
+          handleStatus("Delivered");
+          setShowDeliveredModal(false);
+        }}
+        title="Confirm Delivery"
+        message="Are you sure you want to mark this order as delivered?"
+      />
+      
+      {/* Rejected Confirmation Modal */}
+      <StatusModal
+        isOpen={showRejectedModal}
+        onClose={() => setShowRejectedModal(false)}
+        onConfirm={() => {
+          handleStatus("Rejected");
+          setShowRejectedModal(false);
+        }}
+        title="Confirm Rejection"
+        message="Are you sure you want to reject this order?"
       />
     </Sidebar>
   );
