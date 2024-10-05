@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Sidebar from '../component/Sidebar';
 import axios from 'axios';
 import ConfirmationModal from '../component/ConfirmationModal';
-import { toast } from 'react-toastify';
+import { toast ,ToastContainer} from 'react-toastify';
 import StatusModal from '../component/StatusModal';
 
 const OrderManagement = () => {
@@ -72,7 +72,7 @@ const OrderManagement = () => {
         d_mobile: selectedAgent.d_mobile,
         pick_up: pickupDate
       }]);
-      toast.success("Agent assigned successfully!");
+      // toast.success("Agent assigned successfully!");
     } catch (error) {
       console.error('Error assigning agent:', error);
       toast.error("Error assigning agent. Please try again.");
@@ -81,6 +81,13 @@ const OrderManagement = () => {
 
   const handleStatus = async (status) => {
     try {
+
+      if (status === "Delivered" && orderData[0].order_status !== "Picked-up") {
+        toast.error("Order must be picked up before it can be marked as delivered");
+        return;
+      }
+
+
       const [orderRes, requirementRes] = await Promise.all([
         axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
         axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/requirement/requirementstatus/${orderData[0].req_id}`)
@@ -97,7 +104,7 @@ const OrderManagement = () => {
       }
   
       fetchOrderData();
-      toast.success(`Order ${status} successfully!`);
+      // toast.success(`Order ${status} successfully!`);
     } catch (err) {
       console.log(err);
       toast.error("Error updating order status. Please try again.");
@@ -117,7 +124,7 @@ const OrderManagement = () => {
         pick_up: null
       }]);
       setPickupDate('');
-      toast.success("Agent removed successfully!");
+      // toast.success("Agent removed successfully!");
     } catch (error) {
       console.error('Error removing agent:', error);
       toast.error("Error removing agent. Please try again.");
@@ -165,9 +172,13 @@ const OrderManagement = () => {
     order_otp, d_id, d_mobile, d_name, pick_up, d_phone
   } = orderData[0];
 
+
+  
+
   return (
     <Sidebar page={'Order Management'}>
       <div className="bg-white p-6 rounded-lg  mx-auto mt-8">
+      <ToastContainer />
         <div className="flex justify-between items-center mb-4">
           {orderData[0].payment === "Paid" ? 
             <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span> :
