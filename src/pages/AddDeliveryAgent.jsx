@@ -3,7 +3,7 @@ import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddVendor() {
@@ -13,7 +13,7 @@ export default function AddVendor() {
         email: "",
         companyName: "",
         address: "",
-        location:"",
+        location: "",
         pdfFile: null,
         imageFile: null,
         imagePreview: userImage,
@@ -24,10 +24,28 @@ export default function AddVendor() {
     const navigate = useNavigate();
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    
+        setFormData((prev) => {
+            // Apply validation only for 'personName'
+            if (name === 'personName') {
+                // Allow only alphabets and spaces, up to 30 characters
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                    return {
+                        ...prev,
+                        [name]: value
+                    };
+                } else {
+                    // Return previous state if the value doesn't match the regex
+                    return prev;
+                }
+            }
+    
+            // No validation for other fields, just update the state
+            return {
+                ...prev,
+                [name]: value
+            };
+        });
     };
 
     const handleFileChange = (event) => {
@@ -58,7 +76,7 @@ export default function AddVendor() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/delivery/add-agent', data, {
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/delivery/add-agent', data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -90,78 +108,84 @@ export default function AddVendor() {
                 </div>
 
                 <form className='flex flex-col items-center w-full'>
-                <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='personName' className='w-1/4 text-right mr-4'>Person Name</label>
-        <input
-            type="text"
-            name='personName'
-            id='personName'
-            value={formData.personName}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='personName' className='w-1/4 text-right mr-4'>Person Name</label>
+                        <input
+                            type="text"
+                            name='personName'
+                            id='personName'
+                            value={formData.personName}
+                            onChange={handleChange}
+                            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                            maxLength="30"
+                        />
+                    </div>
 
-    <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='phoneNumber' className='w-1/4 text-right mr-4'>Phone Number</label>
-        <input
-            type="tel"
-            name='phoneNumber'
-            id='phoneNumber'
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='phoneNumber' className='w-1/4 text-right mr-4'>Phone Number</label>
+                        <input
+                            type="number"
+                            name="phoneNumber"
+                            pattern="[0-9]*"
+                            inputMode="numeric"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            id="phoneNumber"
+                            className="p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            
+                        />
 
-    <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='email' className='w-1/4 text-right mr-4'>Email Id</label>
-        <input
-            type="email"
-            name='email'
-            id='email'
-            value={formData.email}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
 
-    <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='companyName' className='w-1/4 text-right mr-4'>Company Name</label>
-        <input
-            type="text"
-            name='companyName'
-            id='companyName'
-            value={formData.companyName}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
+                    </div>
 
-    <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='address' className='w-1/4 text-right mr-4'>Address</label>
-        <input
-            type="text"
-            name='address'
-            id='address'
-            value={formData.address}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='email' className='w-1/4 text-right mr-4'>Email Id</label>
+                        <input
+                            type="email"
+                            name='email'
+                            id='email'
+                            value={formData.email}
+                            onChange={handleChange}
+                            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                    </div>
 
-    <div className='flex items-center w-3/4 mb-4'>
-        <label htmlFor='location' className='w-1/4 text-right mr-4'>Location</label>
-        <input
-            type="text"
-            name='location'
-            id='location'
-            value={formData.location}
-            onChange={handleChange}
-            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
-    </div>
-                    
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='companyName' className='w-1/4 text-right mr-4'>Company Name</label>
+                        <input
+                            type="text"
+                            name='companyName'
+                            id='companyName'
+                            value={formData.companyName}
+                            onChange={handleChange}
+                            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                    </div>
+
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='address' className='w-1/4 text-right mr-4'>Address</label>
+                        <input
+                            type="text"
+                            name='address'
+                            id='address'
+                            value={formData.address}
+                            onChange={handleChange}
+                            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                    </div>
+
+                    <div className='flex items-center w-3/4 mb-4'>
+                        <label htmlFor='location' className='w-1/4 text-right mr-4'>Location</label>
+                        <input
+                            type="text"
+                            name='location'
+                            id='location'
+                            value={formData.location}
+                            onChange={handleChange}
+                            className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                    </div>
+
                     <label htmlFor="pdfFile" className='mb-4 px-4 py-2 bg-gray-400 text-white rounded-3xl cursor-pointer hover:bg-gray-500 transition duration-300'>
                         Upload Document
                     </label>
@@ -174,7 +198,7 @@ export default function AddVendor() {
                         >
                             Submit
                         </button>
-                        <button onClick={()=>{navigate('/dashboard/delivery_agent/allgents')}} className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
+                        <button onClick={() => { navigate('/dashboard/delivery_agent/allgents') }} className='px-6 py-2 bg-red-600 text-white rounded-3xl hover:bg-red-700 transition duration-300'>
                             Cancel
                         </button>
                     </div>

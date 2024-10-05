@@ -70,10 +70,28 @@ export default function AddBuyer() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    
+        setFormData((prev) => {
+            // Apply validation only for 'personName'
+            if (name === 'personName') {
+                // Allow only alphabets and spaces, up to 30 characters
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                    return {
+                        ...prev,
+                        [name]: value
+                    };
+                } else {
+                    // Return previous state if the value doesn't match the regex
+                    return prev;
+                }
+            }
+    
+            // No validation for other fields, just update the state
+            return {
+                ...prev,
+                [name]: value
+            };
+        });
     };
 
     const handleFileChange = (event) => {
@@ -196,13 +214,14 @@ export default function AddBuyer() {
             value={formData.personName}
             onChange={handleChange}
             className='p-1 w-3/4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            maxLength="30"
         />
     </div>
 
     <div className='flex justify-between items-center mb-2 w-3/4'>
         <label htmlFor="phoneNumber" className='w-1/4 text-right pr-4'>Phone Number:</label>
         <input
-            type="tel"
+            type="number"
             id="phoneNumber"
             name='phoneNumber'
             value={formData.phoneNumber}

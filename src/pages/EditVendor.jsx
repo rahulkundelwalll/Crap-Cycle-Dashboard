@@ -33,16 +33,35 @@ export default function AddVendor() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    
+        setFormData((prev) => {
+            // Apply validation only for 'personName'
+            if (name === 'personName') {
+                // Allow only alphabets and spaces, up to 30 characters
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                    return {
+                        ...prev,
+                        [name]: value
+                    };
+                } else {
+                    // Return previous state if the value doesn't match the regex
+                    return prev;
+                }
+            }
+    
+            // No validation for other fields, just update the state
+            return {
+                ...prev,
+                [name]: value
+            };
+        });
     };
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/vender-detail/${id}`);
                 setData(res.data.data);
+                console.log(res.data.data)
                 // console.log(res.data.data)
                 // setCategories(res.data.category);
                 setFormData((prev)=>{
@@ -186,7 +205,7 @@ export default function AddVendor() {
             Phone Number:
         </label>
         <input
-            type="tel"
+            type="number"
             name='phoneNumber'
             value={formData.phoneNumber}
             onChange={handleChange}
