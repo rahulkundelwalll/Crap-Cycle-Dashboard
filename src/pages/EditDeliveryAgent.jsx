@@ -27,10 +27,28 @@ export default function EditAgent() {
     const navigate = useNavigate();
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    
+        setFormData((prev) => {
+            // Apply validation only for 'personName'
+            if (name === 'personName') {
+                // Allow only alphabets and spaces, up to 30 characters
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                    return {
+                        ...prev,
+                        [name]: value
+                    };
+                } else {
+                    // Return previous state if the value doesn't match the regex
+                    return prev;
+                }
+            }
+    
+            // No validation for other fields, just update the state
+            return {
+                ...prev,
+                [name]: value
+            };
+        });
     };
     React.useEffect(() => {
         const fetchData = async () => {
@@ -138,13 +156,14 @@ export default function EditAgent() {
             value={formData.personName}
             onChange={handleChange}
             className='p-3 w-full border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            maxLength="30"
         />
     </div>
 
     <div className='flex items-center w-3/4 mb-4'>
         <label htmlFor='phoneNumber' className='w-1/4 text-right mr-4'>Phone Number</label>
         <input
-            type="tel"
+            type="number"
             name='phoneNumber'
             id='phoneNumber'
             value={formData.phoneNumber}
