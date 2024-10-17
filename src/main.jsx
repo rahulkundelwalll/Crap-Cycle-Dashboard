@@ -5,6 +5,7 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ToastContainer } from 'react-toastify';
+import NetworkStatus from './NetworkStatus'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AuthProvider>
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         theme="light"
         transition:Bounce
 />
+<NetworkStatus>
       <App />
+      </NetworkStatus>  
     </AuthProvider>
   </BrowserRouter>
 );
