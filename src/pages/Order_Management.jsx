@@ -89,9 +89,11 @@ const OrderManagement = () => {
 
 
       const [orderRes, requirementRes] = await Promise.all([
-        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/changestatus/${orderData[0].order_id}`, { status: status }),
+        axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/changestatus/${orderData[0].order_id}`, { status: status , supplyid:orderData[0].s_id}),
         axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/requirement/requirementstatus/${orderData[0].req_id}`)
       ]);
+
+      console.log(orderRes);
   
       if (orderRes.status === 200) {
         console.log('Order status updated successfully:', orderRes.data);
@@ -146,7 +148,8 @@ const OrderManagement = () => {
     try {
       const [orderRes, requirementRes] = await Promise.all([
         axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/order/add-transitionId/${orderData[0].order_id}`, {
-          transitionId: transitionId
+          transitionId: transitionId,
+          supplyid:orderData[0].s_id
         }),
         axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/requirement/requirementstatus/${orderData[0].req_id}`)
       ]);
