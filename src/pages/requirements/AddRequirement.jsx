@@ -25,7 +25,7 @@ export default function AddRequirement() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/leaf-category');
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
