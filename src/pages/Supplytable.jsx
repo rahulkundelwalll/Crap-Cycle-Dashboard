@@ -6,8 +6,8 @@ import { FaBell } from "react-icons/fa";
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 
-const sortByOptions = ['vendor_ratings', 'supply_quantity', 'supply_rate', 'price_range'];
-const searchOptions = ['vendor_name'];
+const sortByOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id','supply_quantity','supply_rate','v_id','vendor_supply'];
+const searchOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id','supply_quantity','supply_rate','v_id','vendor_supply'];
 
 export default function SupplyTable() {
     const [data, setData] = React.useState([]);
@@ -16,8 +16,9 @@ export default function SupplyTable() {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
     const [notification, setNotification] = React.useState('');
-    const [currentPage, setCurrentPage] = React.useState(0);
-    const itemsPerPage = 10;
+    const [filteredData, setFilteredData] = React.useState([]);
+
+   
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,6 +44,8 @@ export default function SupplyTable() {
                 }));
 
                 setData(fetchedData);
+                setFilteredData(fetchedData);
+
                 console.log(fetchedData);
             } catch (err) {
                 console.log(err);
@@ -57,7 +60,7 @@ export default function SupplyTable() {
     };
 
     const handleSortClick = () => {
-        const sortedData = [...data].sort((a, b) => {
+        const sortedData = [...filteredData].sort((a, b) => {
             if (sortby) {
                 if (ascending) {
                     return a[sortby] > b[sortby] ? 1 : -1;
@@ -67,9 +70,10 @@ export default function SupplyTable() {
             }
             return 0;
         });
-        setData(sortedData);
+        setFilteredData(sortedData);
         setAscending(!ascending);
     };
+    
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -80,14 +84,16 @@ export default function SupplyTable() {
     };
 
     const handleSearchClick = () => {
-        if (searchColumn) {
+        if (searchColumn && searchTerm) {
             const filteredData = data.filter(item =>
                 item[searchColumn].toString().toLowerCase().includes(searchTerm.toLowerCase())
             );
-            setData(filteredData);
-            setCurrentPage(0); // Reset to first page after search
+            setFilteredData(filteredData);
+        } else {
+            setFilteredData(data); // Reset if search inputs are not complete
         }
     };
+    
 
     const handleApproveQuantityChange = (index, value) => {
         const updatedData = [...data];
@@ -139,11 +145,11 @@ export default function SupplyTable() {
         }
     };
 
-    const handlePageClick = (selectedPage) => {
-        setCurrentPage(selectedPage.selected);
-    };
+    // const handlePageClick = (selectedPage) => {
+    //     setCurrentPage(selectedPage.selected);
+    // };
 
-    const displayedData = data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    const displayedData = data;
 
     return (
         <>
@@ -208,9 +214,9 @@ export default function SupplyTable() {
                             </tr>
                         </thead>
                         <tbody>
-                            {displayedData.map((item, index) => (
+                            {filteredData.map((item, index) => (
                                 <tr key={item.s_id} className="border-b border-gray-200">
-                                    <td className="py-2 px-4 text-sm text-gray-700">{currentPage * itemsPerPage + index + 1}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{ index + 1}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_name}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.cat_name}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.cat_id}</td>
@@ -255,23 +261,7 @@ export default function SupplyTable() {
                             ))}
                         </tbody>
                     </table>
-                    <ReactPaginate
-                        previousLabel={'Previous'}
-                        nextLabel={'Next'}
-                        breakLabel={'...'}
-                        pageCount={Math.ceil(data.length / itemsPerPage)}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={handlePageClick}
-                        containerClassName={'pagination flex justify-center mt-4'}
-                        pageClassName={'page-item'}
-                        pageLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
-                        previousClassName={'page-item'}
-                        previousLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
-                        nextClassName={'page-item'}
-                        nextLinkClassName={'page-link bg-white text-gray-800 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100'}
-                        activeClassName={'bg-blue-500 text-white'}
-                    />
+                   
 
                 </div>
             </Sidebar>

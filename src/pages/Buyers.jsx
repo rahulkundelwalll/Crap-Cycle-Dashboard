@@ -6,41 +6,64 @@ import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 
 export default function Buyer() {
-    const navigate = useNavigate();
-    const [data, setData] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(0);
-    const [perPage] = React.useState(10);
+    const [data, setData] = React.useState([]); // State to hold fetched data
+    const [searchQuery, setSearchQuery] = React.useState(''); // State to hold search query
+    const [currentPage, setCurrentPage] = React.useState(0); // State to hold current page
+    const [buyersPerPage] = React.useState(10); // State to hold buyers per page
 
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/buyer/allbuyer');
-                setData(res.data.data);
-                
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/buyer/allbuyer');
+                setData(res.data.data); // Set fetched data to state
             } catch (err) {
                 console.log(err);
             }
         };
-
         fetchData();
     }, []);
 
-    const handlePageClick = (event) => {
-        setCurrentPage(event.selected);
+    const navigate = useNavigate();
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
     };
 
-    const offset = currentPage * perPage;
-    const currentData = data.slice(offset, offset + perPage);
+    const handlePageClick = (selectedItem) => {
+        setCurrentPage(selectedItem.selected);
+    };
+
+    const filteredData = data.filter(row => 
+        row.b_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        row.b_id.toString().includes(searchQuery.toLowerCase()) ||
+        row.b_mobile.includes(searchQuery) ||
+        row.b_company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        row.b_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        row.b_address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Get current buyers
+    const offset = currentPage * buyersPerPage;
+    const currentBuyers = filteredData.slice(offset, offset + buyersPerPage);
 
     return (
         <>
             <Sidebar page={'Buyers'}>
-                <div className='flex justify-end text-xl font-bold mt-5 '>
+                <div className="flex justify-end text-xl font-bold mt-5 ">
                     <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/dashboard/buyer/add')}>
                         + Add Buyer
                     </button>
                 </div>
-                <div className="mx-auto pt-10 container w-sreen ">
+                <div className="mx-auto pt-10 container">
+                    <div className="mb-4 flex justify-center">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className="px-4 py-2 border border-gray-300 rounded-3xl w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    </div>
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
@@ -55,9 +78,9 @@ export default function Buyer() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {currentData.map((row, index) => (
+                            {currentBuyers.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-2 px-4">{index + 1 + offset}</td>
+                                    <td className="py-2 px-4">{offset + index + 1}</td>
                                     <td className="py-2 px-4">{row.b_name}</td>
                                     <td className="py-2 px-4">{row.b_id}</td>
                                     <td className="py-2 px-4">{row.b_mobile}</td>
@@ -79,7 +102,7 @@ export default function Buyer() {
                             nextLabel={'Next'}
                             breakLabel={'...'}
                             breakClassName={'break-me'}
-                            pageCount={Math.ceil(data.length / perPage)}
+                            pageCount={Math.ceil(filteredData.length / buyersPerPage)}
                             marginPagesDisplayed={2}
                             pageRangeDisplayed={5}
                             onPageChange={handlePageClick}
