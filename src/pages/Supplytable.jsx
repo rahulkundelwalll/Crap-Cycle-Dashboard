@@ -6,8 +6,8 @@ import { FaBell } from "react-icons/fa";
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 
-const sortByOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id','supply_quantity','supply_rate','v_id','vendor_supply'];
-const searchOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id','supply_quantity','supply_rate','v_id','vendor_supply'];
+const sortByOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id', 'supply_quantity', 'supply_rate', 'v_id', 'vendor_supply'];
+const searchOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id', 'supply_quantity', 'supply_rate', 'v_id', 'vendor_supply'];
 
 export default function SupplyTable() {
     const [data, setData] = React.useState([]);
@@ -18,20 +18,19 @@ export default function SupplyTable() {
     const [notification, setNotification] = React.useState('');
     const [filteredData, setFilteredData] = React.useState([]);
 
-   
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/supply/pending-supply');
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/supply/pending-supply');
 
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,
                     v_id: item.v_id,
                     cat_id: item.list_cat_id,
                     cat_name: item.cat_name,
-                    id: item.id,  // Add ID for each item
+                    id: item.id,
                     vendor_name: item.v_name,
                     supply_quantity: item.s_qty,
                     supply_rate: item.s_price,
@@ -45,8 +44,6 @@ export default function SupplyTable() {
 
                 setData(fetchedData);
                 setFilteredData(fetchedData);
-
-                console.log(fetchedData);
             } catch (err) {
                 console.log(err);
             }
@@ -73,7 +70,6 @@ export default function SupplyTable() {
         setFilteredData(sortedData);
         setAscending(!ascending);
     };
-    
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -90,37 +86,30 @@ export default function SupplyTable() {
             );
             setFilteredData(filteredData);
         } else {
-            setFilteredData(data); // Reset if search inputs are not complete
+            setFilteredData(data);
         }
     };
-    
 
-    const handleApproveQuantityChange = (index, value) => {
+    const updateDataValue = (index, key, value) => {
         const updatedData = [...data];
-        updatedData[index].approve_quantity = value;
+        updatedData[index][key] = value;
         setData(updatedData);
+        setFilteredData(updatedData);
     };
 
     const handleLowerLimitChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].lower_limit = value;
-        setData(updatedData);
+        updateDataValue(index, 'lower_limit', value);
     };
 
     const handleUpperLimitChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].upper_limit = value;
-        setData(updatedData);
+        updateDataValue(index, 'upper_limit', value);
     };
 
     const handleAskedQuantityChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].asked_quantity = value;
-        setData(updatedData);
+        updateDataValue(index, 'asked_quantity', value);
     };
 
     const handleBellClick = async (item) => {
-    
         const notificationData = {
             s_id: item.s_id,
             v_id: item.v_id,
@@ -130,12 +119,12 @@ export default function SupplyTable() {
             prev_quantity: item.supply_quantity,
             cat_id: item.cat_id,
             cat_name: item.cat_name,
-            lower_price:item.lower_limit,
-            upper_price:item.upper_limit
+            lower_price: item.lower_limit,
+            upper_price: item.upper_limit
         };
 
         try {
-            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/notification/new-notification', notificationData);
+            const res = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/notification/new-notification', notificationData);
             setNotification('Notification sent successfully!');
             setTimeout(() => setNotification(''), 3000);
         } catch (err) {
@@ -144,12 +133,6 @@ export default function SupplyTable() {
             setTimeout(() => setNotification(''), 3000);
         }
     };
-
-    // const handlePageClick = (selectedPage) => {
-    //     setCurrentPage(selectedPage.selected);
-    // };
-
-    const displayedData = data;
 
     return (
         <>
@@ -208,61 +191,57 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supply Rate</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lower Limit</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Upper Limit</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved Quantity</th>
-                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="py-2 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asked Quantity</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredData.map((item, index) => (
-                                <tr key={item.s_id} className="border-b border-gray-200">
-                                    <td className="py-2 px-4 text-sm text-gray-700">{ index + 1}</td>
+                                <tr key={index} className="hover:bg-gray-100 border-b border-gray-200">
+                                    <td className="py-2 px-4 text-sm font-medium text-gray-700">{index + 1}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_name}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.cat_name}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.cat_id}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.s_id}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.supply_quantity}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">{item.vendor_supply}</td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.supply_rate}</td>
                                     <td className="py-2 px-4 text-sm text-gray-700">
-                                    {parseFloat(item.supply_rate).toFixed(2)}
-                                        </td>
-                                    <td className="py-2 px-4">
                                         <input
-                                            type="number"
-                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            type="text"
                                             value={item.lower_limit}
                                             onChange={(e) => handleLowerLimitChange(index, e.target.value)}
+                                            className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
-                                    <td className="py-2 px-4">
+                                    <td className="py-2 px-4 text-sm text-gray-700">
                                         <input
-                                            type="number"
-                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            type="text"
                                             value={item.upper_limit}
                                             onChange={(e) => handleUpperLimitChange(index, e.target.value)}
+                                            className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
-                                    <td className="py-2 px-4">
+                                    <td className="py-2 px-4 text-sm text-gray-700">
                                         <input
-                                            type="number"
-                                            className="text-center w-full p-1 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            type="text"
                                             value={item.asked_quantity}
                                             onChange={(e) => handleAskedQuantityChange(index, e.target.value)}
+                                            className="text-center w-full p-1 border border-gray-300 rounded"
                                         />
                                     </td>
-                                    <td className="py-2 px-4 text-sm text-gray-700">{item.status}</td>
-                                    <td className="py-2 px-4 text-center">
-                                        <FaBell
-                                            className="cursor-pointer hover:scale-125 text-2xl ease-in duration-300"
+                                    <td className="py-2 px-4 text-sm text-gray-700">
+                                        <button
+                                            className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-700"
                                             onClick={() => handleBellClick(item)}
-                                        />
+                                        >
+                                            <FaBell />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                   
-
                 </div>
             </Sidebar>
         </>
