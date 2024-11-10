@@ -193,6 +193,7 @@ export default function SupplyTable() {
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Upper Limit</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asked Quantity</th>
                                 <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -238,6 +239,7 @@ export default function SupplyTable() {
                                             <FaBell />
                                         </button>
                                     </td>
+                                    <td className="py-2 px-4 text-sm text-gray-700">{item.status}</td>
                                 </tr>
                             ))}
                         </tbody>
