@@ -4,6 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id', 'supply_quantity', 'supply_rate', 'v_id', 'vendor_supply'];
@@ -110,6 +111,11 @@ export default function SupplyTable() {
     };
 
     const handleBellClick = async (item) => {
+
+        if (item.lower_limit <= 0 && item.upper_limit <= 0 && item.asked_quantity ) {
+            toast.error("Selling Quantity and Selling Price must be positive values");
+            return;
+          }
         const notificationData = {
             s_id: item.s_id,
             v_id: item.v_id,
@@ -137,6 +143,7 @@ export default function SupplyTable() {
     return (
         <>
             <Sidebar page={'Supply Table'}>
+                <ToastContainer/>
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'
