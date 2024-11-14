@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/login', { email, password });
       if (response.status === 200) {
         setAuth(response.data);
-        toast("Welcome Pawan!")
+        toast("Welcome Pawan!");
       }
       return response;
     } catch (error) {
