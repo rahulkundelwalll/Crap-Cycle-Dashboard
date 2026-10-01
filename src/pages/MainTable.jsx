@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../component/Sidebar';
 import { useNavigate } from "react-router-dom";
 import * as orderApi from '../api/order';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import the styles for react-toastify
 
 const searchOptions = [
@@ -179,7 +179,6 @@ export default function MainTable() {
                     </div>
                 </div>
             </Sidebar>
-            <ToastContainer />
         </>
     );
 }

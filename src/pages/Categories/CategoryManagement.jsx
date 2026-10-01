@@ -95,7 +95,7 @@ export default function CategoryManagement() {
         <>
             <Sidebar page={'Category Management'}>
                 <div className='flex justify-end text-xl font-bold mt-5'>
-                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={(event) => navigate('/dashboard/category/addcategory')}>
+                    <button className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-3xl me-3" onClick={() => navigate('/dashboard/category/addcategory')}>
                         + Add Category
                     </button>
                 </div>

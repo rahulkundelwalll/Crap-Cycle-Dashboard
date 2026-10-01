@@ -5,7 +5,7 @@ import * as requirementApi from '../../api/requirement';
 import * as categoryApi from '../../api/category';
 import * as buyerApi from '../../api/buyer';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default function AddRequirement() {
     const Id = useParams().id;
@@ -149,7 +149,7 @@ export default function AddRequirement() {
         console.log(data);
 
         try {
-            const response = await requirementApi.updateRequirement(Id, data, {
+            await requirementApi.updateRequirement(Id, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

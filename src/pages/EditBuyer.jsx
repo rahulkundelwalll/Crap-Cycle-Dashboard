@@ -4,7 +4,7 @@ import userImage from '../assets/user.webp';
 import { useNavigate,useParams } from 'react-router-dom';
 import * as buyerApi from '../api/buyer';
 import * as categoryApi from '../api/category';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -143,7 +143,7 @@ export default function AddBuyer() {
         }
 
         try {
-            const response = await buyerApi.updateBuyer(id, formDataToSend, {
+            await buyerApi.updateBuyer(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route, Routes } from 'react-router-dom';
 import './App.css'; // or './App.module.css' if you're using CSS modules
 
@@ -27,11 +26,8 @@ import CategoryManagement from './pages/Categories/CategoryManagement'
 import AddCategory from './pages/Categories/AddCategory'
 import Editcategory from './pages/Categories/Editcategory'
 import CategoryDetail from './pages/Categories/CategoryDetail'
-import AddSubCat from './pages/subcategories/AddSubCat'
-import SubCategory from './pages/subcategories/SubCategory'
 
 // Requirement
-import RequiremenStatus from './pages/requirements/RequiremenStatus';
 import AddRequirement from './pages/requirements/AddRequirement';
 import RequirementDetail from './pages/requirements/RequirementDetail';
 import EditRequirement from './pages/requirements/EditRequirement';
@@ -43,11 +39,9 @@ import LoginPage from './pages/login/LoginPage'
 
 import SupplyTable from './pages/Supplytable';
 import MainTable from './pages/MainTable';
-import SpecificMainTable from './pages/SpecifyMainTable';
 import ProtectedRoute from './protected/ProtectedRoute';
 
 //Order
-import Order_History from './pages/OrderHistory';
 import OrderMangement from './pages/Order_Management';
 
 import UpdateLinks from './pages/Other';
@@ -132,9 +126,6 @@ function App() {
 
 
       </Routes>
-
-      {/* <Sidebar/> */}
-
     </>
   )
 }

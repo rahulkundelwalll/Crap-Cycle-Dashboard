@@ -3,7 +3,7 @@ import Sidebar from '../component/Sidebar';
 import userImage from '.././assets/user.webp';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import * as deliveryAgentApi from '../api/deliveryAgent';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -33,7 +33,7 @@ export default function DeliveryAgentProfile() {
     }, [id])
     const confirmDelete = async () => {
         try {
-            const res = await deliveryAgentApi.deleteAgent(id);
+            await deliveryAgentApi.deleteAgent(id);
             navigate('/dashboard/delivery_agent/allgents'); // Navigate to vendors list after deletion
             toast.warn("Delivery Agent deleted !");
         } catch (err) {

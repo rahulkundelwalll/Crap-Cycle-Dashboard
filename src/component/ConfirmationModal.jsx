@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 const ConfirmationModal = ({ show, onClose, onConfirm }) => {
@@ -10,8 +11,7 @@ const ConfirmationModal = ({ show, onClose, onConfirm }) => {
 
   const handleConfirm = () => {
     if (!transitionId) {
-      // Show an error message if transitionId is null or empty
-      window.alert('Transition ID is required!');
+      toast.error('Transition ID is required!');
       return;
     }
 
@@ -52,6 +52,12 @@ const ConfirmationModal = ({ show, onClose, onConfirm }) => {
       </div>
     </div>
   );
+};
+
+ConfirmationModal.propTypes = {
+  show: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default ConfirmationModal;

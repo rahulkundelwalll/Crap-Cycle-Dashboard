@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../../component/Sidebar';
 import * as orderApi from '../../api/order';
@@ -7,17 +7,16 @@ const OrderManagementHistory = () => {
   const { id } = useParams();
   const [orderData, setOrderData] = useState(null);
 
-  const fetchOrderData = async () => {
-    try {
-      const response = await orderApi.getOrderDetail(id);
-      setOrderData(response.data.data);
-      console.log(response.data.data);
-    } catch (error) {
-      console.error('Error fetching order data:', error);
-    }
-  };
-
   useEffect(() => {
+    const fetchOrderData = async () => {
+      try {
+        const response = await orderApi.getOrderDetail(id);
+        setOrderData(response.data.data);
+      } catch (error) {
+        console.error('Error fetching order data:', error);
+      }
+    };
+
     fetchOrderData();
   }, [id]);
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import { MdWifiOff } from "react-icons/md";
 
 const NetworkStatus = ({ children }) => {
@@ -64,6 +65,10 @@ const NetworkStatus = ({ children }) => {
       )}
     </div>
   );
+};
+
+NetworkStatus.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default NetworkStatus;

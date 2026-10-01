@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as requirementApi from '../api/requirement';
 import * as orderApi from '../api/order';
 import { useParams } from 'react-router-dom';
@@ -49,12 +49,12 @@ const CompletedRequirements = () => {
                         <p>Status: {orderDetails.req_status}</p>
                     </div>
                     <div className="p-4 rounded-lg shadow-md">
-                        <h2 className="font-bold">Buyer's Details</h2>
-                        <p>Buyer's Name: {orderDetails.b_name}</p>
-                        <p>Buyer's Phone No.: {orderDetails.b_moile}</p>
-                        <p>Buyer's Address: {orderDetails.b_add}</p>
+                        <h2 className="font-bold">Buyer&apos;s Details</h2>
+                        <p>Buyer&apos;s Name: {orderDetails.b_name}</p>
+                        <p>Buyer&apos;s Phone No.: {orderDetails.b_moile}</p>
+                        <p>Buyer&apos;s Address: {orderDetails.b_add}</p>
                         <p>Order drop location: {orderDetails.b_drop_add}</p>
-                        <p>Buyer's ID: {orderDetails.b_id}</p>
+                        <p>Buyer&apos;s ID: {orderDetails.b_id}</p>
                     </div>
                 </div>
 

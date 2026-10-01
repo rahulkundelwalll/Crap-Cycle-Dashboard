@@ -1,5 +1,4 @@
 // src/Profile.js
-import React from 'react';
 
 const Profile = () => {
   const user = {

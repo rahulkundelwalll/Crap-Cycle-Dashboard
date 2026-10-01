@@ -7,8 +7,7 @@ import { toast } from 'react-toastify';
 export default function AddCategory() {
     const [hierarchical, setHierarchical] = React.useState([]);
     const location =useLocation();
-    const { cat,cat_id } = location.state || {};
-    console.log(cat_id)
+    const { cat_id } = location.state || {};
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -61,7 +60,7 @@ export default function AddCategory() {
         formDataToSend.append('imageFile',formData.imageFile)
         formDataToSend.append('parent',cat_id?cat_id:-1)
         try{
-            const res =await categoryApi.addCategory(formDataToSend,{
+            await categoryApi.addCategory(formDataToSend,{
                 headers:{
                     'Content-Type':'multipart/form-data'
                 }
@@ -81,7 +80,7 @@ export default function AddCategory() {
     return (
         <Sidebar page={"Category"}>
             <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
-                <span className="text-green-400">{hierarchical?.map((item, index) => (
+                <span className="text-green-400">{hierarchical?.map((item) => (
                     <React.Fragment key={item.cat_id}>
                         /
                         {item.cat_name}

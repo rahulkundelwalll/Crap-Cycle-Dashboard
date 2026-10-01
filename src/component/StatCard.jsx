@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function StatCard({ icon, label, value, loading, accent, onClick }) {

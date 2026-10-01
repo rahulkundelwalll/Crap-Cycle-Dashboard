@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../component/Sidebar';
 import * as orderApi from '../api/order';
 import * as deliveryAgentApi from '../api/deliveryAgent';
 import * as requirementApi from '../api/requirement';
 import ConfirmationModal from '../component/ConfirmationModal';
-import { toast ,ToastContainer} from 'react-toastify';
+import { toast } from 'react-toastify';
 import StatusModal from '../component/StatusModal';
 
 const OrderManagement = () => {
@@ -19,19 +19,18 @@ const OrderManagement = () => {
   const [showDeliveredModal, setShowDeliveredModal] = useState(false);
   const [showRejectedModal, setShowRejectedModal] = useState(false);
 
-  const fetchOrderData = async () => {
+  const fetchOrderData = useCallback(async () => {
     try {
       const response = await orderApi.getOrderDetail(id);
       setOrderData(response.data.data);
-      console.log(response.data.data);
     } catch (error) {
       console.error('Error fetching order data:', error);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchOrderData();
-    
+
     const fetchAgents = async () => {
       try {
         const response = await deliveryAgentApi.getAgents();
@@ -42,7 +41,7 @@ const OrderManagement = () => {
     };
 
     fetchAgents();
-  }, [id]);
+  }, [id, fetchOrderData]);
 
   const handleAgentChange = (event) => {
     const agentId = event.target.value;
@@ -148,7 +147,7 @@ const OrderManagement = () => {
     }
   
     try {
-      const [orderRes, requirementRes] = await Promise.all([
+      const [orderRes] = await Promise.all([
         orderApi.addTransitionId(orderData[0].order_id, {
           transitionId: transitionId,
           supplyid:orderData[0].s_id
@@ -183,7 +182,6 @@ const OrderManagement = () => {
   return (
     <Sidebar page={'Order Management'}>
       <div className="bg-white p-6 rounded-lg  mx-auto mt-8">
-      <ToastContainer />
         <div className="flex justify-between items-center mb-4">
           {orderData[0].payment === "Paid" ? 
             <span className="bg-green-600 text-white font-semibold px-4 py-2 rounded-full ml-auto">Paid</span> :
@@ -232,14 +230,14 @@ const OrderManagement = () => {
           {/* Buyer's Section */}
           <div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-bold text-lg">Buyer's ID: {b_id}</h3>
+              <h3 className="font-bold text-lg">Buyer&apos;s ID: {b_id}</h3>
               <p className="text-gray-700">Name: {b_name}</p>
               <p className="text-gray-700">Phone: {b_mobile}</p>
               <p className="text-gray-700">Drop Location: {b_drop_address}</p>
             </div>
             <hr />
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-bold text-lg">Vendor's ID: {v_id}</h3>
+              <h3 className="font-bold text-lg">Vendor&apos;s ID: {v_id}</h3>
               <p className="text-gray-700">Name: {v_name}</p>
               <p className="text-gray-700">Phone: {v_mobile}</p>
               <p className="text-gray-700">Address: {v_address}</p>

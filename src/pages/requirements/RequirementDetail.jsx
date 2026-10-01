@@ -18,14 +18,13 @@ export default function RequirementDetail() {
             try {
                 const res = await requirementApi.getRequirementDetail(id);
                 setData(res.data.results[0]);
-                console.log(res.data.results[0])
             } catch (err) {
                 console.log(err);
             }
 
         }
         fetchData();
-    }, [])
+    }, [id])
     // Example addresses
     const handleDelete = async () => {
         try {

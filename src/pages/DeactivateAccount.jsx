@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as otherApi from '../api/other';
 import Sidebar from './../component/Sidebar';
 function DeactivatedAccountInfo() {

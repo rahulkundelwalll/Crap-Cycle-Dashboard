@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import Sidebar from '../component/Sidebar';
 import { CiSearch } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import * as supplyApi from '../api/supply';
 import * as notificationApi from '../api/notification';
-import { ToastContainer, toast } from 'react-toastify';
-import ReactPaginate from 'react-paginate';
+import { toast } from 'react-toastify';
 
 const sortByOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id', 'supply_quantity', 'supply_rate', 'v_id', 'vendor_supply'];
 const searchOptions = ['vendor_name', 'cat_id', 'cat_name', 's_id', 'supply_quantity', 'supply_rate', 'v_id', 'vendor_supply'];
@@ -19,8 +17,6 @@ export default function SupplyTable() {
     const [searchColumn, setSearchColumn] = React.useState('');
     const [notification, setNotification] = React.useState('');
     const [filteredData, setFilteredData] = React.useState([]);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -131,7 +127,7 @@ export default function SupplyTable() {
         };
 
         try {
-            const res = await notificationApi.sendNotification(notificationData);
+            await notificationApi.sendNotification(notificationData);
             setNotification('Notification sent successfully!');
             setTimeout(() => setNotification(''), 3000);
         } catch (err) {
@@ -144,7 +140,6 @@ export default function SupplyTable() {
     return (
         <>
             <Sidebar page={'Supply Table'}>
-                <ToastContainer/>
                 <div className='flex justify-around items-center mt-3'>
                     <select
                         name='sortby'

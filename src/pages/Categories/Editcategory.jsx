@@ -41,25 +41,22 @@ export default function Editcategory() {
         }
     };
     React.useEffect(() => {
-        try {
-            const fetchData = async () => {
+        const fetchData = async () => {
+            try {
                 const res = await categoryApi.getCategory(id);
-                console.log(res.data.data[0]);
                 setFormData({
                     categoryName: res.data.data[0].cat_name,
                     categoryDescription: res.data.data[0].cat_description,
                     imagePreview: `${import.meta.env.VITE_IMAGE_URL + res.data.data[0].cat_image}`,
                     imageName: res.data.data[0].cat_image,
                     parent: res.data.data[0].parent
-
                 })
-                // console.log(formData)
+            } catch (err) {
+                console.log(err);
             }
-            fetchData();
-        } catch (err) {
-            console.log(err);
         }
-    }, [])
+        fetchData();
+    }, [id])
     const handleClick = async (event) => {
         event.preventDefault();
         const formDataToSend = new FormData();
@@ -71,7 +68,7 @@ export default function Editcategory() {
             formDataToSend.append('imageFile', formData.imageFile)
         }
         try {
-            const res = await categoryApi.updateCategory(id, formDataToSend, {
+            await categoryApi.updateCategory(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

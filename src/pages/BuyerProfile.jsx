@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Sidebar from '../component/Sidebar';
 import userImage from '.././assets/user.webp';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -30,6 +31,14 @@ const Modal = ({ isOpen, onClose, addresses }) => {
     );
 };
 
+Modal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    addresses: PropTypes.arrayOf(PropTypes.shape({
+        dropingAddress: PropTypes.string,
+    })).isRequired,
+};
+
 export default function BuyerProfile() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { id } = useParams();
@@ -50,7 +59,6 @@ export default function BuyerProfile() {
                 setCategories(res.data.category)
                 setDropingAdds(res.data.dropingaddress)
                 setBuyerImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data.b_image}`)
-                console.log(buyerImage);
             } catch (error) {
                 console.log(error)
             }

@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import { CiSearch } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
-import { FaBell } from "react-icons/fa";
 import * as supplyApi from '../../api/supply';
 import ReactPaginate from 'react-paginate';
 
@@ -15,10 +13,8 @@ export default function SupplyTableHistory() {
     const [ascending, setAscending] = React.useState(true);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [searchColumn, setSearchColumn] = React.useState('');
-    const [notification, setNotification] = React.useState('');
     const [currentPage, setCurrentPage] = React.useState(0);
     const itemsPerPage = 10;
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,32 +85,6 @@ export default function SupplyTableHistory() {
         }
     };
 
-    const handleApproveQuantityChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].approve_quantity = value;
-        setData(updatedData);
-    };
-
-    const handlePriceRangeChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].price_range = value;
-        setData(updatedData);
-    };
-
-    const handleAskedPriceChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].asked_price = value;
-        setData(updatedData);
-    };
-
-    const handleAskedQuantityChange = (index, value) => {
-        const updatedData = [...data];
-        updatedData[index].asked_quantity = value;
-        setData(updatedData);
-    };
-
-    
-
     const handlePageClick = (selectedPage) => {
         setCurrentPage(selectedPage.selected);
     };
@@ -159,11 +129,6 @@ export default function SupplyTableHistory() {
                     />
                     <CiSearch className='cursor-pointer hover:scale-125 text-2xl ease-in duration-300' onClick={handleSearchClick} />
                 </div>
-                {notification && (
-                    <div className="fixed bottom-5 right-5 bg-blue-500 text-white p-2 rounded shadow-lg">
-                        {notification}
-                    </div>
-                )}
                 <div className="mx-auto pt-10 container">
                     <table className="min-w-full bg-white border border-gray-200">
                         <thead className="bg-gray-50">

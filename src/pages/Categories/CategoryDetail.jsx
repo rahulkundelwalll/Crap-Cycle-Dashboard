@@ -3,10 +3,10 @@ import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import * as categoryApi from '../../api/category';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function CategoryDetail(props) {
+export default function CategoryDetail() {
     const navigate = useNavigate();
     const location = useLocation();
     const [hierarchical, setHierarchical] = React.useState([]);
@@ -38,6 +38,7 @@ export default function CategoryDetail(props) {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     useEffect(() => {
@@ -88,7 +89,7 @@ export default function CategoryDetail(props) {
                 </button>
             </div>
             <div className='flex justify-start text-xl font-bold mt-5 ms-10'>
-                <span className="text-green-400">{hierarchical?.map((item, index) => (
+                <span className="text-green-400">{hierarchical?.map((item) => (
                     <React.Fragment key={item.cat_id}>
                         /
                         <Link to={`/dashboard/category/CategoryDetail/${item.cat_id}`}>{item.cat_name}</Link>

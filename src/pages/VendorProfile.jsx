@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as vendorApi from '../api/vendor';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // https://crap-cycle-waste-solution.s3.ap-south-1.amazonaws.com/imageFile-1726259713588-14104409.png
@@ -34,7 +34,7 @@ export default function VendorProfile() {
     // console.log(process.env.REACT_APP_IMAGE_URL)
     const confirmDelete = async () => {
         try {
-            const res = await vendorApi.deleteVendor(id);
+            await vendorApi.deleteVendor(id);
             navigate('/dashboard/vendor/vendors'); // Navigate to vendors list after deletion
             toast.warn("Vender deleted !");
         } catch (err) {

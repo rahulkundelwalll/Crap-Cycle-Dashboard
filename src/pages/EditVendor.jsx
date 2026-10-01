@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import * as vendorApi from '../api/vendor';
 import * as categoryApi from '../api/category';
 import { useNavigate ,useParams} from 'react-router-dom';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -153,7 +153,7 @@ export default function AddVendor() {
         }
 
         try {
-            const res = await vendorApi.updateVendor(id, formDataToSend, {
+            await vendorApi.updateVendor(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

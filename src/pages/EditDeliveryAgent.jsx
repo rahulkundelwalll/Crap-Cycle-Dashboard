@@ -115,7 +115,7 @@ export default function EditAgent() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await deliveryAgentApi.updateAgent(id, data, {
+            await deliveryAgentApi.updateAgent(id, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

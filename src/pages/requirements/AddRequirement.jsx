@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import * as categoryApi from '../../api/category';
@@ -127,7 +127,7 @@ export default function AddRequirement() {
         // console.log(data);
     
         try {
-            const response = await requirementApi.addRequirement(data, {
+            await requirementApi.addRequirement(data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as vendorApi from '../../api/vendor';
 import Sidebar from '../../component/Sidebar';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export default function GetPassword() {
     const [email, setEmail] = useState('');
@@ -60,7 +60,6 @@ export default function GetPassword() {
                     </div>
                 )}
             </div>
-            <ToastContainer />
         </Sidebar>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import * as deliveryAgentApi from '../api/deliveryAgent';
@@ -76,7 +76,7 @@ export default function AddVendor() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await deliveryAgentApi.addAgent(data, {
+            await deliveryAgentApi.addAgent(data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

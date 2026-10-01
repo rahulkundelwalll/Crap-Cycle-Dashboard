@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import * as otherApi from '../../api/other';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 export default function UpdateContact() {
     const [contactInfo, setContactInfo] = useState({
         payment_related_mobile: '',
@@ -35,9 +35,7 @@ export default function UpdateContact() {
         e.preventDefault();
         try {
             await otherApi.updateContact(contactInfo);
-            // toast.success('Contact information updated successfully');
-            window.alert("Contact information updated successfully");
-
+            toast.success('Contact information updated successfully');
         } catch (error) {
             console.error('Error updating contact info:', error);
         }

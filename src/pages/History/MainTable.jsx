@@ -2,7 +2,6 @@ import React from 'react';
 import Sidebar from '../../component/Sidebar';
 import { useNavigate } from "react-router-dom";
 import * as orderApi from '../../api/order';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const searchOptions = [
@@ -133,7 +132,6 @@ export default function MainTableHistory() {
                     </div>
                 </div>
             </Sidebar>
-            <ToastContainer />
         </>
     );
 }
