@@ -3,7 +3,7 @@ import Sidebar from '../component/Sidebar';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import axios from 'axios';
+import * as orderApi from '../api/order';
 
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
 const searchOptions = ['requirement_id', 'category_name', 'category_id'];
@@ -20,7 +20,7 @@ export default function Order_History() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/order/get-order-history');
+                const res = await orderApi.getOrderHistory();
                 console.log(res);
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,

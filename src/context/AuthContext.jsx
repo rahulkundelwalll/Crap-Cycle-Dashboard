@@ -1,11 +1,11 @@
   // src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import * as authApi from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-axios.defaults.withCredentials = true;
+const AUTH_CHECK_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
 const AuthContext = createContext();
 
 
@@ -17,14 +17,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/checkAuth');
-        console.log(response.data)
+        const response = await authApi.checkAuth();
         if (response?.data?.user?.role === 'dashboardUser') {
           setAuth(response.data);
         }
-
-
-        // console.log(response.data);
       } catch (error) {
         setAuth(null);
       } finally {
@@ -34,13 +30,13 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
 
-    const interval = setInterval(checkAuth, 1800000000); // Check every minute
+    const interval = setInterval(checkAuth, AUTH_CHECK_INTERVAL_MS);
     return () => clearInterval(interval);
   }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/login', { email, password });
+      const response = await authApi.login(email, password);
       if (response.status === 200) {
         setAuth(response.data);
         toast("Welcome Pawan!");
@@ -53,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/Autharization/logout');
+      await authApi.logout();
       setAuth(null);
       toast.success("Logged out successfully");
       navigate('/login');

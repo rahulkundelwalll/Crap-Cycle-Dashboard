@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-import axios from 'axios';
+import * as otherApi from '../../api/other';
 import { ToastContainer, toast } from 'react-toastify';
 export default function UpdateContact() {
     const [contactInfo, setContactInfo] = useState({
@@ -16,7 +16,7 @@ export default function UpdateContact() {
         // Fetch existing contact information
         const fetchContactInfo = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/contact');
+                const response = await otherApi.getContact();
                 setContactInfo(response.data);
             } catch (error) {
                 console.error('Error fetching contact info:', error);
@@ -34,7 +34,7 @@ export default function UpdateContact() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/other/contact', contactInfo);
+            await otherApi.updateContact(contactInfo);
             // toast.success('Contact information updated successfully');
             window.alert("Contact information updated successfully");
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaFilter } from "react-icons/fa";
-import axios from 'axios';
+import * as requirementApi from '../../api/requirement';
 import { parseISO, format } from 'date-fns';
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -88,7 +88,7 @@ export default function RequirementStatus() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/requirement/all-requirement');
+                const res = await requirementApi.getAllRequirements();
               
                 setData(res.data.results);
                 setInitialData(res.data.results);

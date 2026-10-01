@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../component/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
-import axios from 'axios';
+import * as requirementApi from '../api/requirement';
 import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['quantity', 'date', 'bided_quantity', 'no_of_bids'];
@@ -22,7 +22,7 @@ export default function Requirement_Table() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/requirement/pending-requirement');
+                const res = await requirementApi.getPendingRequirements();
 
                 const fetchedData = res.data.results.map(item => ({
                     s_no: item.req_id,

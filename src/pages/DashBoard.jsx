@@ -1,10 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Sidebar from '../component/Sidebar';
+import StatCard from '../component/StatCard';
+import * as vendorApi from '../api/vendor';
+import * as buyerApi from '../api/buyer';
+import * as deliveryAgentApi from '../api/deliveryAgent';
+import * as requirementApi from '../api/requirement';
+import * as supplyApi from '../api/supply';
+import * as authApi from '../api/auth';
+import * as orderApi from '../api/order';
 import { FaStore, FaUsers, FaTruck, FaClipboardList, FaBoxOpen, FaHandshake, FaPlus, FaExclamationTriangle } from 'react-icons/fa';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const STATUS_COLORS = {
     pending: 'bg-yellow-400',
@@ -15,26 +20,6 @@ const STATUS_COLORS = {
 
 function statusColor(status) {
     return STATUS_COLORS[(status || '').toLowerCase()] || 'bg-gray-400';
-}
-
-function StatCard({ icon, label, value, loading, accent, onClick }) {
-    return (
-        <button
-            onClick={onClick}
-            className="bg-white rounded-2xl shadow-md p-5 flex items-center space-x-4 text-left hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:cursor-default"
-            disabled={!onClick}
-        >
-            <div className={`flex items-center justify-center w-14 h-14 rounded-xl text-2xl text-white ${accent}`}>
-                {icon}
-            </div>
-            <div>
-                <p className="text-sm font-medium text-gray-500">{label}</p>
-                <p className="text-2xl font-bold text-gray-800">
-                    {loading ? <span className="inline-block w-10 h-6 bg-gray-200 rounded animate-pulse" /> : value}
-                </p>
-            </div>
-        </button>
-    );
 }
 
 export default function DashBoard() {
@@ -55,13 +40,13 @@ export default function DashBoard() {
         const fetchAll = async () => {
             setLoading(true);
             const results = await Promise.allSettled([
-                axios.get(`${BACKEND_URL}/api/vendor/get-vendors`),
-                axios.get(`${BACKEND_URL}/api/buyer/allbuyer`),
-                axios.get(`${BACKEND_URL}/api/delivery/get-all-agent`),
-                axios.get(`${BACKEND_URL}/api/requirement/pending-requirement`),
-                axios.get(`${BACKEND_URL}/api/supply/pending-supply`),
-                axios.get(`${BACKEND_URL}/api/Autharization/interested-vendor-count`),
-                axios.get(`${BACKEND_URL}/api/order/get-current-order`),
+                vendorApi.getVendors(),
+                buyerApi.getBuyers(),
+                deliveryAgentApi.getAgents(),
+                requirementApi.getPendingRequirements(),
+                supplyApi.getPendingSupply(),
+                authApi.getInterestedVendorCount(),
+                orderApi.getCurrentOrders(),
             ]);
 
             const [vendorsRes, buyersRes, agentsRes, reqRes, supplyRes, interestedRes, ordersRes] = results;

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate,useParams } from 'react-router-dom';
-import axios from 'axios';
+import * as buyerApi from '../api/buyer';
+import * as categoryApi from '../api/category';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -34,7 +35,7 @@ export default function AddBuyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${id}`);
+                const res = await buyerApi.getBuyerDetail(id);
                 // setData(res.data.data)
                 const fetchData = res.data.data;
                 // console.log(res.data);
@@ -142,7 +143,7 @@ export default function AddBuyer() {
         }
 
         try {
-            const response = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/buyer/edit/${id}`, formDataToSend, {
+            const response = await buyerApi.updateBuyer(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -184,7 +185,7 @@ export default function AddBuyer() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
+                const res = await categoryApi.getCategories();
                 setCategoryOptions(res.data.data);
             } catch (err) {
                 console.log(err);

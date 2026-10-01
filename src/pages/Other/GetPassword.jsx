@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import * as vendorApi from '../../api/vendor';
 import Sidebar from '../../component/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -14,7 +14,7 @@ export default function GetPassword() {
     const handleSearch = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/get-password?email=${email}`);
+            const response = await vendorApi.getVendorPassword(email);
             console.log(response);
             if (response.data.data) {
                 setPassword(response.data.data);

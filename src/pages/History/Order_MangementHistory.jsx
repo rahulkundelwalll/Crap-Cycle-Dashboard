@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../../component/Sidebar';
-import axios from 'axios';
+import * as orderApi from '../../api/order';
 
 const OrderManagementHistory = () => {
   const { id } = useParams();
@@ -9,7 +9,7 @@ const OrderManagementHistory = () => {
 
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/order/get-order-detail/${id}`);
+      const response = await orderApi.getOrderDetail(id);
       setOrderData(response.data.data);
       console.log(response.data.data);
     } catch (error) {

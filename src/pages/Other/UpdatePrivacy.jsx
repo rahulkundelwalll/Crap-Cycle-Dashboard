@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-import axios from 'axios';
+import * as otherApi from '../../api/other';
 
 export default function Updateprivacy() {
     const [privacy, setprivacy] = useState(''); // State to hold the privacy text
@@ -10,7 +10,7 @@ export default function Updateprivacy() {
         // Fetch the existing privacy from the backend
         const fetchprivacy = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/privacy');
+                const response = await otherApi.getPrivacy();
                 setprivacy(response.data.privacy); // Adjusted to access 'privacy' field from the response
             } catch (error) {
                 console.error('Error fetching privacy:', error);
@@ -26,7 +26,7 @@ export default function Updateprivacy() {
 
     const handleSaveClick = async () => {
         try {
-            await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/other/privacy', { privacy:privacy }); // Posting the updated privacy to the backend
+            await otherApi.updatePrivacy(privacy); // Posting the updated privacy to the backend
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating privacy:', error);

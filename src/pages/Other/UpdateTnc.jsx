@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
-import axios from 'axios';
+import * as otherApi from '../../api/other';
 
 export default function UpdateTnc() {
     const [tnc, setTnc] = useState(''); // State to hold the TnC text
@@ -10,7 +10,7 @@ export default function UpdateTnc() {
         // Fetch the existing TnC from the backend
         const fetchTnc = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/tnc');
+                const response = await otherApi.getTnc();
                 setTnc(response.data.tnc); // Adjusted to access 'tnc' field from the response
             } catch (error) {
                 console.error('Error fetching TnC:', error);
@@ -26,7 +26,7 @@ export default function UpdateTnc() {
 
     const handleSaveClick = async () => {
         try {
-            await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/other/tnc', { tnc:tnc }); // Posting the updated TnC to the backend
+            await otherApi.updateTnc(tnc); // Posting the updated TnC to the backend
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating TnC:', error);

@@ -1,6 +1,6 @@
 // AddSubcategory.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import * as subcategoryApi from '../../api/subcategory';
 
 export default function AddSubcategory({ parentId, onSubcategoryAdded }) {
     const [subcategoryName, setSubcategoryName] = useState("");
@@ -8,7 +8,7 @@ export default function AddSubcategory({ parentId, onSubcategoryAdded }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/subcategory/add', {
+            const response = await subcategoryApi.addSubcategory({
                 subcategoryName,
                 parentId
             });

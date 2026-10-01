@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '.././assets/user.webp';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import * as buyerApi from '../api/buyer';
 
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -45,7 +45,7 @@ export default function BuyerProfile() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${id}`);
+                const res = await buyerApi.getBuyerDetail(id);
                 setData(res.data.data)
                 setCategories(res.data.category)
                 setDropingAdds(res.data.dropingaddress)
@@ -60,7 +60,7 @@ export default function BuyerProfile() {
     
     const handleDelete = async () => {
         try {
-            await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/buyer/deletbuyer/${id}`);
+            await buyerApi.deleteBuyer(id);
             toast.warn("Buyer deleted!")
             navigate('/dashboard/buyer/buyers');
         } catch (error) {

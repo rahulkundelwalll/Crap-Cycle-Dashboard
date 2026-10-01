@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-import axios from 'axios'; // Import axios for making HTTP requests
+import * as deliveryAgentApi from '../api/deliveryAgent';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,7 +53,7 @@ export default function EditAgent() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/delivery/agent-detail/${id}`)
+                const res = await deliveryAgentApi.getAgentDetail(id)
                 const fetchData = res.data.data[0];
                 // console.log(fetchData)
                 setFormData((prev) => {
@@ -115,7 +115,7 @@ export default function EditAgent() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/delivery/edit/${id}`, data, {
+            const response = await deliveryAgentApi.updateAgent(id, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

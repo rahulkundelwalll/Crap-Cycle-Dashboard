@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
-import axios from 'axios';
+import * as categoryApi from '../../api/category';
+import * as buyerApi from '../../api/buyer';
+import * as requirementApi from '../../api/requirement';
 import { useNavigate } from 'react-router-dom';
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,7 +27,7 @@ export default function AddRequirement() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/leaf-category');
+                const res = await categoryApi.getLeafCategories();
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -37,7 +39,7 @@ export default function AddRequirement() {
     useEffect(() => {
         const fetchBuyers = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/buyer/allbuyer');
+                const res = await buyerApi.getBuyers();
                 setBuyers(res.data.data);
                 // console.log(res.data.data)
             } catch (err) {
@@ -52,7 +54,7 @@ export default function AddRequirement() {
         {
             const deliveryAdd = async()=>{
                 try{
-                    const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/buyer/getbuyer/${formData.buyer.b_id}`);
+                    const res = await buyerApi.getBuyerDetail(formData.buyer.b_id);
                     setDropingAdd(res.data.dropingaddress)
                     // console.log(res.data.dropingaddress)
                 }catch(err)
@@ -125,7 +127,7 @@ export default function AddRequirement() {
         // console.log(data);
     
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/requirement/add-requirement', data, {
+            const response = await requirementApi.addRequirement(data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

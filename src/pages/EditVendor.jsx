@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-import axios from 'axios';
+import * as vendorApi from '../api/vendor';
+import * as categoryApi from '../api/category';
 import { useNavigate ,useParams} from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -59,7 +60,7 @@ export default function AddVendor() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/vender-detail/${id}`);
+                const res = await vendorApi.getVendorDetail(id);
                 setData(res.data.data);
                 console.log(res.data.data)
                 // console.log(res.data.data)
@@ -94,7 +95,7 @@ export default function AddVendor() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/category/categories');
+                const res = await categoryApi.getCategories();
                 setCategories(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -152,7 +153,7 @@ export default function AddVendor() {
         }
 
         try {
-            const res = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/vendor/edit/${id}`, formDataToSend, {
+            const res = await vendorApi.updateVendor(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

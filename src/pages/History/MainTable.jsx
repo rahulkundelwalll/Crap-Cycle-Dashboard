@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../../component/Sidebar';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import * as orderApi from '../../api/order';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,7 +25,7 @@ export default function MainTableHistory() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/order/get-order-history');
+                const res = await orderApi.getOrderHistory();
                 console.log(res);
                 const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,

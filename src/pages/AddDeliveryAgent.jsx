@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
-import axios from 'axios'; // Import axios for making HTTP requests
+import * as deliveryAgentApi from '../api/deliveryAgent';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -76,7 +76,7 @@ export default function AddVendor() {
         data.append('password', 'yourPassword'); // Include a password if required
 
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/delivery/add-agent', data, {
+            const response = await deliveryAgentApi.addAgent(data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

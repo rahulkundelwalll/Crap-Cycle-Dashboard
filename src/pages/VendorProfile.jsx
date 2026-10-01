@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../component/Sidebar';
 import userImage from '../assets/user.webp';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import * as vendorApi from '../api/vendor';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,7 +21,7 @@ export default function VendorProfile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/vendor/vender-detail/${id}`);
+                const res = await vendorApi.getVendorDetail(id);
                 setData(res.data.data);
                 setCategories(res.data.category);
                 setVendroImage(`${import.meta.env.VITE_IMAGE_URL+res.data.data.v_image}`)
@@ -34,7 +34,7 @@ export default function VendorProfile() {
     // console.log(process.env.REACT_APP_IMAGE_URL)
     const confirmDelete = async () => {
         try {
-            const res = await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/vendor/delete-vendor/${id}`);
+            const res = await vendorApi.deleteVendor(id);
             navigate('/dashboard/vendor/vendors'); // Navigate to vendors list after deletion
             toast.warn("Vender deleted !");
         } catch (err) {

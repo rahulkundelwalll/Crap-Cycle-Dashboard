@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import * as otherApi from '../api/other';
 import Sidebar from './../component/Sidebar';
 function DeactivatedAccountInfo() {
   const [deactivatedAccounts, setDeactivatedAccounts] = useState([]);
@@ -9,7 +9,7 @@ function DeactivatedAccountInfo() {
   useEffect(() => {
     const fetchDeactivatedAccounts = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/other/deactivated-account-info');
+        const response = await otherApi.getDeactivatedAccountInfo();
         setDeactivatedAccounts(response.data.data);
         setLoading(false);
       } catch (err) {

@@ -3,7 +3,7 @@ import Sidebar from '../../component/Sidebar';
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
-import axios from 'axios';
+import * as supplyApi from '../../api/supply';
 import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['vendor_ratings', 'supply_quantity', 'supply_rate', 'price_range'];
@@ -23,7 +23,7 @@ export default function SupplyTableHistory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/supply/complete-supply');
+                const res = await supplyApi.getCompletedSupply();
                 
                 const fetchedData = res.data.results.map(item => ({
                     s_id: item.s_id,

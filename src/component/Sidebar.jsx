@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import * as authApi from '../api/auth';
 import { FaLaptopHouse, FaUserCircle } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { GiNotebook } from "react-icons/gi";
@@ -16,32 +17,66 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaUserAltSlash } from "react-icons/fa";
 import { useLocation } from 'react-router-dom';
 
+const NAV_ITEMS = [
+    { id: 'dashboard', label: 'Dashboard', icon: FaLaptopHouse, path: '/' },
+    {
+        id: 'userManagement',
+        label: 'User Management',
+        icon: FaUserCircle,
+        children: [
+            { label: 'Vendors', path: '/dashboard/vendor/vendors' },
+            { label: 'Buyers', path: '/dashboard/buyer/buyers' },
+            { label: 'Delivery Agent', path: '/dashboard/delivery_agent/allgents' },
+        ],
+    },
+    { id: 'category', label: 'Category Management', icon: BiSolidCategory, path: '/dashboard/category/category' },
+    {
+        id: 'orderManagement',
+        label: 'Order Management',
+        icon: DiCodepen,
+        children: [
+            { label: 'Supply', path: '/dashboard/supplytable' },
+            { label: 'Requirement', path: '/dashboard/requirement/allrequirement' },
+            { label: 'MainOrder Table', path: '/dashboard/maintable' },
+        ],
+    },
+    {
+        id: 'orderHistory',
+        label: 'Order History',
+        icon: DiCodepen,
+        children: [
+            { label: 'Supply', path: '/dashboard/history/supplytable' },
+            { label: 'Requirement', path: '/dashboard/history/requirementtable' },
+            { label: 'MainOrder Table', path: '/dashboard/history/maintable' },
+        ],
+    },
+    { id: 'addRequirement', label: 'Add Requirement', icon: GiNotebook, path: '/dashboard/requirement/addrequirement' },
+    { id: 'updateLinks', label: 'Update Links', icon: FaLink, path: '/dashboard/update-links' },
+    { id: 'deactivateAccount', label: 'Deactivated Account', icon: FaUserAltSlash, path: '/dashboard/deactivateaccount' },
+];
+
 export default function Sidebar({ children, page }) {
     const [sideButton, setSideButton] = React.useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
     const [interestedVendorNotifications, setInterestedVendorNotifications] = useState(0);
-    const [expandUserManagement, setExpandUserManagement] = React.useState(() => {
-        const savedState = localStorage.getItem('expandUserManagement');
-        return savedState === 'true';
-    });
-    const [expandOrderManagement, setExpandOrderManagement] = React.useState(() => {
-        const savedState = localStorage.getItem('expandOrderManagement');
-        return savedState === 'true';
-    });
-    const [expandOrderHistory, setExpandOrderHistory] = React.useState(() => {
-        const savedState = localStorage.getItem('expandOrderHistory');
-        return savedState === 'true';
+    const [expandedGroups, setExpandedGroups] = useState(() => {
+        const initial = {};
+        NAV_ITEMS.forEach((item) => {
+            if (item.children) {
+                initial[item.id] = localStorage.getItem(`expand_${item.id}`) === 'true';
+            }
+        });
+        return initial;
     });
     const { logout } = React.useContext(AuthContext);
+
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const interestedVendorResponse = await axios.get('/api/Autharization/interested-vendor-count');
-                console.log(interestedVendorResponse);
-
-                setInterestedVendorNotifications(interestedVendorResponse.data.data.count);
+                const res = await authApi.getInterestedVendorCount();
+                setInterestedVendorNotifications(res.data.data.count);
             } catch (err) {
                 console.error('Error fetching notifications:', err);
             }
@@ -52,46 +87,25 @@ export default function Sidebar({ children, page }) {
 
     const handleInterestedVendorClick = async () => {
         try {
-            await axios.post('/api/Autharization/mark-all-unread'); // Adjust the API endpoint as needed
-            setInterestedVendorNotifications(0); // Reset the notification count to 0
-            navigate('/dashboard/interested-vendor'); // Navigate to the interested vendor page
+            await authApi.markAllNotificationsRead();
+            setInterestedVendorNotifications(0);
+            navigate('/dashboard/interested-vendor');
         } catch (err) {
             console.error('Error marking notifications as unread:', err);
         }
     };
 
-
-    const toggleUserManagement = () => {
-        setExpandUserManagement(prev => {
-            const newState = !prev;
-            localStorage.setItem('expandUserManagement', newState);
-            return newState;
+    const toggleGroup = (id) => {
+        setExpandedGroups((prev) => {
+            const next = { ...prev, [id]: !prev[id] };
+            localStorage.setItem(`expand_${id}`, next[id]);
+            return next;
         });
-    }
-
-    const toggleOrderManagement = () => {
-        setExpandOrderManagement(prev => {
-            const newState = !prev;
-            localStorage.setItem('expandOrderManagement', newState);
-            return newState;
-        });
-    }
-
-    const toggleOrderHistory = () => {
-        setExpandOrderHistory(prev => {
-            const newState = !prev;
-            localStorage.setItem('expandOrderHistory', newState);
-            return newState;
-        });
-    }
+    };
 
     const sideButtonFunction = () => {
-        setSideButton(prev => !prev);
-    }
-
-    React.useEffect(() => {
-        setSideButton(prev => prev);
-    }, [sideButton]);
+        setSideButton((prev) => !prev);
+    };
 
     const handleLogout = async () => {
         const res = await logout();
@@ -101,10 +115,10 @@ export default function Sidebar({ children, page }) {
         } else {
             alert(res.data.message);
         }
-    }
-    const isActive = (path) => {
-        return location.pathname === path ? { color: 'red', fontWeight: 'bold' } : { color: 'white' };
-      };
+    };
+
+    const isActive = (path) => (location.pathname === path ? { color: 'red', fontWeight: 'bold' } : { color: 'white' });
+
     return (
         <>
             <div className='flex  h-screen'>
@@ -116,70 +130,37 @@ export default function Sidebar({ children, page }) {
                     </div>
                     <div className='h-150'>
                         <ul className='align flex flex-col space-y-4 '>
-                        <Link to='/' style={isActive('/')}><li className="flex items-center space-x-2 cursor-pointer  hover:text-black">
-                                <FaLaptopHouse className="text-xl" />
-                                <span className="text-xl">Dashboard</span>
-                            </li></Link>
-                            <li className="flexspace-x-2 cursor-pointer flex-col">
-                                <div className='flex text-white items-center hover:text-black' onClick={toggleUserManagement}>
-                                    <FaUserCircle className="text-xl" />
-                                    <span className="text-xl">User Management</span>
-                                </div>
-                                <ul className={expandUserManagement ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/vendor/vendors' style={isActive('/dashboard/vendor/vendors')}><li className='hover:text-black'>&#x2022;Vendors</li></Link>
-                                    <Link to='/dashboard/buyer/buyers' style={isActive('/dashboard/buyer/buyers')}><li className='hover:text-black'>&#x2022;Buyers</li></Link>
-                                    <Link to='/dashboard/delivery_agent/allgents' style={isActive('/dashboard/delivery_agent/allgents')}><li className='hover:text-black'>&#x2022;Delivery Agent</li></Link>
-                                </ul>
-                            </li>
-                            <Link to='/dashboard/category/category' style={isActive('/dashboard/category/category')}>
-                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
-                                    <BiSolidCategory className=" text-xl " />
-                                    <span className="   text-xl">Category Management</span>
-                                </li>
-                            </Link>
-                            <li className="flexspace-x-2 cursor-pointer flex-col" >
-                                <div className='flex text-white  items-center hover:text-black' onClick={toggleOrderManagement}>
-                                    <DiCodepen className=" text-xl" />
-                                    <span className="text-xl">Order Management</span>
-                                </div>
-                                <ul className={expandOrderManagement ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/supplytable' style={isActive('/dashboard/supplytable')}><li className='hover:text-black'>&#x2022;Supply</li></Link>
-                                    <Link to='/dashboard/requirement/allrequirement' style={isActive('/dashboard/requirement/allrequirement')}><li className='hover:text-black'>&#x2022;Requirement</li></Link>
-                                    <Link to='/dashboard/maintable' style={isActive('/dashboard/maintable')}><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
-                                </ul>
-                            </li>
-                            <li className="flexspace-x-2 cursor-pointer flex-col">
-                                <div className='flex text-white hover:text-black  items-center' onClick={toggleOrderHistory}>
-                                    <DiCodepen className=" text-xl" />
-                                    <span className="text-xl">Order History</span>
-                                </div>
-                                <ul className={expandOrderHistory ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
-                                    <Link to='/dashboard/history/supplytable' style={isActive('/dashboard/history/supplytable')}><li className='hover:text-black'>&#x2022;Supply</li></Link>
-                                    <Link to='/dashboard/history/requirementtable' style={isActive('/dashboard/history/requirementtable')}><li className='hover:text-black'>&#x2022;Requirement</li></Link>
-                                    <Link to='/dashboard/history/maintable' style={isActive('/dashboard/history/maintable')}><li className='hover:text-black'>&#x2022;MainOrder Table</li></Link>
-                                </ul>
-                            </li>
-                            <Link to='/dashboard/requirement/addrequirement' style={isActive('/dashboard/requirement/addrequirement')}>
-                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
-                                    <GiNotebook className="text-xl " />
-                                    <span className="  text-xl">Add Requirement</span>
-                                </li>
-                            </Link>
-                            <Link to='/dashboard/update-links' style={isActive('/dashboard/update-links')}>
-                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
-                                    <FaLink className="text-xl " />
-                                    <span className="  text-xl">Update Links</span>
-                                </li>
-                            </Link>
-                            <Link to='/dashboard/deactivateaccount' style={isActive('/dashboard/deactivateaccount')}>
-                                <li className=" hover:text-black flex items-center space-x-2 cursor-pointer">
-                                    <FaUserAltSlash className="text-xl " />
-                                    <span className="  text-xl">Deactivated Account</span>
-                                </li>
-                            </Link>
+                            {NAV_ITEMS.map((item) => {
+                                const Icon = item.icon;
+                                if (item.children) {
+                                    return (
+                                        <li key={item.id} className="flexspace-x-2 cursor-pointer flex-col">
+                                            <div className='flex text-white items-center hover:text-black' onClick={() => toggleGroup(item.id)}>
+                                                <Icon className="text-xl" />
+                                                <span className="text-xl">{item.label}</span>
+                                            </div>
+                                            <ul className={expandedGroups[item.id] ? 'text-white flex flex-col justify-center ms-10 text-sm' : 'hidden'}>
+                                                {item.children.map((child) => (
+                                                    <Link key={child.path} to={child.path} style={isActive(child.path)}>
+                                                        <li className='hover:text-black'>&#x2022;{child.label}</li>
+                                                    </Link>
+                                                ))}
+                                            </ul>
+                                        </li>
+                                    );
+                                }
+                                return (
+                                    <Link key={item.id} to={item.path} style={isActive(item.path)}>
+                                        <li className="hover:text-black flex items-center space-x-2 cursor-pointer">
+                                            <Icon className="text-xl" />
+                                            <span className="text-xl">{item.label}</span>
+                                        </li>
+                                    </Link>
+                                );
+                            })}
                             <li className=" hover:text-black flex items-center space-x-2 cursor-pointer" style={isActive('/dashboard/interested-vendor')} onClick={handleInterestedVendorClick}>
                                 <FaHandshake className="text-xl" />
-                                <span  className="text-xl">Interested Vendor</span>
+                                <span className="text-xl">Interested Vendor</span>
                                 {interestedVendorNotifications > 0 && (
                                     <div className="relative">
                                         <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
@@ -190,8 +171,6 @@ export default function Sidebar({ children, page }) {
                                     </div>
                                 )}
                             </li>
-
-
                         </ul>
                     </div>
                     <div className="pb-10">
@@ -221,3 +200,8 @@ export default function Sidebar({ children, page }) {
         </>
     );
 }
+
+Sidebar.propTypes = {
+    children: PropTypes.node,
+    page: PropTypes.string,
+};

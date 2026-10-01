@@ -3,7 +3,7 @@ import Sidebar from '../../component/Sidebar';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import axios from 'axios';
+import * as categoryApi from '../../api/category';
 import ReactPaginate from 'react-paginate';
 
 const sortByOptions = ['current_requirement', 'bidden_requirement', 'no_of_listing', 'no_of_bidding'];
@@ -74,7 +74,7 @@ export default function CategoryManagement() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/category/category-bidden');
+                const res = await categoryApi.getCategoryBidden();
                 setData(res.data.data);
                 setInitialData(res.data.data);
                 res.data.data.forEach((cat) => {

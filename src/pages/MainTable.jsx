@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../component/Sidebar';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import * as orderApi from '../api/order';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import the styles for react-toastify
 
@@ -29,7 +29,7 @@ export default function MainTable() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/order/get-current-order');
+                const res = await orderApi.getCurrentOrders();
                 console.log(res);
                 const fetchedData = res.data.data.map(item => ({
                     s_no: item.req_id,
@@ -66,7 +66,7 @@ export default function MainTable() {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+'/api/order/add-order', {
+            const response = await orderApi.addOrder({
                 req_id: requirementId,
                 s_id: supplyId,
                 quantity: quantity,

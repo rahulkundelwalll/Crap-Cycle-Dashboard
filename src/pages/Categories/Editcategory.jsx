@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
-import axios from 'axios';
+import * as categoryApi from '../../api/category';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 export default function Editcategory() {
@@ -43,7 +43,7 @@ export default function Editcategory() {
     React.useEffect(() => {
         try {
             const fetchData = async () => {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/category/${id}`);
+                const res = await categoryApi.getCategory(id);
                 console.log(res.data.data[0]);
                 setFormData({
                     categoryName: res.data.data[0].cat_name,
@@ -71,7 +71,7 @@ export default function Editcategory() {
             formDataToSend.append('imageFile', formData.imageFile)
         }
         try {
-            const res = await axios.put(import.meta.env.VITE_BACKEND_URL+`/api/category/edit/${id}`, formDataToSend, {
+            const res = await categoryApi.updateCategory(id, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

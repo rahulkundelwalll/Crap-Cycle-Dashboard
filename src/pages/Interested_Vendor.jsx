@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import * as authApi from '../api/auth';
 import Sidebar from './../component/Sidebar';
 
 function InterestedVendorInfo() {
@@ -10,7 +10,7 @@ function InterestedVendorInfo() {
   useEffect(() => {
     const fetchInterestedVendors = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/api/Autharization/signUp-get');
+        const response = await authApi.getSignUpRequests();
         console.log(response);
         setInterestedVendors(response.data.data);
         setLoading(false);

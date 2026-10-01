@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../component/Sidebar';
 import userImage from '../../assets/user.webp';
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
-import axios from 'axios';
+import * as categoryApi from '../../api/category';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,7 +24,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/category/${id}`);
+                const res = await categoryApi.getCategory(id);
                 setData({
                     category: res.data.data[0].cat_name,
                     discription: res.data.data[0].cat_description,
@@ -43,7 +43,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/get-subcat/${id}`);
+                const res = await categoryApi.getSubcategories(id);
                 setData((prev) => ({
                     ...prev,
                     subcategory: res.data.data || [] // Provide a default value of an empty array
@@ -57,7 +57,7 @@ export default function CategoryDetail(props) {
     useEffect(() => {
         const fetchHierarchicalData = async () => {
             try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+`/api/category/hierarchical-cat/${id}`);
+                const res = await categoryApi.getHierarchicalCategory(id);
                 setHierarchical(res.data.data || []); // Ensure hierarchical is set to an array
                 
             } catch (err) {
@@ -70,7 +70,7 @@ export default function CategoryDetail(props) {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(import.meta.env.VITE_BACKEND_URL+`/api/category/delete-cat/${id}`);
+            await categoryApi.deleteCategory(id);
             toast.warn("Category Deleted !")
             navigate('/dashboard/category/category');
         } catch (err) {
